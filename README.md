@@ -13,7 +13,7 @@ WebSocket API SandBox: `wss://sandbox-feed.cobinhood.com`
 All timestamps exchanged between client and server are based on server Unix UTC timestamp. Please refer to System Module for retrieving server timestamp.
 
 ### Floating Point Values
-All floating point values in responses are encoded in `string` type to avoid loss of precision
+All floating point values in responses are encoded in `string` type to avoid loss of precision.
 
 ### Authentication
 COBINHOOD uses JWT for APIs that require authentication. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
@@ -45,7 +45,7 @@ An unsuccessful response would result in HTTP status codes ranging from 400 to 5
 ```
 
 ### Rate-limiting
-All API requests are rate-limited at 10 requests/sec per user, and 50 requests/sec per IP addres
+All API requests are rate-limited at 10 requests/sec per user, and 50 requests/sec per IP address.
 
 ### Pagination
 For APIs that return large amounts of data, the response may need to be paginated, e.g. retrieving the trade history. When pagination is required, a `Link` field can be found in the headers. Take the trade history request as an example:

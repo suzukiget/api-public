@@ -16,35 +16,49 @@ All timestamps exchanged between client and server are based on server Unix UTC 
 All floating point values in responses are encoded in `string` type to avoid loss of precision
 
 ### Authentication
-COBINHOOD uses JWT for APIs that requires authorization. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
+COBINHOOD uses JWT for APIs that require authentication. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
 
 ### API Responses
 All responses from API contain a JSON object field named `result`:
 
-A successful response should have HTTP status codes ranging from 100 to 399. Clients should find the response as a JSON object within the `result` object:
+A successful response should have HTTP status codes ranging from 100 to 399, and a boolean `success` field with value `true`. Clients should find the response as a JSON object within the `result` object:
 ```javascript
 {
+    "success": true,
     "result": {
         ...
     }
 }
 ```
 
-A unsuccessful response would result in HTTP status codes ranging from 400 to 599. An boolean `success` field indicates whether the request completed successfully. If `success` is `false`, an `error` object containing information that describes the error can be found in the root object:
+An unsuccessful response would result in HTTP status codes ranging from 400 to 599, and a boolean `success` field with value `false`. If `success` is `false`, an `error` object member containing information that describes the error can be found in the root object:
 ```javascript
 {
-    "success": <bool>,
+    "success": false,
     "error": {
-	"type": <string>,
+        "type": <string>,
         "code": <int>,
-	"message": <string>,
+        "message": <string>,
         ...
     }
 }
 ```
 
 ### Rate-limiting
-All API requests are rate-limited at 10 requests/sec per user, and 50 requests/sec per IP address
+All API requests are rate-limited at 10 requests/sec per user, and 50 requests/sec per IP addres
+
+### Pagination
+For APIs that return large amounts of data, the response may need to be paginated, e.g. retrieving the trade history. When pagination is required, a `Link` field can be found in the headers. Take the trade history request as an example:
+
+Request URL: `https://api.cobinhood.com/v1/trading/trades?limit=30&page=7`
+
+Response headers:
+```
+Link: <https://api.cobinhood.com/v1/trading/trades?limit=30&page=1>; rel="first",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=6&before=cGFnZTZkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="prev",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=8&before=cGFnZThkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="next",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=15>; rel="last"
+X-Total-Count: 431
+```
+
+The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades. 
 
 # System Module - Authentication Not Required
 
@@ -56,6 +70,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "time": 1505204498376
     }
@@ -74,6 +89,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "currencies": [
             {
@@ -98,6 +114,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "trading_pairs": [
             {
@@ -134,18 +151,19 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
         + required
 
 + Query parameters
-    + `limit`: Limits number of entries of asks/bids list, beginning from the best price for both sides
-        + int
-        + optional
-        + Defaults to 50 if not specified
     + `precision`: Price aggregation level, denoted as number of digits after decimal
         + int (digits [0..2], -1 shows result with no precision limit)
         + optional
         + Defaults to 2 (0.01) if not specified
+    + `limit`: Limits number of entries of asks/bids list, beginning from the best price for both sides
+        + int
+        + optional
+        + Defaults to 50 if not specified
 
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "orderbook": {
             "sequence": 1938572,
@@ -185,6 +203,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "ticker": {
             "last_trade_id": "e015d51ae494f3edc3d921a091adab27",
@@ -227,7 +246,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
         + required
 
 + Query parameters
-    + `limit`: Limits number of recent trades
+    + `limit`: Limits number of trades beginning from the most recent
         + int
         + optional
         + Defaults to 50 if not specified
@@ -235,6 +254,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "trades": [
             {
@@ -298,6 +318,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
 	"result": {
 	    "candles": [
 	        {
@@ -336,6 +357,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "order": {
             "order_id": "37f550a202aa6a3fe120f420637c894c",
@@ -380,6 +402,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "trades": [
             {
@@ -423,10 +446,15 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
     + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, `...`]
         + required
+    + `limit`: Limits number of orders per page
+        + int
+        + optional
+        + Defaults to 50 if not specified
 
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "orders": [
             {
@@ -492,6 +520,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "order": {
             "trading_pair_id": "BTC-USDT",
@@ -533,6 +562,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true
 }
 ```
 
@@ -542,25 +572,18 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
     Returns order history for the current user
 
 + Query Parameters
-    + `start_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `limit`: Limits number of orders to show from `end_time` to earlier
-        + int
-        + optional
-        + Defaults to 50 if not specified
     + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, `...`]
         + required
+    + `limit`: Limits number of orders per page
+        + int
+        + optional
+        + Defaults to 50 if not specified
 
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "order_history": [
             {
@@ -610,6 +633,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "trade": {
             "trading_pair_id": "BTC-USDT",
@@ -647,26 +671,19 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
     Returns trade history for the current user
 
 + Path Parameters
-    + `start_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `limit`: Limits number of trades to show from `end_time` to earlier
-        + int
-        + optional
-        + Defaults to 50 if not specified
     + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, `...`]
         + required
+    + `limit`: Limits number of trades per page
+        + int
+        + optional
+        + Defaults to 50 if not specified
 
 + [Success] Response 200 (application/json)
 ```javascript
 {
     "result": {
+        "success": true,
         "trades": [
             {
                 "trading_pair_id": "BTC-USDT",
@@ -719,6 +736,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 ```javascript
 {
     "result": {
+        "success": true,
         "balances": [
             {
                 "currency": "BTC",
@@ -746,15 +764,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
     Get balance history for the current user
 
 + Query Parameter
-    + `start_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `limit`: Limits number of balance changes to show from `end_time` to earlier
+    + `limit`: Limits the number of balance changes per page
         + int
         + optional
         + Defaults to 50 if not specified
@@ -767,6 +777,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 ```javascript
 {
     "result":
+        "success": true,
         "history": [
             {
                 "type": "trade",
@@ -828,6 +839,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "deposit_address": {
             "currency": "BTC",
@@ -859,6 +871,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "deposit_addresses": [
             {
@@ -904,6 +917,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "withdrawal": {
             "withdrawal_id": "393215d18749fa01987c43103712d61e",
@@ -930,6 +944,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "withdrawal": {
             "status": "pending",
@@ -967,18 +982,6 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
     Get All Withdrawals
 
 + Query Parameters
-    + `start_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `limit`: Limits number of withdrawals to show from `end_time` to earlier
-        + int
-        + optional
-        + Defaults to 50 if not specified
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
         + optional
@@ -987,10 +990,15 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
         + enum[`pending`, `completed`]
         + optional
         + Returns all status if not specified
+    + `limit`: Limits number of withdrawals per page
+        + int
+        + optional
+        + Defaults to 50 if not specified
 
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "withdrawals": [
             {
@@ -1041,6 +1049,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "deposits": [
             {
@@ -1081,23 +1090,11 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
     Get All Deposits
 
 + Query Parameters
-    + `start_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `limit`: Limits number of deposits to show from `end_time` to earlier
-        + int
-        + optional
-        + Defaults to 50 if not specified
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
         + optional
         + Returns all currencies if not specified
-    + `limit`: Limits number of withdrawals to show
+    + `limit`: Limits the number of withdrawals per page
         + int
         + optional
         + Returns most recent 50 deposits if not specified
@@ -1105,6 +1102,7 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 + [Success] Response 200 (application/json)
 ```javascript
 {
+    "success": true,
     "result": {
         "deposits": [
             {

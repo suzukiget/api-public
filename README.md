@@ -57,7 +57,6 @@ Response headers:
 Link: <https://api.cobinhood.com/v1/trading/trades?limit=30&page=1>; rel="first",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=6&before=cGFnZTZkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="prev",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=8&before=cGFnZThkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="next",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=15>; rel="last"
 X-Total-Count: 431
 ```
-
 The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades. 
 
 # System Module - Authentication Not Required
@@ -185,7 +184,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `size`: The aggregated total amount in the price group
     + string
-+ `count`: The number of orders within current price range 
++ `count`: The number of orders within current price range
     + string
     + e.g. when `precision=2`,  4137.181 and 4137.1837 would both fall into price group 4137.18
 
@@ -240,7 +239,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
     Returns most recent trades for the specified trading pair
 
-+ Path Parameters 
++ Path Parameters
     + `trading_pair_id`
         + enum[`BTC-USDT`, `...`]
         + required
@@ -818,7 +817,12 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `timestamp`: Unix timestamp in milliseconds
     + int
-+ `trade`: The 
++ `trade_id`: Trade ID
+    + string
++ `deposit_id`: Deposit ID
+    + string
++ `withdrawal_id`: Withdrawal ID
+    + string
 
 ### Generate New Deposit Address
 `/v1/wallet/deposit_addresses [POST]`
@@ -1297,7 +1301,6 @@ After receiving the response, you will receive a snapshot of the ticker,
           ...
         ]
 }
-
 ```
 + `CHANNEL_ID`: Channel ID
     + string

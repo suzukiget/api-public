@@ -361,6 +361,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         "order": {
             "order_id": "37f550a202aa6a3fe120f420637c894c",
             "trading_pair_id": "BTC-USDT",
+            "status": "open",
             "side": "buy",
             "type": "limit",
             "price": "5000.01",
@@ -375,6 +376,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `trading_pair_id`: Trading pair ID
     + enum[`BTC-USDT`, ...]
++ `status`: Order status
+    + enum[`received`, `open`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -459,6 +462,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
             {
                 "trading_pair_id": "BTC-USDT",
                 "order_id": "37f550a202aa6a3fe120f420637c894c",
+                "status": "open",
                 "side": "buy",
                 "type": "limit",
                 "price": "5000.01000000",
@@ -475,6 +479,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + enum[`BTC-USDT`, ...]
 + `order_id`: Order ID
     + string
++ `status`: Order status
+    + enum[`received`, `open`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -524,6 +530,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         "order": {
             "trading_pair_id": "BTC-USDT",
             "order_id": "37f550a202aa6a3fe120f420637c894c",
+            "status": "open",
             "side": "buy",
             "type": "limit",
             "price": "5000.01000000",
@@ -537,6 +544,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + enum[`BTC-USDT`, ...]
 + `order_id`: Order ID
     + string
++ `status`: Order status
+    + enum[`received`, `open`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -604,10 +613,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
 ```
 + `trading_pair_id`: Trading pair ID
     + enum[`BTC-USDT`, ...]
-+ `status`: Order status
-    + enum[`canceled`, `closed`]
 + `order_id`: Order ID
     + string
++ `status`: Order status
+    + enum[`canceled`, `closed`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -765,14 +774,14 @@ The `Link` header contains a list of links that direct to the first, previous, n
     Get balance history for the current user
 
 + Query Parameter
-    + `limit`: Limits the number of balance changes per page
-        + int
-        + optional
-        + Defaults to 50 if not specified
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
         + optional
         + returns history of all currencies if not given
+    + `limit`: Limits the number of balance changes per page
+        + int
+        + optional
+        + Defaults to 50 if not specified
 
 + [Success] Response 200 (application/json)
 ```javascript
@@ -953,6 +962,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
     "success": true,
     "result": {
         "withdrawal": {
+            "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
             "status": "pending",
             "created_at": 1504459805123,
             "completed_at": 1504459914233,
@@ -965,6 +975,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
++ `withdrawal_id`: Withdrawal ID
+    + string
 + `status`: Status of the withdrawal request
     + enum[`pending`, `completed`]
 + `created_at`: Timestamp of withdrawal creation in milliseconds
@@ -1057,18 +1069,15 @@ The `Link` header contains a list of links that direct to the first, previous, n
 {
     "success": true,
     "result": {
-        "deposits": [
-            {
-                "deposit_id": "62056df2d4cf8fb9b15c7238b89a1438",
-                "created_at": 1504459805123,
-                "completed_at": 1504459914233,
-                "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-                "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
-                "currency": "BTC",
-                "amount": "0.021",
-                "fee": "0.0003"
-            },
-            ...
+        "deposit": {
+            "deposit_id": "62056df2d4cf8fb9b15c7238b89a1438",
+            "created_at": 1504459805123,
+            "completed_at": 1504459914233,
+            "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
+            "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
+            "currency": "BTC",
+            "amount": "0.021",
+            "fee": "0.0003"
         }
     }
 }

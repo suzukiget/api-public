@@ -58,7 +58,7 @@ Link: <https://api.cobinhood.com/v1/trading/trades?limit=30&page=1>; rel="first"
 X-Total-Count: 431
 ```
 
-The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades. 
+The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades. 
 
 # System Module - Authentication Not Required
 
@@ -1155,7 +1155,7 @@ followed by any trade that occurs at COBINHOOD.
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Response**
 ```javascript
@@ -1169,7 +1169,7 @@ followed by any trade that occurs at COBINHOOD.
 + `CHANNEL_ID`: The channel ID for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Snapshot / Update**
 ```javascript
@@ -1209,7 +1209,7 @@ followed by updates upon any changes to the book.
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Response**
 ```javascript
@@ -1223,7 +1223,7 @@ followed by updates upon any changes to the book.
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Snapshot / Update**
 ```javascript
@@ -1259,7 +1259,7 @@ After receiving the response, you will receive a snapshot of the ticker,
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 
 **Response**
@@ -1274,7 +1274,7 @@ After receiving the response, you will receive a snapshot of the ticker,
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Snapshot / Update**
 ```javascript
@@ -1338,7 +1338,7 @@ timeframe interval are emitted.
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 + `TIMEFRAME`: Timespan granularity
     + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
 
@@ -1355,7 +1355,7 @@ timeframe interval are emitted.
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 + `TIMEFRAME`: Timespan granularity
     + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
 

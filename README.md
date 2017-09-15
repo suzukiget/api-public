@@ -1278,19 +1278,26 @@ After receiving the response, you will receive a snapshot of the ticker,
 
 **Snapshot / Update**
 ```javascript
-[
-  CHANNEL_ID,
-  BID,
-  BID_SIZE,
-  ASK,
-  ASK_SIZE,
-  DAILY_CHANGE,
-  DAILY_CHANGE_PERC,
-  LAST_PRICE,
-  VOLUME,
-  HIGH,
-  LOW
-]
+{
+    "channel_id": CHANNEL_ID,
+    "data":
+        [
+            [
+              BID,
+              BID_SIZE,
+              ASK,
+              ASK_SIZE,
+              DAILY_CHANGE,
+              DAILY_CHANGE_PERC,
+              LAST_PRICE,
+              VOLUME,
+              HIGH,
+              LOW
+            ],
+          ...
+        ]
+}
+
 ```
 + `CHANNEL_ID`: Channel ID
     + string
@@ -1376,4 +1383,46 @@ timeframe interval are emitted.
 + `LOW`: Lowest price during the time frame
     + string
 + `VOL`:  Trading volume of the time frame
+    + string
+
+### Ping/Pong
+
+Send `ping` to test connection
+
+**Request**
+```javascript
+{
+  "action": 'ping',
+}
+```
+
+**Response**
+```javascript
+{
+  "event": "pong",
+}
+```
+
+### Unsubscribe
+
+Send unsubscribe action to unsubscribe channel
+
+**Request**
+```javascript
+{
+  "action": 'unsubscribe',
+  "channel_id": CHANNEL_ID
+}
+```
++ `CHANNEL_ID`: The channel id for event type
+    + string
+
+**Response**
+```javascript
+{
+  "event": 'unsubscribed',
+  "channel_id": CHANNEL_ID
+}
+```
++ `CHANNEL_ID`: The channel id for event type
     + string

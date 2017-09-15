@@ -1153,7 +1153,7 @@ followed by any trade that occurs at COBINHOOD.
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Response**
 ```javascript
@@ -1167,7 +1167,7 @@ followed by any trade that occurs at COBINHOOD.
 + `CHANNEL_ID`: The channel ID for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Snapshot / Update**
 ```javascript
@@ -1207,7 +1207,7 @@ followed by updates upon any changes to the book.
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Response**
 ```javascript
@@ -1221,7 +1221,7 @@ followed by updates upon any changes to the book.
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Snapshot / Update**
 ```javascript
@@ -1257,7 +1257,7 @@ After receiving the response, you will receive a snapshot of the ticker,
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 
 **Response**
@@ -1272,7 +1272,7 @@ After receiving the response, you will receive a snapshot of the ticker,
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
 **Snapshot / Update**
 ```javascript
@@ -1329,7 +1329,7 @@ timeframe interval are emitted.
 }
 ```
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 + `TIMEFRAME`: Timespan granularity
     + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
 
@@ -1346,7 +1346,7 @@ timeframe interval are emitted.
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USD`, ...]
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 + `TIMEFRAME`: Timespan granularity
     + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
 

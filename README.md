@@ -545,6 +545,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `size`: Base amount
     + string
++ `filled_size`: Amount filled in current order
+    + string
 + `timestamp`: Order timestamp in milliseconds
     + int
 

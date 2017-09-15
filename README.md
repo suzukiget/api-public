@@ -1139,6 +1139,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
 # WebSocket Public Channels - Authentication Not Required
 
+All parameter in the WebSocket api is string format.
+
 ### Trades
 
 After receiving the response, you will start receiving recent trade,
@@ -1364,7 +1366,7 @@ timeframe interval are emitted.
 + `CHANNEL_ID`: Channel ID
     + string
 + `TIME`: Timestamp in milliseconds
-    + int
+    + string
 + `OPEN`: First price during the time frame
     + string
 + `CLOSE`: Last price during the time frame

@@ -57,7 +57,7 @@ Response headers:
 Link: <https://api.cobinhood.com/v1/trading/trades?limit=30&page=1>; rel="first",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=6&before=cGFnZTZkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="prev",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=8&before=cGFnZThkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="next",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=15>; rel="last"
 X-Total-Count: 431
 ```
-The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades. 
+The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades.
 
 # System Module - Authentication Not Required
 
@@ -318,33 +318,33 @@ The `Link` header contains a list of links that direct to the first, previous, n
 ```javascript
 {
     "success": true,
-	"result": {
-	    "candles": [
-	        {
-	            "timestamp": 1504459805123,
-	            "open": "4378.6",
-	            "close": "4379.0",
-	            "high": "4379.0",
-	            "low": "4378.3",
-	            "volume": "23.91460172"
-	        },
-	        ...
-	    ]
-	}
+    "result": {
+        "candles": [
+            {
+                "timestamp": 1504459805123,
+                "open": "4378.6",
+                "close": "4379.0",
+                "high": "4379.0",
+                "low": "4378.3",
+                "volume": "23.91460172"
+            },
+            ...
+        ]
+    }
 }
 ```
 + `timestamp`: Time of candlestick, Unix time in milliseconds
-	+ int
+    + int
 + `open`: The open (first trade) price during the interval
-	+ string
+    + string
 + `close`: Closing (last trade) price during the interval
-	+ string
+    + string
 + `high`: The highest price during the interval
-	+ string
+    + string
 + `low`: The lowest  price during the interval
-	+ string
+    + string
 + `volume`: Volume of trading activity during the interval
-	+ string
+    + string
 
 # Trading Module - Authentication Required
 
@@ -1336,17 +1336,17 @@ After receiving the response, you will receive a snapshot of the ticker,
 + `LOW`: Daily low
     + string
 
-### Chart
+### Candles
 
-After receiving the response, you will receive a snapshot of the chart data,
-followed by updates upon any changes to the chart. Updates to the most recent
+After receiving the response, you will receive a snapshot of the candles data,
+followed by updates upon any changes to the candles. Updates to the most recent
 timeframe interval are emitted.
 
 **Request**
 ```javascript
 {
   "action": 'subscribe',
-  "type": 'chart',
+  "type": 'candles',
   "trading_pair_id": TRADING_PAIR_ID,
   "timeframe": TIMEFRAME
 }
@@ -1360,7 +1360,7 @@ timeframe interval are emitted.
 ```javascript
 {
   "event": "subscribed",
-  "type": "chart",
+  "type": "candles",
   "channel_id": CHANNEL_ID,
   "trading_pair_id": TRADING_PAIR_ID,
   "timeframe": TIMEFRAME

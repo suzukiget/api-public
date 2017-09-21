@@ -259,10 +259,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
             {
                 "trading_pair_id": "BTC-USDT",
                 "trade_id": "09619448e48a3bd73d493a4194f9020b",
-                "order_ids": [
-                    "c7d4b777d9034fdcacf955d940284177",
-                    ...
-                ],
+                "maker_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
+                "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
                 "price": "10.00000000",
                 "size": "0.01000000",
                 "side": "buy"
@@ -277,8 +275,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `trade_id`: Trade ID
     + string
-+ `order_ids`: ID of orders that made the trade
-    + array[string]
++ `maker_order_id`: ID of maker order
+    + string
++ `taker_order_id`: ID of taker order
+    + string
 + `price`: Quote price
     + string
 + `size`: Base amount
@@ -377,7 +377,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `trading_pair_id`: Trading pair ID
     + enum[`BTC-USDT`, ...]
 + `status`: Order status
-    + enum[`received`, `open`]
+    + enum[`received`, `open`, `canceled`, `closed`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -410,10 +410,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
             {
                 "trading_pair_id": "BTC-USDT",
                 "trade_id": "09619448e48a3bd73d493a4194f9020b",
-                "order_ids": [
-                    "c7d4b777d9034fdcacf955d940284177",
-                    ...
-                ],
+                "maker_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
+                "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
                 "price": "10.00000000",
                 "size": "0.01000000",
                 "side": "buy"
@@ -428,8 +426,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `trade_id`: Trade ID
     + string
-+ `order_ids`: ID of orders that made the trade
-    + array[string]
++ `maker_order_id`: ID of maker order
+    + string
++ `taker_order_id`: ID of taker order
+    + string
 + `price`: Quote price
     + string
 + `size`: Base amount
@@ -480,7 +480,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `order_id`: Order ID
     + string
 + `status`: Order status
-    + enum[`received`, `open`]
+    + enum[`open`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -545,7 +545,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `order_id`: Order ID
     + string
 + `status`: Order status
-    + enum[`received`, `open`]
+    + enum[`open`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type
@@ -648,10 +648,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
         "trade": {
             "trading_pair_id": "BTC-USDT",
             "trade_id": "09619448e48a3bd73d493a4194f9020b",
-            "order_ids": [
-                "37f550a202aa6a3fe120f420637c894c",
-                ...
-            ],
+            "maker_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
+            "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
             "price": "10.00000000",
             "size": "0.01000000",
             "side": "buy"
@@ -664,8 +662,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `trade_id`: Trade ID
     + string
-+ `order_ids`: ID of orders that made the trade
-    + array[string]
++ `maker_order_id`: ID of maker order
+    + string
++ `taker_order_id`: ID of taker order
+    + string
 + `price`: Quote price
     + string
 + `size`: Base amount
@@ -698,10 +698,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
             {
                 "trading_pair_id": "BTC-USDT",
                 "trade_id": "09619448e48a3bd73d493a4194f9020b",
-                "order_ids": [
-                    "c7d4b777d9034fdcacf955d940284177",
-                    ...
-                ],
+                "maker_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
+                "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
                 "price": "10.00000000",
                 "size": "0.01000000",
                 "side": "buy"
@@ -716,8 +714,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `trade_id`: Trade ID
     + string
-+ `order_ids`: ID of orders that made the trade
-    + array[string]
++ `maker_order_id`: ID of maker order
+    + string
++ `taker_order_id`: ID of taker order
+    + string
 + `price`: Quote price
     + string
 + `size`: Base amount

@@ -1188,9 +1188,20 @@ followed by any trade that occurs at COBINHOOD.
 
 **Snapshot / Update**
 ```javascript
+//snapshot
 {
     "channel_id": CHANNEL_ID,
-    "data":
+    "snapshot":
+        [
+          [TRADE_ID, TIME, PRICE, AMOUNT, SIDE],
+          ...
+        ]
+}
+
+//update
+{
+    "channel_id": CHANNEL_ID,
+    "update":
         [
           [TRADE_ID, TIME, PRICE, AMOUNT, SIDE],
           ...
@@ -1242,9 +1253,20 @@ followed by updates upon any changes to the book.
 
 **Snapshot / Update**
 ```javascript
+//snapshot
 {
     "channel_id": CHANNEL_ID,
-    "data":
+    "snapshot":
+        [
+          [PRICE, COUNT, AMOUNT],
+          ...
+        ]
+}
+
+//update
+{
+    "channel_id": CHANNEL_ID,
+    "update":
         [
           [PRICE, COUNT, AMOUNT],
           ...
@@ -1293,9 +1315,31 @@ After receiving the response, you will receive a snapshot of the ticker,
 
 **Snapshot / Update**
 ```javascript
+//snapshot
 {
     "channel_id": CHANNEL_ID,
-    "data":
+    "snapshot":
+        [
+            [
+              BID,
+              BID_SIZE,
+              ASK,
+              ASK_SIZE,
+              DAILY_CHANGE,
+              DAILY_CHANGE_PERC,
+              LAST_PRICE,
+              VOLUME,
+              HIGH,
+              LOW
+            ],
+          ...
+        ]
+}
+
+//update
+{
+    "channel_id": CHANNEL_ID,
+    "update":
         [
             [
               BID,
@@ -1375,9 +1419,20 @@ timeframe interval are emitted.
 
 **Snapshot / Update**
 ```javascript
+//snapshot
 {
     "channel_id": CHANNEL_ID,
-    "data":
+    "snapshot":
+        [
+          [TIME, OPEN, CLOSE, HIGH, LOW, VOL],
+          ...
+        ]
+}
+
+//update
+{
+    "channel_id": CHANNEL_ID,
+    "update":
         [
           [TIME, OPEN, CLOSE, HIGH, LOW, VOL],
           ...

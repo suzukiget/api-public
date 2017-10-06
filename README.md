@@ -1258,7 +1258,7 @@ followed by updates upon any changes to the book.
     "channel_id": CHANNEL_ID,
     "snapshot":
         [
-          [PRICE, COUNT, AMOUNT],
+          [PRICE, COUNT, AMOUNT, SIDE],
           ...
         ]
 }
@@ -1268,7 +1268,7 @@ followed by updates upon any changes to the book.
     "channel_id": CHANNEL_ID,
     "update":
         [
-          [PRICE, COUNT, AMOUNT],
+          [PRICE, COUNT, AMOUNT, SIDE],
           ...
         ]
 }
@@ -1281,6 +1281,8 @@ followed by updates upon any changes to the book.
     + string
 + `AMOUNT`: Total amount
     + string
++ `SIDE`: The order side
+    + enum[`buy`, `sell`]
 
 ### Ticker
 

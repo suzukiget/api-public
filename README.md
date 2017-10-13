@@ -377,7 +377,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `trading_pair_id`: Trading pair ID
     + enum[`BTC-USDT`, ...]
 + `status`: Order status
-    + enum[`received`, `open`, `canceled`, `closed`]
+    + enum[`received`, `open`, `canceled`, `partially-filled`, `filled`]
 + `side`: Order side
     + enum[`buy`, `sell`]
 + `type`: Order type

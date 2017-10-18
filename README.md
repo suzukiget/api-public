@@ -652,7 +652,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
             "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
             "price": "10.00000000",
             "size": "0.01000000",
-            "side": "buy"
+            "side": "bid"
             "timestamp": 1504459805123
         }
     }

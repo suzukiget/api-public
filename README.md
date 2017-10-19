@@ -641,7 +641,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + required
         + e.g. 09619448-e48a-3bd7-3d49-3a4194f9020b
 
-+ [Success] Response 200 (application/json) if <trade\_id> is valid and found a trade
++ [Success] Response 200 (application/json)
 ```javascript
 {
     "success": true,
@@ -658,15 +658,6 @@ The `Link` header contains a list of links that direct to the first, previous, n
         }
     }
 }
-```
-+ [Success] Response 200 (application/json) if <trade\_id> is valid but not found anything
-```javascript
-{
-    "success": true,
-    "result": {
-    }
-}
-```
 + `trading_pair_id`: Trading pair ID
     + string
 + `trade_id`: Trade ID

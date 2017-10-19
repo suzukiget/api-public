@@ -639,22 +639,31 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + `trade_id`: Trading ID
         + string
         + required
+        + e.g. 09619448-e48a-3bd7-3d49-3a4194f9020b
 
-+ [Success] Response 200 (application/json)
++ [Success] Response 200 (application/json) if <trade\_id> is valid and found a trade
 ```javascript
 {
     "success": true,
     "result": {
         "trade": {
             "trading_pair_id": "BTC-USDT",
-            "trade_id": "09619448e48a3bd73d493a4194f9020b",
-            "maker_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
-            "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
+            "trade_id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
+            "maker_order_id": "54c692b3-c0ad-514b-cc52-7fbcc4d29e6f",
+            "taker_order_id": "c7d4b777-d903-4fdc-acf9-55d940284177",
             "price": "10.00000000",
             "size": "0.01000000",
             "maker_side": "bid",
             "timestamp": 1504459805123
         }
+    }
+}
+```
++ [Success] Response 200 (application/json) if <trade\_id> is valid but not found anything
+```javascript
+{
+    "success": true,
+    "result": {
     }
 }
 ```
@@ -670,10 +679,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `size`: Base amount
     + string
-+ `side`: Side of the taker
-    + enum[`buy`, `sell`]
++ `maker_side`: Side of the taker
+    + enum[`ask`, `bid`]
 + `timestamp`: Closed timestamp in milliseconds
-    + int
+    + int64
 
 ### Get Trade History
 `/v1/trading/trades [GET]`

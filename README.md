@@ -92,7 +92,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-+ `system_phase`: System Phase
++ `phase`: System Phase
     + enum[`open_beta`, `production_online`]
 
 # Market Module - Authentication Not Required

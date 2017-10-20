@@ -649,8 +649,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
         "trade": {
             "trading_pair_id": "BTC-USDT",
             "trade_id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
-            "maker_order_id": "54c692b3-c0ad-514b-cc52-7fbcc4d29e6f",
-            "taker_order_id": "c7d4b777-d903-4fdc-acf9-55d940284177",
+            "ask_order_id": "54c692b3-c0ad-514b-cc52-7fbcc4d29e6f",
+            "bid_order_id": "c7d4b777-d903-4fdc-acf9-55d940284177",
             "price": "10.00000000",
             "size": "0.01000000",
             "maker_side": "bid",
@@ -673,7 +673,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `maker_side`: Side of the taker
     + enum[`ask`, `bid`]
 + `timestamp`: Closed timestamp in milliseconds
-    + int64
+    + int
 
 ### Get Trade History
 `/v1/trading/trades [GET]`
@@ -714,9 +714,9 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `trade_id`: Trade ID
     + string
-+ `bid_order_id`: ID of maker order
++ `bid_order_id`: ID of ask order
     + string
-+ `ask_order_id`: ID of taker order
++ `ask_order_id`: ID of bid order
     + string
 + `price`: Quote price
     + string

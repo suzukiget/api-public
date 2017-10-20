@@ -78,6 +78,23 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `time`: Server Unix timestamp in milliseconds
     + int
 
+### Get System Phase
+`/v1/system/phase [GET]`
+
+    Get system phase
+
++ [Success] Response 200 (application/json)
+```javascript
+{
+    "success": true,
+    "result": {
+        "system_phase": "production_online"
+    }
+}
+```
++ `system_phase`: System Phase
+    + enum[`open_beta`, `production_online`]
+
 # Market Module - Authentication Not Required
 
 ### Get All Currencies

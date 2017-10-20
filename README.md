@@ -88,7 +88,9 @@ The `Link` header contains a list of links that direct to the first, previous, n
 {
     "success": true,
     "result": {
-        "system_phase": "production_online"
+        "system": {
+            "phase": "production_online"
+        }
     }
 }
 ```

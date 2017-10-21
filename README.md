@@ -663,26 +663,15 @@ The `Link` header contains a list of links that direct to the first, previous, n
 {
     "success": true,
     "result": {
-        "trade": {
-            "trading_pair_id": "BTC-USDT",
-            "trade_id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
-            "ask_order_id": "54c692b3-c0ad-514b-cc52-7fbcc4d29e6f",
-            "bid_order_id": "c7d4b777-d903-4fdc-acf9-55d940284177",
-            "price": "10.00000000",
-            "size": "0.01000000",
-            "maker_side": "bid",
-            "timestamp": 1504459805123
-        }
+        "trade_id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
+        "price": "10.00000000",
+        "size": "0.01000000",
+        "maker_side": "bid",
+        "timestamp": 1504459805123
     }
 }
 ```
-+ `trading_pair_id`: Trading pair ID
-    + string
 + `trade_id`: Trade ID
-    + string
-+ `maker_order_id`: ID of maker order
-    + string
-+ `taker_order_id`: ID of taker order
     + string
 + `price`: Quote price
     + string

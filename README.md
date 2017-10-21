@@ -651,7 +651,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 ### Get Trade
 `/v1/trading/trades/<trade_id> [GET]`
 
-    Get trade information
+    Get trade information. A user only can get their own trade.
 
 + Path Parameters
     + `trade_id`: Trading ID

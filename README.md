@@ -266,7 +266,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + int
         + optional
         + Defaults to 50 if not specified
-        + Maxomum: 50
+        + Maximum: 50
 
 + [Success] Response 200 (application/json)
 ```javascript

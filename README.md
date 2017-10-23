@@ -1261,21 +1261,31 @@ followed by updates upon any changes to the book.
 //snapshot
 {
     "channel_id": CHANNEL_ID,
-    "snapshot":
-        [
-          [PRICE, COUNT, AMOUNT, SIDE],
-          ...
+    "snapshot":  {
+        "bids": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ],
+        "asks": [
+            [ PRICE, SIZE, COUNT ],
+            ...
         ]
+    }
 }
 
 //update
 {
     "channel_id": CHANNEL_ID,
-    "update":
-        [
-          [PRICE, COUNT, AMOUNT, SIDE],
-          ...
+    "update":  {
+        "bids": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ],
+        "asks": [
+            [ PRICE, SIZE, COUNT ],
+            ...
         ]
+    }
 }
 ```
 + `CHANNEL_ID`: Channel ID
@@ -1284,10 +1294,8 @@ followed by updates upon any changes to the book.
     + string
 + `COUNT`: Order number
     + string
-+ `AMOUNT`: Total amount
++ `SIZE`: Total amount
     + string
-+ `SIDE`: The order side
-    + enum[`buy`, `sell`]
 
 ### Ticker
 
@@ -1327,19 +1335,15 @@ After receiving the response, you will receive a snapshot of the ticker,
     "channel_id": CHANNEL_ID,
     "snapshot":
         [
-            [
-              BID,
-              BID_SIZE,
-              ASK,
-              ASK_SIZE,
-              DAILY_CHANGE,
-              DAILY_CHANGE_PERC,
-              LAST_PRICE,
-              VOLUME,
-              HIGH,
-              LOW
-            ],
-          ...
+          LAST_TRADE_ID,
+          PRICE,
+          HIGHEST_BID,
+          LOWEST_ASK,
+          24H_VOLUME,
+          24H_HIGH,
+          24H_LOW,
+          24H_OPEN,
+          TIME_STAMP,
         ]
 }
 
@@ -1348,48 +1352,40 @@ After receiving the response, you will receive a snapshot of the ticker,
     "channel_id": CHANNEL_ID,
     "update":
         [
-            [
-              BID,
-              BID_SIZE,
-              ASK,
-              ASK_SIZE,
-              DAILY_CHANGE,
-              DAILY_CHANGE_PERC,
-              LAST_PRICE,
-              VOLUME,
-              HIGH,
-              LOW
-            ],
-          ...
+          LAST_TRADE_ID,
+          PRICE,
+          HIGHEST_BID,
+          LOWEST_ASK,
+          24H_VOLUME,
+          24H_HIGH,
+          24H_LOW,
+          24H_OPEN,
+          TIME_STAMP,
         ]
 }
 ```
 + `CHANNEL_ID`: Channel ID
     + string
-+ `BID`: Price of last highest bid
++ `LAST_TRADE_ID`: Latest trade ID
     + string
-+ `BID_SIZE`: Size of the last highest bid
++ `PRICE`: Latest trade price
     + string
-+ `ASK`: Price of last lowest ask
++ `HIGHEST_BID`: Best bid price in current order book
     + string
-+ `ASK_SIZE`: Size of the last lowest ask
++ `LOWEST_ASK`: Best ask price in current order book
     + string
-+ `DAILY_CHANGE`: Amount that the last price has changed since yesterday
++ `24H_VOLUME`: Trading volume of the last 24 hours
     + string
-+ `DAILY_CHANGE_PERC`: Amount that the price has changed expressed in percentage terms
++ `24H_LOW`: Lowest trade price of the last 24 hours
     + string
-+ `LAST_PRICE`: Price of the last trade
++ `24H_HIGH`: Highest trade price of the last 24 hours
     + string
-+ `VOLUME`: Daily volume
-    + string
-+ `HIGH`: Daily high
-    + string
-+ `LOW`: Daily low
++ `TIME_STAMP`: Ticker timestamp in milliseconds
     + string
 
-### Candles
+### Candle
 
-After receiving the response, you will receive a snapshot of the candles data,
+After receiving the response, you will receive a snapshot of the candle data,
 followed by updates upon any changes to the candles. Updates to the most recent
 timeframe interval are emitted.
 
@@ -1431,7 +1427,7 @@ timeframe interval are emitted.
     "channel_id": CHANNEL_ID,
     "snapshot":
         [
-          [TIME, OPEN, CLOSE, HIGH, LOW, VOL],
+          [TIME_STAMP, OPEN, CLOSE, HIGH, LOW, VOL],
           ...
         ]
 }
@@ -1441,14 +1437,14 @@ timeframe interval are emitted.
     "channel_id": CHANNEL_ID,
     "update":
         [
-          [TIME, OPEN, CLOSE, HIGH, LOW, VOL],
+          [TIME_STAMP, OPEN, CLOSE, HIGH, LOW, VOL],
           ...
         ]
 }
 ```
 + `CHANNEL_ID`: Channel ID
     + string
-+ `TIME`: Timestamp in milliseconds
++ `TIME_STAMP`: Timestamp in milliseconds
     + string
 + `OPEN`: First price during the time frame
     + string

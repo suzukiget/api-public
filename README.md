@@ -1198,7 +1198,7 @@ followed by any trade that occurs at COBINHOOD.
     "channel_id": CHANNEL_ID,
     "snapshot":
         [
-          [TRADE_ID, TIME, PRICE, AMOUNT, SIDE],
+          [TRADE_ID, TIME_STAMP, PRICE, SIZE, MAKER_SIDE],
           ...
         ]
 }
@@ -1208,7 +1208,7 @@ followed by any trade that occurs at COBINHOOD.
     "channel_id": CHANNEL_ID,
     "update":
         [
-          [TRADE_ID, TIME, PRICE, AMOUNT, SIDE],
+          [TRADE_ID, TIME_STAMP, PRICE, SIZE, MAKER_SIDE],
           ...
         ]
 }
@@ -1217,14 +1217,14 @@ followed by any trade that occurs at COBINHOOD.
     + string
 + `TRADE_ID`: Trade ID
     + string
-+ `TIME`: Trade timestamp in milliseconds
++ `TIME_STAMP`: Trade timestamp in milliseconds
     + string
 + `PRICE`: Trade quote price
     + string
-+ `AMOUNT`: Trade base amount
++ `SIZE`: Trade base amount
     + string
-+ `SIDE`: The order side
-    + enum[`buy`, `sell`]
++ `MAKER_SIDE`: The order side
+    + enum[`bid`, `ask`]
 
 ### Order book
 

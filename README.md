@@ -395,7 +395,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `status`: Order status
     + enum[`received`, `open`, `canceled`, `partially-filled`, `filled`]
 + `side`:  side
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `type`: Order type
     + enum[`market`, `limit`, `stop`, `stop-limit`]
 + `price`: Quote price
@@ -451,7 +451,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `size`: Base amount
     + string
 + `side`: Side of the taker
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `timestamp`: Closed timestamp in milliseconds
     + int
 
@@ -498,7 +498,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `status`: Order status
     + enum[`open`]
 + `side`: Order side
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `type`: Order type
     + enum[`market`, `limit`, `stop`, `stop-limit`]
 + `price`: Quote price
@@ -528,7 +528,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `trading_pair_id`: Trading pair ID
     + enum[`BTC-USDT`, ...]
 + `side`: Order side
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `type`: Order type
     + enum[`market`, `limit`, `stop`, `stop-limit`]
 + `price`: Quote price
@@ -563,7 +563,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `status`: Order status
     + enum[`open`]
 + `side`: Order side
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `type`: Order type
     + enum[`market`, `limit`, `stop`, `stop-limit`]
 + `price`: Quote price
@@ -634,7 +634,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `status`: Order status
     + enum[`canceled`, `closed`]
 + `side`: Order side
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `type`: Order type
     + enum[`market`, `limit`, `stop`, `stop-limit`]
 + `price`: Quote price
@@ -728,7 +728,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `size`: Base amount
     + string
 + `maker_side`: Side of the taker
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `timestamp`: Closed timestamp in milliseconds
     + int
 
@@ -1155,6 +1155,69 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `amount`: Deposit amount
     + string
 + `fee`: Transfer fee of the deposit
+    + string
+
+# WebSocket Authenticated Channels - Authentication Required
+
+COBINHOOD uses JWT for APIs that require authentication. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
+
+### Order
+
+**Request**
+```javascript
+{
+  "action": 'subscribe',
+  "type": 'order',
+}
+```
+
+**Response**
+```javascript
+{
+  "event": "subscribed",
+  "type": "order",
+  "channel_id": CHANNEL_ID,
+}
+```
++ `CHANNEL_ID`: The channel ID for event type
+    + string
+
+**Snapshot / Update**
+```javascript
+//update
+{
+    "channel_id": CHANNEL_ID,
+    "update":
+        [
+            ORDER_ID,
+            TRADING_PAIR_ID, 
+            STATUS, 
+            SIDE, 
+            TYPE,
+            PRICE,
+            SIZE,
+            FILLED_SIZE,
+            TIME_STAMP
+         ]
+}
+```
++ `ORDER_ID`: Order ID
+    + string
++ `TRADING_PAIR_ID`: Trading pair ID
+    + enum[`BTC-USDT`, ...]
++ `STATUS`: Order status
+    + enum[`received`, `open`, `canceled`, `closed`]
++ `SIDE`: Order side
+    + enum[`bid`, `ask`]
++ `TYPE`: Order type
+    + enum[`market`, `limit`, `stop`, `stop-limit`]
++ `PRICE`: Quote price
+    + string
++ `SIZE`: Base amount
+    + string
++ `FILLED_SIZE`: Amount filled in current order
+    + string
++ `TIME_STAMP`: Order timestamp in milliseconds
     + string
 
 # WebSocket Public Channels - Authentication Not Required

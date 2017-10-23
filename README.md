@@ -677,7 +677,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
 + `size`: Base amount
     + string
-+ `maker_side`: Side of the taker
++ `maker_side`: Side of the maker
     + enum[`ask`, `bid`]
 + `timestamp`: Closed timestamp in milliseconds
     + int

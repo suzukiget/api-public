@@ -277,11 +277,9 @@ The `Link` header contains a list of links that direct to the first, previous, n
             {
                 "trading_pair_id": "BTC-USDT",
                 "trade_id": "09619448e48a3bd73d493a4194f9020b",
-                "bid_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
-                "ask_order_id": "c7d4b777d9034fdcacf955d940284177",
                 "price": "10.00000000",
                 "size": "0.01000000",
-                "maker_side": "buy",
+                "maker_side": "bid",
                 "timestamp": 1504459805123
             },
             ...
@@ -302,7 +300,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `size`: Base amount
     + string
 + `maker_side`: Side of the taker
-    + enum[`buy`, `sell`]
+    + enum[`bid`, `ask`]
 + `timestamp`: Closed timestamp in milliseconds
     + int
 
@@ -396,7 +394,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + enum[`BTC-USDT`, ...]
 + `status`: Order status
     + enum[`received`, `open`, `canceled`, `partially-filled`, `filled`]
-+ `side`: Order side
++ `side`:  side
     + enum[`buy`, `sell`]
 + `type`: Order type
     + enum[`market`, `limit`, `stop`, `stop-limit`]

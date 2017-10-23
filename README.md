@@ -378,7 +378,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
             "order_id": "37f550a202aa6a3fe120f420637c894c",
             "trading_pair_id": "BTC-USDT",
             "status": "open",
-            "side": "buy",
+            "side": "bid",
             "type": "limit",
             "price": "5000.01",
             "size": "1.0100",
@@ -430,7 +430,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
                 "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
                 "price": "10.00000000",
                 "size": "0.01000000",
-                "side": "buy"
+                "side": "bid"
                 "timestamp": 1504459805123
             },
             ...
@@ -479,7 +479,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
                 "trading_pair_id": "BTC-USDT",
                 "order_id": "37f550a202aa6a3fe120f420637c894c",
                 "status": "open",
-                "side": "buy",
+                "side": "bid",
                 "type": "limit",
                 "price": "5000.01000000",
                 "size": "1.0100",
@@ -519,7 +519,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 ```javascript
 {
     "trading_pair_id": "BTC-USDT",
-    "side": "buy",
+    "side": "bid",
     "type": "limit",
     "price": "5000.01000000",
     "size": "1.0100"
@@ -547,7 +547,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
             "trading_pair_id": "BTC-USDT",
             "order_id": "37f550a202aa6a3fe120f420637c894c",
             "status": "open",
-            "side": "buy",
+            "side": "bid",
             "type": "limit",
             "price": "5000.01000000",
             "size": "1.0100",
@@ -615,7 +615,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
             {
                 "trading_pair_id": "BTC-USDT",
                 "order_id": "37f550a202aa6a3fe120f420637c894c",
-                "side": "buy",
+                "side": "bid",
                 "type": "limit",
                 "price": "5000.01000000",
                 "size": "1.0100",
@@ -707,7 +707,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
                 "ask_order_id": "c7d4b777d9034fdcacf955d940284177",
                 "price": "10.00000000",
                 "size": "0.01000000",
-                "maker_side": "buy",
+                "maker_side": "bid",
                 "timestamp": 1504459805123
             },
             ...

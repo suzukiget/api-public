@@ -6,6 +6,7 @@ language_tabs:
 
 toc_footers:
 - <a href='https://cobinhood.com'>COBINHOOD</a>
+- <a href='https://github.com/cobinhood/api-public/issues'>Report Issues</a>
 ---
 
 <aside class="notice">

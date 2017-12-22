@@ -294,6 +294,9 @@
                     <a href="#get-order-book" class="toc-h2 toc-link" data-title="Get Order Book">Get Order Book</a>
                   </li>
                   <li>
+                    <a href="#get-trading-statistics" class="toc-h2 toc-link" data-title="Get Trading Statistics">Get Trading Statistics</a>
+                  </li>
+                  <li>
                     <a href="#get-ticker" class="toc-h2 toc-link" data-title="Get Ticker">Get Ticker</a>
                   </li>
                   <li>
@@ -1150,6 +1153,25 @@ enum [<code>normal</code>, <code>warning</code>, <code>critical</code>]</p>
 <li>e.g. when <code>precision=2</code>,  4137.181 and 4137.1837 would both fall into price group 4137.18</li>
 </ul></li>
 </ul>
+<h2 id='get-trading-statistics'>Get Trading Statistics</h2><pre class="highlight plaintext"><code>{
+    "success": true,
+    "result": {
+        "BTC-USD": {
+            "id": "BTC-USD",
+            "latestPrice": "10005",
+            "lowestAsk": "10005",
+            "highestBid": "15200.1",
+            "baseVolume": "0.36255776",
+            "quoteVolume": "4197.431917146",
+            "isFrozen": false,
+            "high24hr": "16999.9",
+            "low24hr": "10000",
+            "percentChanged24hr": "-0.3417806461799593"
+        }
+    }
+}
+</code></pre>
+<p><code>/v1/market/trades [GET]</code></p>
 <h2 id='get-ticker'>Get Ticker</h2>
 <p><code>/v1/market/tickers/&lt;trading_pair_id&gt; [GET]</code></p>
 
@@ -2299,6 +2321,7 @@ enum [<code>normal</code>, <code>warning</code>, <code>critical</code>]</p>
         </span><span class="s2">"withdrawal_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
             </span><span class="p">{</span><span class="w">
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kihon's Bitcoin Wallet Address"</span><span class="w">
                 </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xbcd7defe48a19f758a1c1a9706e808072391bc20"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
             </span><span class="p">},</span><span class="w">
@@ -2326,6 +2349,11 @@ enum [<code>normal</code>, <code>warning</code>, <code>critical</code>]</p>
 
 <ul>
 <li>enum[<code>BTC</code>, ...]</li>
+</ul></li>
+<li><p><code>name</code>: A name to describe this withdrawal wallet address</p>
+
+<ul>
+<li>string</li>
 </ul></li>
 <li><p><code>address</code>: User withdrawal address</p>
 

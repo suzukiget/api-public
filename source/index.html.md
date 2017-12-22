@@ -593,6 +593,29 @@ The `Link` header contains a list of links that direct to the first, previous, n
     + string
     + e.g. when `precision=2`,  4137.181 and 4137.1837 would both fall into price group 4137.18
 
+## Get Trading Statistics
+
+```
+{
+    "success": true,
+    "result": {
+        "BTC-USD": {
+            "id": "BTC-USD",
+            "latestPrice": "10005",
+            "lowestAsk": "10005",
+            "highestBid": "15200.1",
+            "baseVolume": "0.36255776",
+            "quoteVolume": "4197.431917146",
+            "isFrozen": false,
+            "high24hr": "16999.9",
+            "low24hr": "10000",
+            "percentChanged24hr": "-0.3417806461799593"
+        }
+    }
+}
+```
+
+`/v1/market/trades [GET]`
 
 ## Get Ticker
 
@@ -1372,6 +1395,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         "withdrawal_addresses": [
             {
                 "currency": "BTC",
+		"name": "Kihon's Bitcoin Wallet Address"
                 "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
                 "created_at": 1504459805123
             },
@@ -1392,6 +1416,8 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
 + `currency`: Currency ID
     + enum[`BTC`, ...]
++ `name`: A name to describe this withdrawal wallet address
+    + string
 + `address`: User withdrawal address
     + string
 + `created_at`: Address creation time in milliseconds

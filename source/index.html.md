@@ -615,7 +615,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/market/trades [GET]`
+`/v1/market/stats [GET]`
 
 ## Get Ticker
 

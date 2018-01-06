@@ -990,7 +990,38 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `timestamp`: Order timestamp in milliseconds
     + int
 
+## Modify Order
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true
+}
+```
+
+`/v1/trading/orders/<order_id> [PUT]` [Authentication Required]
+
+    Modify a single order
+
++ Path Parameter
+    + `order_id`: Order ID
+        + string
+        + required
+
++ Query Parameters
+    + `trading_pair_id`: Trading pair ID
+        + enum[`BTC-USD`, `...`]
+        + required
+    + `price`:
+        + string
+        + required
+    + `size`:
+        + string
+        + required
+
 ## Cancel Order
+> [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true
@@ -1006,15 +1037,12 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + string
         + required
 
-+ [Success] Response 200 (application/json)
-
-
 ## Get Order History
 `/v1/trading/order_history [GET]` [Authentication Required]
 
     Returns order history for the current user
 
-> Query Parameters
++ Query Parameters
     + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USD`, `...`]
         + optional
@@ -1128,7 +1156,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/trading/trades [GET]` [Authenication Required]
+`/v1/trading/trades [GET]` [Authentication Required]
 
     Returns trade history for the current user
 

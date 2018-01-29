@@ -1708,6 +1708,10 @@ The `Link` header contains a list of links that direct to the first, previous, n
 + `fee`: Transfer fee of the deposit
     + string
 
+# WebSocket Endpoint
+
+wss://feed.cobinhood.com/ws
+
 # WebSocket Authenticated Channels
 
 COBINHOOD uses JWT for APIs that require authentication. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
@@ -1773,6 +1777,100 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
 + `FILLED_SIZE`: Amount filled in current order
     + string
 + `TIME_STAMP`: Order timestamp in milliseconds
+    + string
+
+## Place Order [Authentication Required]
+
+> **Request**
+
+```json
+{
+  "action": 'place_order',
+  "type": TYPE,
+  "trading_pair_id": TRADING_PAIR_ID,
+  "side": SIDE,
+  "price": PRICE,
+  "size": SIZE,
+}
+```
+
+> **Response**
+
+```json
+{
+  "event": "order_placed",
+  "type": TYPE,
+  "trading_pair_id": TRADING_PAIR_ID,
+  "side": SIDE,
+  "price": PRICE,
+  "size": SIZE,
+}
+
++ `TYPE`: The order type 
+    + enum[`market`, `limit`, `stop`]
++ `TRADING_PAIR_ID`: Subscribe trading pair ID
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
++ `SIDE`: The order side
+    + enum[`bid`, `ask`]
++ `PRICE`: Trade quote price
+    + string
++ `SIZE`: Trade base amount
+    + string
+
+## Cancel Order [Authentication Required]
+
+> **Request**
+
+```json
+{
+  "action": 'cancel_order',
+  "order_id": ORDER_ID,
+}
+```
+
+> **Response**
+
+```json
+{
+  "event": "order_canceled",
+  "order_id": ORDER_ID,
+}
+
++ `ORDER_ID`: The order id
+    + string
+
+## Modify Order [Authentication Required]
+
+> **Request**
+
+```json
+{
+  "action": 'modify_order',
+  "trading_pair_id": TRADING_PAIR_ID,
+  "type": 'modify'
+  "price": PRICE,
+  "size": SIZE,
+  "order_id": ORDER_ID,
+}
+```
+
+> **Response**
+
+```json
+{
+  "event": "order_modified",
+  "price": PRICE,
+  "size": SIZE,
+  "order_id": ORDER_ID,
+}
+
++ `TRADING_PAIR_ID`: Subscribe trading pair ID
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
++ `PRICE`: Trade quote price
+    + string
++ `SIZE`: Trade base amount
+    + string
++ `ORDER_ID`: The order id
     + string
 
 # WebSocket Public Channels
@@ -1858,8 +1956,9 @@ followed by updates upon any changes to the book.
 ```json
 {
   "action": 'subscribe',
-  "type": 'book',
+  "type": 'order-book',
   "trading_pair_id": TRADING_PAIR_ID
+  "precision": PRECISION
 }
 ```
 
@@ -1868,9 +1967,10 @@ followed by updates upon any changes to the book.
 ```json
 {
   "event": "subscribed",
-  "type": "book",
+  "type": "order-book",
   "channel_id": CHANNEL_ID,
   "trading_pair_id": TRADING_PAIR_ID
+  "precision": PRECISION      
 }
 ```
 
@@ -1921,6 +2021,8 @@ followed by updates upon any changes to the book.
 + `COUNT`: Order number
     + string
 + `SIZE`: Total amount
+    + string
++ `PRECISION`: The precision of the target orderbook. 
     + string
 
 ## Ticker
@@ -2133,3 +2235,31 @@ Send unsubscribe action to unsubscribe channel
     + string
 + `CHANNEL_ID`: The channel id for event type
     + string
+
+# WebSocket error code
+Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example: 
+
+```json
+{
+  "event": "error",
+  "code": 4001,
+  "message": "undefined_action"
+  "type": "ticker",
+  "trading_pair_id": "BTC-USD"
+}
+```
+
+## Error Code
+
++ `4000`: undefined_error. Unknown error.
++ `4001`: undefined_action. Request action is not defined.
++ `4002`: cannel_not_found. Cound't found a  channel according the request.
++ `4003`: subscribe_failed. Failed to subscribe a channel for specified request.
++ `4004`: unsubsribe_failed. Failed to unsubscribe a channel for specified request.
++ `4005`: invalid_payload. request is not avliable.
++ `4006`: not_authenticated. Calling a authorization required chanel, but request without authorization.   
++ `4007`: invalid_snapshot. Failed to get a snapshot. 
++ `4008`: place_order_failed. Failed to place a order.
++ `4009`: cancel_order_failed. Failed to cancel a order.
++ `4010`: modify_order_failed. Failed to modify a order.
+

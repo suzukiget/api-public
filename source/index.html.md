@@ -18,13 +18,9 @@ COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 
 COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com`
 
-RESTful API SandBox: `https://sandbox-api.cobinhood.com`
-
-WebSocket API SandBox: `wss://sandbox-feed.cobinhood.com`
-
 ## HTTP Request Headers
-`device_id`
-`nonce` for 'POST' 'UPDATE' 'DELETE'
+`nonce` for 'POST' 'UPDATE' 'DELETE'  
+`authorization`
 
 ## Timestamps
 All timestamps exchanged between client and server are based on server Unix UTC timestamp. Please refer to System Module for retrieving server timestamp.
@@ -32,12 +28,8 @@ All timestamps exchanged between client and server are based on server Unix UTC 
 ## Floating Point Values
 All floating point values in responses are encoded in `string` type to avoid loss of precision.
 
-## UUID String
-+ String
-+ e.g. "09619448-e48a-3bd7-3d49-3a4194f9020b"
-
 ## Authentication
-COBINHOOD uses JWT for APIs that require authentication. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
+COBINHOOD uses token for APIs that require authentication. Token header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
 
 ## Successful API Response
 
@@ -70,7 +62,7 @@ A successful response should have HTTP status codes ranging from 100 to 399, and
 An unsuccessful response would result in HTTP status codes ranging from 400 to 599, and a boolean `success` field with value `false`. If `success` is `false`, an `error` object member containing information that describes the error can be found in the root object:
 
 ## Rate-limiting
-All API requests are rate-limited at 10 requests/sec per user, and 50 requests/sec per IP address.
+All API requests are rate-limited.
 
 ## Pagination
 
@@ -79,17 +71,6 @@ All API requests are rate-limited at 10 requests/sec per user, and 50 requests/s
 ```
 https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 ```
-
-> Response headers:
-
-```
-Link: <https://api.cobinhood.com/v1/trading/trades?limit=30&page=1>; rel="first",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=6&before=cGFnZTZkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="prev",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=8&before=cGFnZThkdWRlaXRzanVzdGFuZXhhbXBsZXdoeXNvc2VyaW91c2NoaWxsCg==>; rel="next",<https://api.cobinhood.com/v1/trading/trades?limit=30&page=15>; rel="last"
-X-Total-Count: 431
-```
-
-For APIs that return large amounts of data, the response may need to be paginated, e.g. retrieving the trade history. When pagination is required, a `Link` field can be found in the headers. Take the trade history request as an example:
-
-The `Link` header contains a list of links that direct to the first, previous, next, and last pages of the paginated data. APIs that support pagination take a `limit` query parameter to indicate the page size. Clients should use `limit` to specify the number of entries per page, and use links provided in the response header to navigate through the paginated data. The header `X-Total-Count` indicates the total number of existing entries, in our case, 431 trades.
 
 # System
 
@@ -105,13 +86,16 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-+ `time`: Server Unix timestamp in milliseconds
-    + int
 
+`/v1/system/time [GET]`
+
+    Get the reference system time as Unix timestamp
+    
++ **Response**
+    + `time`: Server Unix timestamp in milliseconds
+        + int
+    
 ## Get System Information
-`/v1/system/info [GET]`
-
-    Get system information
 
 > [Success] Response 200 (application/json)
 
@@ -120,366 +104,21 @@ The `Link` header contains a list of links that direct to the first, previous, n
     "success": true,
     "result": {
     	"info": {
-            "phase": "production_online",
+            "phase": "production",
             "revision": "480bbd"
-	}
+	    }
     }
 }
 ```
-`/v1/system/time [GET]`
+`/v1/system/info [GET]`
 
-    Get the reference system time as Unix timestamp
-
-+ `phase`: System Phase
-    + enum[`open_beta`, `production_online`]
-+ `revision`: Revision number of the system deployment
-    + string
-
-
-## System Message Priority Enum
-> String
-> enum [`normal`, `warning`, `critical`]
-
-## Get System Message IDs
-> Query parameters
-    + `limit`: Limit the number of list.
-        + Optional
-        + Int
-        + The default value is 50 if not specified. Max limit is 200.
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "messages": [
-            {
-                "id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
-                "announce_time": 1504459805123,
-                "priority": "normal",
-                "subject": "..."
-            },
-            ...
-        ]
-    }
-}
-```
-
-`/v1/system/messages [GET]`
-
-    Get the list of latest system message IDs. This API only can get messages which have been announced.
-
-+ `id`: Message ID
-    + [UUID String](#uuid-string)
-+ `announce_time`: The time of announcement
-    + Int
-    + Milliseconds
-+ `priority`: The priority of this message
-    + [Priority Enum](#system-message-priority-enum)
-+ `subject`: The default subject of this message
-    + String
-
-## Get System Message
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "<message_id>": {
-            "<locale_enum>": {
-                "subject": "...",
-                "content": "..."
-            },
-            "en_us": {
-                "subject": "Hello",
-                "content": "..."
-            },
-            "zh_tw": {
-                "subject": "安安",
-                "content": "..."
-            },
-            ...
-        }
-    }
-}
-```
-
-`/v1/system/messages/<message_id> [GET]`
-
-    Get a system message. This API only can get messages which have been announced.
-
-+ `locale_enum`: The locale of this message. `locale_enum` must be replaced with one of enum.
-    + [Locale Enum](#locale-enum)
-+ `subject`: The subject of this locale message
-    + String
-+ `content`: The content of this locale message
-    + String
-
-+ Path Parameters
-    + `message_id`: Message ID
-        + Required
-        + [UUID String](#uuid-string)
-+ Query parameters
-    + `locale`: Specify the locale of this message.
-        + Optional
-        + [Locale Enum](#locale-enum)
-        + Return all locales if not specified.
-
-## Get System Message IDs [Admin]
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "messages": [
-            {
-                "id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
-                "announce_time": 1504459805123,
-                "priority": "normal",
-                "subject": "...",
-                "has_forwarded": false
-            },
-            ...
-        ]
-    }
-}
-```
-
-`/v1/admin/system/messages [GET]`
-
-    Get the list of system message IDs from the latest announcement. This API can get messages which have
-	not been announced yet. For example, now is 2017-10-24 18:00:00 and the time of latest announcement
-	is 2017-10-25 09:00:00. If the query parameter, announce_time, is empty string, the list of system
-	messages starts from 2017-10-25 09:00:00.
-
-+ Query parameters
-    + `announce_time`: Specify the time of announcement.
-        + Optional
-        + Int
-        + Milliseconds
-        + The default value is the latest announcement time if not specified.
-    + `limit`: Limit the number of list.
-        + Optional
-        + Int
-        + The default value is 50 if not specified. Max limit is 200.
-
-+ `id`: Message ID
-    + [UUID String](#uuid-string)
-+ `announce_time`: The time of announcement
-    + Int
-    + Milliseconds
-+ `priority`: The priority of this message
-    + [Priority Enum](#system-message-priority-enum)
-+ `subject`: The default subject of this message
-    + String
-+ `has_forwarded`: Have all locale messages been forwarded to the mail server?
-    + Bool
-
-## Get System Message [Admin]
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "<message_id>": {
-            "<locale_enum>": {
-                "subject": "Hello",
-                "content": "...",
-                "has_forwarded": false
-            },
-            "zh_tw": {
-                "subject": "安安",
-                "content": "...",
-                "has_forwarded": false
-            },
-            ...
-        }
-    }
-}
-```
-
-`/v1/admin/system/messages/<message_id> [GET]`
-
-    Get the system Locale messages
-
-+ Path Parameters
-    + `message_id`: Message ID
-        + Required
-        + [UUID String](#uuid-string)
-+ Query parameters
-    + `locale`: Specify the locale of this message.
-        + Optional
-        + [Locale Enum](#locale-enum)
-        + Return all locales if not specified.
-
-+ `locale_enum`: The locale of this message. `locale_enum` will be replaced with one of enum.
-    + [Locale Enum](#locale-enum)
-+ `subject`: The subject of this locale message
-    + String
-+ `content`: The content of this locale message
-    + String
-+ `has_forwarded`: Has this locale message been forwarded to the mail server?
-    + Bool
-
-
-## Create System Message [Admin]
-> Payload
-
-```json
-{
-    "announce_time": 1504459805123,
-    "priority": "normal",
-    "subject": "Hello World",
-    "locales": {
-        "<locale_enum>": {
-            "subject": "...",
-            "content": "..."
-        },
-        "en_us": {
-            "subject": "Hello",
-            "content": "..."
-        },
-        "zh_tw": {
-            "subject": "安安",
-            "content": "..."
-        },
-        ...
-    }
-}
-```
-
-`/v1/admin/system/messages [POST]`
-
-    Create a new system message. If now is 2017-10-24 18:00:00 and this API can't create messages which
-	annouce_time is before 17:55:00.
-
-+ `announce_time`: The time of announcement
-    + Required
-    + Int
-    + Milliseconds
-+ `priority`: The priority of this message
-    + Required
-    + [Priority Enum](#system-message-priority-enum)
-+ `subject`: The default subject of this message
-    + Required
-    + String
-+ `locale`: The locale of this message.
-    + Required
-+ `locale_enum`: The locale of this message. `locale_enum` must be replaced with one of enum.
-    + Required
-    + [Locale Enum](#locale-enum)
-+ `locale_enum -> subject`: The subject of this locale message
-    + Required
-    + String
-+ `content`: The content of this locale message
-    + Required
-    + String
-
-### Success
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "message_id": "09619448-e48a-3bd7-3d49-3a4194f9020b"
-    }
-}
-```
-
-+ `message_id`: Message ID
-    + [UUID String](#uuid-string)
-
-## Update System Message [Admin]
-> Payload
-
-```json
-{
-    "announce_time": 1504459805123,
-    "priority": "normal",
-    "subject": "Hello World",
-    "locales": {
-        "<locale_enum>" : {
-            "subject": "...",
-            "content": "..."
-        },
-        "zh_tw": {
-            "subject": "您好",
-            "content": "..."
-        }
-    }
-}
-```
-
-`/v1/admin/system/messages/<message_id> [PATCH]`
-
-    Update system message. If now is 2017-10-24 18:00:00 and this API can't update messages which original annouce_time is before 18:05:00.
-
-+ `id`: Message ID. It must be replaced with UUID.
-    + Optional
-    + [UUID String](#uuid-string)
-+ `announce_time`: The time of announcement
-    + Optional
-    + Int
-    + Milliseconds
-+ `priority`: The priority of this message
-    + Optional
-    + [Priority Enum](#system-message-priority-enum)
-+ `subject`: The default subject of this message
-    + Optional
-    + String
-+ `locale`: The locale of this message.
-    + Required
-+ `locale_enum`: The locale of this message. `locale_enum` must be replaced with one of enum.
-    + Optional
-    + [Locale Enum](#locale-enum)
-+ `locale_enum -> subject`: The subject of this locale message
-    + Optional
-    + String
-+ `content`: The content of this locale message
-    + Optional
-    + String
-
-### Success
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-    }
-}
-```
-
-## Delete System Message [Admin]
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-    }
-}
-```
-
-`/v1/admin/system/messages/<message_id> [DELETE]`
-
-    Delete a system message. If now is 2017-10-24 18:00:00 and this API can't delete messages which
-	annouce_time is before 18:05:00.
-
-+ Path Parameters
-    + `message_id`: Message ID
-        + Optional
-        + [UUID String](#uuid-string)
+    Get system information
+    
++ **Response**
+    + `phase`: System Phase
+        + enum[`production`]
+    + `revision`: Revision number of the system deployment
+        + string
 
 # Market
 
@@ -507,10 +146,11 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
     Returns info for all currencies available for trade
 
-+ `currency`: Currency ID
-    + (enum[`BTC`, `ETH`, ...])
-+ `min_unit`: Minimum size unit, all order sizes must be an integer multiple of this number
-    + string
++ **Response**
+    + `currency`: Currency ID
+        + (enum[`BTC`, `ETH`, ...])
+    + `min_unit`: Minimum size unit, all order sizes must be an integer multiple of this number
+        + string
 
 ## Get All Trading Pairs
 > [Success] Response 200 (application/json)
@@ -538,14 +178,15 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
     Get info for all trading pairs
 
-+ `id`: Trading pair ID
-    + enum[`BTC-USDT`, `ETH-USDT`, ...] (Base-Quote)
-+ `base_min_size`: Minimum amount of base
-    + string
-+ `base_max_size`: Maximum amount of base
-    + string
-+ `quote_increment`: Minimum quote currency increment
-    + string
++ **Response**
+    + `id`: Trading pair ID
+        + enum[`BTC-USDT`, `ETH-USDT`, ...] (Base-Quote)
+    + `base_min_size`: Minimum amount of base
+        + string
+    + `base_max_size`: Maximum amount of base
+        + string
+    + `quote_increment`: Minimum quote currency increment
+        + string
 
 ## Get Order Book
 > [Success] Response 200 (application/json)
@@ -572,30 +213,32 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
     Get order book for the trading pair containing all asks/bids
 
-+ Path Parameters
++ **Path Parameters**
     + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, `...`]
+        + enum[`BTC-USDT`, ...]
         + required
 
-+ Query parameters
++ **Query parameters**
     + `limit`: Limits number of entries of asks/bids list, beginning from the best price for both sides
         + int
         + optional
         + Defaults to 50 if not specified, if limit is `0`, it means to fetch the whole order book.
-
-+ `sequence`: A sequence number that is updated on each orderbook state change
-    + int
-+ `price`: Order price
-    + string
-+ `size`: The aggregated total amount in the price group
-    + string
-+ `count`: The number of orders within current price range
-    + string
-    + e.g. when `precision=2`,  4137.181 and 4137.1837 would both fall into price group 4137.18
+        
++ **Response**
+    + `sequence`: A sequence number that is updated on each orderbook state change
+        + int
+    + `price`: Order price
+        + string
+    + `size`: The aggregated total amount in the price group
+        + string
+    + `count`: The number of orders within current price range
+        + string
+        + e.g. when `precision=2`,  4137.181 and 4137.1837 would both fall into price group 4137.18
 
 ## Get Trading Statistics
+> [Success] Response 200 (application/json)
 
-```
+```json
 {
     "success": true,
     "result": {
@@ -618,17 +261,9 @@ The `Link` header contains a list of links that direct to the first, previous, n
 `/v1/market/stats [GET]`
 
 ## Get Ticker
+        
+> [Success] Response 200 (application/json)
 
-`/v1/market/tickers/<trading_pair_id> [GET]`
-
-    Returns ticker for specified trading pair
-
-+ Path Parameters
-    + `trading_pair_id`
-        + enum[`BTC-USDT`, `...`]
-        + required
-
-### Success
 ```json
 {
     "success": true,
@@ -647,43 +282,38 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-+ [Success] Response 200 (application/json)
 
-+ `last_trade_id`: Latest trade ID
-    + string
-+ `price`: Latest trade price
-    + string
-+ `highest_bid`: Best bid price in current order book
-    + string
-+ `lowest_ask`: Best ask price in current order book
-    + string
-+ `24h_volume`: Trading volume of the last 24 hours
-    + string
-+ `24h_low`: Lowest trade price of the last 24 hours
-    + string
-+ `24h_high`: Highest trade price of the last 24 hours
-    + string
-+ `timestamp`: Ticker timestamp in milliseconds
-    + int
+`/v1/market/tickers/<trading_pair_id> [GET]`
+
+    Returns ticker for specified trading pair
+
++ **Path Parameters**
+    + `trading_pair_id`
+        + enum[`BTC-USDT`, ...]
+        + required
+        
++ **Response**
+    + `last_trade_id`: Latest trade ID
+        + string
+    + `price`: Latest trade price
+        + string
+    + `highest_bid`: Best bid price in current order book
+        + string
+    + `lowest_ask`: Best ask price in current order book
+        + string
+    + `24h_volume`: Trading volume of the last 24 hours
+        + string
+    + `24h_low`: Lowest trade price of the last 24 hours
+        + string
+    + `24h_high`: Highest trade price of the last 24 hours
+        + string
+    + `timestamp`: Ticker timestamp in milliseconds
+        + int
 
 ## Get Recent Trades
-`/v1/market/trades/<trading_pair_id> [GET]`
 
-    Returns most recent trades for the specified trading pair
-
-+ Path Parameters
-    + `trading_pair_id`
-        + enum[`BTC-USDT`, `...`]
-        + required
-
-+ Query parameters
-    + `limit`: Limits number of trades beginning from the most recent
-        + int
-        + optional
-        + Defaults to 20 if not specified, Maximun 50.
-
-### Success
 > [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true,
@@ -693,7 +323,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
                 "id": "09619448e48a3bd73d493a4194f9020b",
                 "price": "10.00000000",
                 "size": "0.01000000",
-                "maker_side": "buy"
+                "maker_side": "buy",
                 "timestamp": 1504459805123
             },
             ...
@@ -702,44 +332,37 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-+ `id`: Trade ID
-    + string
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `maker_side`: Side of the taker
-    + enum[`bid`, `ask`]
-+ `timestamp`: Closed timestamp in milliseconds
-    + int
+`/v1/market/trades/<trading_pair_id> [GET]`
+
+    Returns most recent trades for the specified trading pair
+
++ **Path Parameters**
+    + `trading_pair_id`
+        + enum[`BTC-USDT`, ...]
+        + required
+
++ **Query parameters**
+    + `limit`: Limits number of trades beginning from the most recent
+        + int
+        + optional
+        + Defaults to 20 if not specified, Maximun 50.
+
++ **Response**
+    + `id`: Trade ID
+        + string
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `maker_side`: Side of the taker
+        + enum[`bid`, `ask`]
+    + `timestamp`: Closed timestamp in milliseconds
+        + int
 
 # Chart
 
 ## Get Candles
-`/v1/chart/candles/<trading_pair_id>`
 
-    Get charting candles
-
-+ Path Parameters
-    + `trading_pair_id`
-        + enum[`BTC-USDT`, `...`]
-        + required
-
-+ Query parameter
-    + `start_time`: Unix timestamp in seconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in seconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `timeframe`: Time span of data aggregation
-        + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
-        + required
-        + `timeframe` is limited to the range specified by the `start_time` and `end_time` fields, e.g. if range has a span of 3 hours, `timeframe` should only be one of `1m`, `5m`, `15m`, or `1h`
-
-### Success
 > [Success] Response 200 (application/json)
 
 ```json
@@ -760,22 +383,47 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-+ `timestamp`: Time of candlestick, Unix time in seconds, rounded up to zero point of each timeframe intervals
-	+ int
-+ `open`: The open price during the interval (the last trade price before the interval)
-	+ string
-+ `close`: The close price during the interval
-	+ string
-+ `high`: The highest price during the interval
-	+ string
-+ `low`: The lowest  price during the interval
-	+ string
-+ `volume`: The volume of trading during the interval
-	+ string
 
-# Trading
+`/v1/chart/candles/<trading_pair_id>`
 
-## Get Order
+    Get charting candles
+
++ **Path Parameters**
+    + `trading_pair_id`
+        + enum[`BTC-USDT`, ...]
+        + required
+
++ **Query parameter**
+    + `start_time`: Unix timestamp in seconds
+        + int
+        + optional
+        + Defaults to 0 if not specified
+    + `end_time`: Unix timestamp in seconds
+        + int
+        + optional
+        + Defaults to current server time if not specified
+    + `timeframe`: Time span of data aggregation
+        + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
+        + required
+        + `timeframe` is limited to the range specified by the `start_time` and `end_time` fields, e.g. if range has a span of 3 hours, `timeframe` should only be one of `1m`, `5m`, `15m`, or `1h`
+
++ **Response**
+    + `timestamp`: Time of candlestick, Unix time in seconds, rounded up to zero point of each timeframe intervals
+        + int
+    + `open`: The open price during the interval (the last trade price before the interval)
+        + string
+    + `close`: The close price during the interval
+        + string
+    + `high`: The highest price during the interval
+        + string
+    + `low`: The lowest  price during the interval
+        + string
+    + `volume`: The volume of trading during the interval
+        + string
+
+# Trading *[Auth]*
+
+## Get Order 
 > [Success] Response 200 (application/json)
 
 ```json
@@ -800,26 +448,30 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
     Get information for a single order
 
-+ `id`: Order ID
-    + string
-+ `trading_pair`: Trading pair ID
-    + enum[`BTC-USD`, ...]
-+ `state`: Order status
-    + enum[`new`, `queued`, `open`, `partially_filled`, `filled`, `cancelled`]
-+ `side`: Order side
-    + enum[`bid`, `ask`]
-+ `type`: Order type
-    + enum[`market`, `limit`, `stop`, `stop_limit`, `trailing_stop`,`fill_or_kill`]
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `filled`: Amount filled in current order
-    + string
-+ `timestamp`: Order timestamp in milliseconds
-    + int
++ **Response**
+    + `id`: Order ID
+        + string
+    + `trading_pair`: Trading pair ID
+        + enum[`BTC-USD`, ...]
+    + `state`: Order status
+        + enum[`new`, `queued`, `open`, `partially_filled`, `filled`, `cancelled`]
+    + `side`: Order side
+        + enum[`bid`, `ask`]
+    + `type`: Order type
+        + enum[`market`, `limit`, `stop`, `stop_limit`, `trailing_stop`,`fill_or_kill`]
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `filled`: Amount filled in current order
+        + string
+    + `timestamp`: Order timestamp in milliseconds
+        + int
 
-## Get Trades of An Order
+## Get Trades of An Order 
+
+> [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true,
@@ -842,25 +494,27 @@ The `Link` header contains a list of links that direct to the first, previous, n
 
     Get all trades originating from the specific order
 
-+ Path Parameters
++ **Path Parameters**
     + `order_id`: Order ID
         + string
         + required
 
-+ [Success] Response 200 (application/json)
++ **Response**
+    + `id`: Trade ID
+        + string
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `maker_side`: Side of the taker
+        + enum[`bid`, `ask`]
+    + `timestamp`: Closed timestamp in milliseconds
+        + int
 
-+ `id`: Trade ID
-    + string
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `maker_side`: Side of the taker
-    + enum[`bid`, `ask`]
-+ `timestamp`: Closed timestamp in milliseconds
-    + int
+## Get All Orders 
 
-## Get All Orders
+> [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true,
@@ -883,13 +537,13 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/trading/orders [GET]` [Authentication Required]
+`/v1/trading/orders [GET]`
 
     List all current orders for user
 
-+ Query parameters
++ **Query parameters**
     + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, `...`]
+        + enum[`BTC-USDT`, ...]
         + optional
         + Returns orders of all trading pairs if not specified
     + `limit`: Limits number of orders per page
@@ -897,28 +551,27 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + optional
         + Defaults to 20 if not specified, Maximun 50.
 
-+ [Success] Response 200 (application/json)
++ **Response**
+    + `trading_pair`: Trading pair ID
+        + enum[`BTC-USD`, ...]
+    + `id`: Order ID
+        + string
+    + `state`: Order status
+        + enum[`new`, `queued`, `open`, `partially_filled`]
+    + `side`: Order side
+        + enum[`bid`, `ask`]
+    + `type`: Order type
+        + enum[`market`, `limit`, `stop`, `stop_limit`, `trailing_stop`,`fill_or_kill`]
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `filled`: Amount filled in current order
+        + string
+    + `timestamp`: Order timestamp in milliseconds
+        + int
 
-+ `trading_pair`: Trading pair ID
-    + enum[`BTC-USD`, ...]
-+ `id`: Order ID
-    + string
-+ `state`: Order status
-    + enum[`new`, `queued`, `open`, `partially_filled`]
-+ `side`: Order side
-    + enum[`bid`, `ask`]
-+ `type`: Order type
-    + enum[`market`, `limit`, `stop`, `stop_limit`, `trailing_stop`,`fill_or_kill`]
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `filled`: Amount filled in current order
-    + string
-+ `timestamp`: Order timestamp in milliseconds
-    + int
-
-## Place Order
+## Place Order 
 > Payload
 
 ```json
@@ -931,24 +584,23 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/trading/orders [POST]` [Authentication Required]
+`/v1/trading/orders [POST]`
 
     Place orders to ask or bid
 
-+ `trading_pair_id`: Trading pair ID
-    + enum[`BTC-USDT`, ...]
-+ `side`: Order side
-    + enum[`bid`, `ask`]
-+ `type`: Order type
-    + enum[`market`, `limit`, `stop`, `stop_limit`]
-+ `price`: Quote price
-    + string
-    + optional
-    + `market` type will ignore
-+ `size`: Base amount
-    + string
-
-### Success
++ **Request**
+    + `trading_pair_id`: Trading pair ID
+        + enum[`BTC-USDT`, ...]
+    + `side`: Order side
+        + enum[`bid`, `ask`]
+    + `type`: Order type
+        + enum[`market`, `limit`, `stop`, `stop_limit`]
+    + `price`: Quote price
+        + string
+        + optional
+        + `market` type will ignore
+    + `size`: Base amount
+        + string
 
 > [Success] Response 200 (application/json)
 
@@ -970,27 +622,27 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
++ **Response**
+    + `trading_pair`: Trading pair ID
+        + enum[`BTC-USD`, ...]
+    + `id`: Order ID
+        + string
+    + `state`: Order status
+        + enum[`open`]
+    + `side`: Order side
+        + enum[`bid`, `ask`]
+    + `type`: Order type
+        + enum[`market`, `limit`, `stop`, `stop_limit`]
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `filled`: Amount filled in current order
+        + string
+    + `timestamp`: Order timestamp in milliseconds
+        + int
 
-+ `trading_pair`: Trading pair ID
-    + enum[`BTC-USD`, ...]
-+ `id`: Order ID
-    + string
-+ `state`: Order status
-    + enum[`open`]
-+ `side`: Order side
-    + enum[`bid`, `ask`]
-+ `type`: Order type
-    + enum[`market`, `limit`, `stop`, `stop_limit`]
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `filled`: Amount filled in current order
-    + string
-+ `timestamp`: Order timestamp in milliseconds
-    + int
-
-## Modify Order
+## Modify Order 
 > [Success] Response 200 (application/json)
 
 ```json
@@ -999,18 +651,18 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/trading/orders/<order_id> [PUT]` [Authentication Required]
+`/v1/trading/orders/<order_id> [PUT]`
 
     Modify a single order
 
-+ Path Parameter
++ **Path Parameter**
     + `order_id`: Order ID
         + string
         + required
 
-+ Query Parameters
++ **Query Parameters**
     + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USD`, `...`]
+        + enum[`BTC-USD`, ...]
         + required
     + `price`:
         + string
@@ -1019,7 +671,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + string
         + required
 
-## Cancel Order
+## Cancel Order 
 > [Success] Response 200 (application/json)
 
 ```json
@@ -1028,23 +680,23 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/trading/orders/<order_id> [DELETE]` [Authentication Required]
+`/v1/trading/orders/<order_id> [DELETE]`
 
     Cancel a single order
 
-+ Path parameter
++ **Path parameter**
     + `order_id`: Order ID
         + string
         + required
 
-## Get Order History
-`/v1/trading/order_history [GET]` [Authentication Required]
+## Get Order History 
+`/v1/trading/order_history [GET]`
 
     Returns order history for the current user
 
-+ Query Parameters
++ **Query Parameters**
     + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USD`, `...`]
+        + enum[`BTC-USD`, ...]
         + optional
     + `limit`: Limits number of orders per page
         + int
@@ -1076,26 +728,30 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-+ `trading_pair`: Trading pair ID
-    + enum[`BTC-USD`, ...]
-+ `id`: Order ID
-    + string
-+ `status`: Order status
-    + enum[`cancelled`, `filled`]
-+ `side`: Order side
-    + enum[`bid`, `ask`]
-+ `type`: Order type
-    + enum[`market`, `limit`, `stop`, `stop_limit`]
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `filled`: Amount filled in current order
-    + string
-+ `timestamp`: Order timestamp milliseconds
-    + int
 
-## Get Trade
++ **Response**
+    + `trading_pair`: Trading pair ID
+        + enum[`BTC-USD`, ...]
+    + `id`: Order ID
+        + string
+    + `status`: Order status
+        + enum[`cancelled`, `filled`]
+    + `side`: Order side
+        + enum[`bid`, `ask`]
+    + `type`: Order type
+        + enum[`market`, `limit`, `stop`, `stop_limit`]
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `filled`: Amount filled in current order
+        + string
+    + `timestamp`: Order timestamp milliseconds
+        + int
+
+## Get Trade 
+> [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true,
@@ -1110,29 +766,29 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-`/v1/trading/trades/<trade_id> [GET]` [Authentication Required]
+
+`/v1/trading/trades/<trade_id> [GET]`
 
     Get trade information. A user only can get their own trade.
 
-+ Path Parameters
++ **Path Parameters**
     + `trade_id`: Trading ID
         + Required
         + [UUID String](#uuid-string)
 
-+ [Success] Response 200 (application/json)
++ **Response**
+    + `id`: Trade ID
+        + [UUID String](#uuid-string)
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `maker_side`: Side of the maker
+        + enum[`ask`, `bid`]
+    + `timestamp`: Closed timestamp in milliseconds
+        + int
 
-+ `id`: Trade ID
-    + [UUID String](#uuid-string)
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `maker_side`: Side of the maker
-    + enum[`ask`, `bid`]
-+ `timestamp`: Closed timestamp in milliseconds
-    + int
-
-## Get Trade History
+## Get Trade History 
 > [Success] Response 200 (application/json)
 
 ```json
@@ -1156,75 +812,40 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/trading/trades [GET]` [Authentication Required]
+`/v1/trading/trades [GET]`
 
     Returns trade history for the current user
 
-+ Path Parameters
++ **Path Parameters**
     + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, `...`]
+        + enum[`BTC-USDT`, ...]
         + required
     + `limit`: Limits number of trades per page
         + int
         + optional
         + Defaults to 20 if not specified, Maximun 50.
 
-+ `trading_pair_id`: Trading pair ID
-    + string
-+ `trade_id`: Trade ID
-    + string
-+ `maker_order_id`: ID of maker order
-    + string
-+ `taker_order_id`: ID of taker order
-    + string
-+ `price`: Quote price
-    + string
-+ `size`: Base amount
-    + string
-+ `side`: Side of the taker
-    + enum[`bid`, `ask`]
-+ `timestamp`: Closed timestamp in milliseconds
-    + int
++ **Response**
+    + `trading_pair_id`: Trading pair ID
+        + string
+    + `trade_id`: Trade ID
+        + string
+    + `maker_order_id`: ID of maker order
+        + string
+    + `taker_order_id`: ID of taker order
+        + string
+    + `price`: Quote price
+        + string
+    + `size`: Base amount
+        + string
+    + `side`: Side of the taker
+        + enum[`bid`, `ask`]
+    + `timestamp`: Closed timestamp in milliseconds
+        + int
 
-# Wallet
+# Wallet *[Auth]*
 
     This module contains APIs for querying user account balances and history, generate deposit addresses, and deposit/withdraw funds.
-
-## Get Wallet Balances
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "balances": [
-            {
-                "currency": "BTC",
-                "total": "5.00000001",
-                "on_order": "1.00000000"
-            },
-            ...
-        ]
-    }
-}
-```
-
-`/v1/wallet/balances [GET]` [Authentication Required]
-
-    Get Wallet Balances
-
-+ Query Parameter
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-        + optional
-        + returns all currencies if not specified
-
-+ `currency`: Currency ID
-    + enum[`BTC`, ...]
-+ `total`: Total amount in wallet
-    + string
-+ `on_order`: The amount in order book
-    + string
 
 ## Get Ledger Entries
 > [Success] Response 200 (application/json)
@@ -1264,11 +885,11 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/wallet/ledger [GET]` [Authentication Required]
+`/v1/wallet/ledger [GET]`
 
     Get balance history for the current user
 
-+ Query Parameter
++ **Query Parameter**
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
         + optional
@@ -1277,73 +898,29 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + int
         + optional
         + Defaults to 20 if not specified, Maximun 50.
-
-+ `type`: Type of balance change
-    + enum[`trade`, `deposit`, `withdrawal`]
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-+ `amount`: Amount of change
-    + string
-+ `balance`: Total balance after amount change
-    + string
-+ `timestamp`: Unix timestamp in milliseconds
-    + int
-+ `trade_id`: Trade ID
-    + string
-+ `deposit_id`: Deposit ID
-    + string
-+ `withdrawal_id`: Withdrawal ID
-    + string
-
-## Generate New Deposit Address
-> Payload
-
-```json
-{
-    "currency": "BTC"
-}
-```
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "deposit_address": {
-            "currency": "BTC",
-            "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-            "created_at": 1504459805123
-        }
-    }
-}
-```
-
-`/v1/wallet/deposit_addresses [POST]` [Authentication Required]
-
-    Generate a New Deposit Address
-
-+ `currency`: Currency ID
-    + enum[`BTC`, ...]
-+ `address`: Newly generated user deposit address
-    + string
-+ `created_at`: Address creation time in milliseconds
-    + int
+        
++ **Response**
+    + `type`: Type of balance change
+        + enum[`trade`, `deposit`, `withdrawal`]
+    + `currency`: Currency ID
+        + enum[`BTC`, `ETH`, ...]
+    + `amount`: Amount of change
+        + string
+    + `balance`: Total balance after amount change
+        + string
+    + `timestamp`: Unix timestamp in milliseconds
+        + int
+    + `trade_id`: Trade ID
+        + string
+    + `deposit_id`: Deposit ID
+        + string
+    + `withdrawal_id`: Withdrawal ID
+        +
 
 ## Get Deposit Addresses
 
-`/v1/wallet/deposit_addresses [GET]` [Authentication Required]
 
-    Get Wallet Deposit Addresses
-
-+ Query Parameters
-    + `currency`: Currency ID
-        + enum[`BTC`, ...]
-        + optional
-
-### Success
+> [Success] Response 200 (application/json)
 
 ```json
 {
@@ -1361,56 +938,22 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-> [Success] Response 200 (application/json)
+`/v1/wallet/deposit_addresses [GET]`
 
-+ `currency`: Currency ID
-    + enum[`BTC`, ...]
-+ `address`: Newly generated deposit address
-    + string
-+ `created_at`: Address creation time in milliseconds
-    + int
+    Get Wallet Deposit Addresses
 
-## Add Withdrawal Address
++ **Query Parameters**
+    + `currency`: Currency ID
+        + enum[`BTC`, ...]
+        + optional
 
-> Payload
-
-```json
-{
-    "currency": "BTC"
-}
-```
-
-`/v1/wallet/withdrawal_addresses [POST]` [Authentication Required]
-
-    Add a New Withdrawal Address
-    NOTE: Requires 2FA and Email verification if configured by user
-    TODO: Add 2FA + Email
-
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-
-### Success
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "withdrawal_address": {
-            "currency": "BTC",
-            "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-            "created_at": 1504459805123
-        }
-    }
-}
-```
-+ `currency`: Currency ID
-    + enum[`BTC`, ...]
-+ `address`: Newly added address
-    + string
-+ `created_at`: Address creation time in milliseconds
-    + int
++ **Response**
+    + `currency`: Currency ID
+        + enum[`BTC`, ...]
+    + `address`: Newly generated deposit address
+        + string
+    + `created_at`: Address creation time in milliseconds
+        + int
 
 ## Get Withdrawal Addresses
 
@@ -1423,7 +966,7 @@ The `Link` header contains a list of links that direct to the first, previous, n
         "withdrawal_addresses": [
             {
                 "currency": "BTC",
-		"name": "Kihon's Bitcoin Wallet Address"
+		        "name": "Kihon's Bitcoin Wallet Address",
                 "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
                 "created_at": 1504459805123
             },
@@ -1433,68 +976,28 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/wallet/withdrawal_addresses [GET]` [Authentication Required]
+`/v1/wallet/withdrawal_addresses [GET]`
 
     Get Wallet Withdrawal Addresses
 
-+ Query Parameters
++ **Query Parameters**
     + `currency`: Currency ID
         + enum[`BTC`, ...]
         + optional
 
-+ `currency`: Currency ID
-    + enum[`BTC`, ...]
-+ `name`: A name to describe this withdrawal wallet address
-    + string
-+ `address`: User withdrawal address
-    + string
-+ `created_at`: Address creation time in milliseconds
-    + int
-
-## Withdraw Funds
-> Payload
-
-```json
-{
-    "currency": "BTC",
-    "amount": "1.00000001",
-    "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20"
-}
-```
-
-`/v1/wallet/withdrawals [POST]` [Authentication Required]
-
-    Create a Withdrawal Request
-
-+ `currency`: Currency ID
-    + string
-    + required
-+ `amount`: Withdrawal amount
-    + string
-    + required
-+ `address`: The target address for withdrawal
-    + string
-    + required
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "withdrawal": {
-            "withdrawal_id": "393215d18749fa01987c43103712d61e",
-            "timestamp": 1504459805123
-        }
-    }
-}
-```
-+ `withdrawal_id`: Withdrawal ID
-    + string
-+ `timestamp`: Millisecond timestamp of withdrawal
-    + int
++ **Response**
+    + `currency`: Currency ID
+        + enum[`BTC`, ...]
+    + `name`: A name to describe this withdrawal wallet address
+        + string
+    + `address`: User withdrawal address
+        + string
+    + `created_at`: Address creation time in milliseconds
+        + int
 
 ## Get Withdrawal
+
+> [Success] Response 200 (application/json)
 
 ```json
 {
@@ -1515,37 +1018,37 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/wallet/withdrawals/<withdrawal_id> [GET]` [Authentication Required]
+`/v1/wallet/withdrawals/<withdrawal_id> [GET]`
 
     Get Withdrawal Information
 
-+ Path Parameters
++ **Path Parameters**
     + `withdrawal_id`: Withdrawal ID
         + string
         + required
 
-+ [Success] Response 200 (application/json)
-
-+ `withdrawal_id`: Withdrawal ID
-    + string
-+ `status`: Status of the withdrawal request
-    + enum[`pending`, `completed`]
-+ `created_at`: Timestamp of withdrawal creation in milliseconds
-    + int
-+ `completed_at`: Timestamp of withdrawal completion in milliseconds
-    + int
-+ `to_address`: Target address of withdrawal
-    + string
-+ `txhash`: Transaction hash of withdrawal
-    + string
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-+ `amount`: Withdrawal amount
-    + string
-+ `fee`: Transfer fee of the withdrawal
-    + string
++ **Response**
+    + `withdrawal_id`: Withdrawal ID
+        + string
+    + `status`: Status of the withdrawal request
+        + enum[`pending`, `completed`]
+    + `created_at`: Timestamp of withdrawal creation in milliseconds
+        + int
+    + `completed_at`: Timestamp of withdrawal completion in milliseconds
+        + int
+    + `to_address`: Target address of withdrawal
+        + string
+    + `txhash`: Transaction hash of withdrawal
+        + string
+    + `currency`: Currency ID
+        + enum[`BTC`, `ETH`, ...]
+    + `amount`: Withdrawal amount
+        + string
+    + `fee`: Transfer fee of the withdrawal
+        + string
 
 ## Get All Withdrawals
+
 > [Success] Response 200 (application/json)
 
 ```json
@@ -1570,11 +1073,11 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/wallet/withdrawals [GET]` [Authentication Required]
+`/v1/wallet/withdrawals [GET]`
 
     Get All Withdrawals
 
-+ Query Parameters
++ **Query Parameters**
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
         + optional
@@ -1588,26 +1091,30 @@ The `Link` header contains a list of links that direct to the first, previous, n
         + optional
         + Defaults to 20 if not specified, Maximun 50.
 
-+ `withdrawal_id`: Withdrawal ID
-    + string
-+ `status`: Status of the withdrawal request
-    + enum[`pending`, `completed`]
-+ `created_at`: Timestamp of withdrawal creation in milliseconds
-    + int
-+ `completed_at`: Timestamp of withdrawal completion in milliseconds
-    + int
-+ `to_address`: Target address of withdrawal
-    + string
-+ `txhash`: Transaction hash of withdrawal
-    + string
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-+ `amount`: Withdrawal amount
-    + string
-+ `fee`: Transfer fee of the withdrawal
-    + string
++ **Response**
+    + `withdrawal_id`: Withdrawal ID
+        + string
+    + `status`: Status of the withdrawal request
+        + enum[`pending`, `completed`]
+    + `created_at`: Timestamp of withdrawal creation in milliseconds
+        + int
+    + `completed_at`: Timestamp of withdrawal completion in milliseconds
+        + int
+    + `to_address`: Target address of withdrawal
+        + string
+    + `txhash`: Transaction hash of withdrawal
+        + string
+    + `currency`: Currency ID
+        + enum[`BTC`, `ETH`, ...]
+    + `amount`: Withdrawal amount
+        + string
+    + `fee`: Transfer fee of the withdrawal
+        + string
 
 ## Get Deposit
+
+> [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true,
@@ -1625,35 +1132,38 @@ The `Link` header contains a list of links that direct to the first, previous, n
     }
 }
 ```
-`/v1/wallet/deposits/<deposit_id> [GET]` [Authentication Required]
+
+`/v1/wallet/deposits/<deposit_id> [GET]`
 
     Get Deposit Information
 
-+ Path Parameters
++ **Path Parameters**
     + `deposit_id`: Deposit ID
         + string
         + required
 
-+ [Success] Response 200 (application/json)
-
-+ `deposit_id`: Deposit ID
-    + string
-+ `created_at`: Timestamp of deposit creation in milliseconds
-    + int
-+ `completed_at`: Timestamp of deposit  completion in milliseconds
-    + int
-+ `from_address`: Source address of deposit
-    + string
-+ `txhash`: Transaction hash of deposit
-    + string
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-+ `amount`: Deposit amount
-    + string
-+ `fee`: Transfer fee of the deposit
-    + string
++ **Response**
+    + `deposit_id`: Deposit ID
+        + string
+    + `created_at`: Timestamp of deposit creation in milliseconds
+        + int
+    + `completed_at`: Timestamp of deposit  completion in milliseconds
+        + int
+    + `from_address`: Source address of deposit
+        + string
+    + `txhash`: Transaction hash of deposit
+        + string
+    + `currency`: Currency ID
+        + enum[`BTC`, `ETH`, ...]
+    + `amount`: Deposit amount
+        + string
+    + `fee`: Transfer fee of the deposit
+        + string
 
 ## Get All Deposits
+
+> [Success] Response 200 (application/json)
+
 ```json
 {
     "success": true,
@@ -1675,48 +1185,30 @@ The `Link` header contains a list of links that direct to the first, previous, n
 }
 ```
 
-`/v1/wallet/deposits [GET]` [Authentication Required]
+`/v1/wallet/deposits [GET]`
 
-    Get All Deposits
 
-+ Query Parameters
++ **Response**
+    + `deposit_id`: Deposit ID
+        + string
+    + `created_at`: Timestamp of deposit creation in milliseconds
+        + int
+    + `completed_at`: Timestamp of deposit  completion in milliseconds
+        + int
+    + `from_address`: Source address of deposit
+        + string
+    + `txhash`: Transaction hash of deposit
+        + string
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
-        + optional
-        + Returns all currencies if not specified
-    + `limit`: Limits the number of withdrawals per page
-        + int
-        + optional
-        + Returns most recent 50 deposits if not specified
+    + `amount`: Deposit amount
+        + string
+    + `fee`: Transfer fee of the deposit
+        + string
 
-+ [Success] Response 200 (application/json)
+# WebSocket
 
-+ `deposit_id`: Deposit ID
-    + string
-+ `created_at`: Timestamp of deposit creation in milliseconds
-    + int
-+ `completed_at`: Timestamp of deposit  completion in milliseconds
-    + int
-+ `from_address`: Source address of deposit
-    + string
-+ `txhash`: Transaction hash of deposit
-    + string
-+ `currency`: Currency ID
-    + enum[`BTC`, `ETH`, ...]
-+ `amount`: Deposit amount
-    + string
-+ `fee`: Transfer fee of the deposit
-    + string
-
-# WebSocket Endpoint
-
-wss://feed.cobinhood.com/ws
-
-# WebSocket Authenticated Channels
-
-COBINHOOD uses JWT for APIs that require authentication. JWT header field name is `authorization`. The JWT can be generated and revoked on COBINHOOD exchange API console page.
-
-## Order [Authentication Required]
+## Order *[Auth]*
 
 > **Request**
 
@@ -1779,7 +1271,7 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
 + `TIME_STAMP`: Order timestamp in milliseconds
     + string
 
-## Place Order [Authentication Required]
+## Place Order *[Auth]*
 
 > **Request**
 
@@ -1805,6 +1297,7 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
   "price": PRICE,
   "size": SIZE,
 }
+```
 
 + `TYPE`: The order type 
     + enum[`market`, `limit`, `stop`]
@@ -1817,7 +1310,7 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
 + `SIZE`: Trade base amount
     + string
 
-## Cancel Order [Authentication Required]
+## Cancel Order *[Auth]*
 
 > **Request**
 
@@ -1835,11 +1328,12 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
   "event": "order_canceled",
   "order_id": ORDER_ID,
 }
+```
 
 + `ORDER_ID`: The order id
     + string
 
-## Modify Order [Authentication Required]
+## Modify Order *[Auth]*
 
 > **Request**
 
@@ -1863,6 +1357,7 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
   "size": SIZE,
   "order_id": ORDER_ID,
 }
+```
 
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
     + enum[`BTC-USDT`, `ETH-USDT`, ...]
@@ -1872,10 +1367,6 @@ COBINHOOD uses JWT for APIs that require authentication. JWT header field name i
     + string
 + `ORDER_ID`: The order id
     + string
-
-# WebSocket Public Channels
-
-All parameter in the WebSocket api is string format.
 
 ## Trades
 
@@ -1907,10 +1398,9 @@ followed by any trade that occurs at COBINHOOD.
 + `TRADING_PAIR_ID`: Trading pair ID
     + enum[`BTC-USDT`, `ETH-USDT`, ...]
 
-> **Snapshot / Update**
+> **Snapshot**
 
 ```json
-//snapshot
 {
     "channel_id": CHANNEL_ID,
     "snapshot":
@@ -1919,8 +1409,11 @@ followed by any trade that occurs at COBINHOOD.
           ...
         ]
 }
+```
 
-//update
+> **Update**
+
+```json
 {
     "channel_id": CHANNEL_ID,
     "update":
@@ -1974,7 +1467,7 @@ followed by updates upon any changes to the book.
 }
 ```
 
-> **Snapshot / Update**
+> **Snapshot**
 
 ```json
 //snapshot
@@ -1991,7 +1484,11 @@ followed by updates upon any changes to the book.
         ]
     }
 }
+```
 
+> **Update**
+
+```json
 //update
 {
     "channel_id": CHANNEL_ID,
@@ -2046,10 +1543,9 @@ followed by updates upon any changes to the book.
 }
 ```
 
-> **Snapshot / Update**
+> **Snapshot**
 
 ```json
-//snapshot
 {
     "channel_id": CHANNEL_ID,
     "snapshot":
@@ -2065,8 +1561,11 @@ followed by updates upon any changes to the book.
           TIME_STAMP,
         ]
 }
+```
 
-//update
+> **Update**
+
+```json
 {
     "channel_id": CHANNEL_ID,
     "update":
@@ -2137,10 +1636,9 @@ After receiving the response, you will receive a snapshot of the ticker,
 }
 ```
 
-> **Snapshot / Update**
+> **Snapshot**
 
 ```json
-//snapshot
 {
     "channel_id": CHANNEL_ID,
     "snapshot":
@@ -2149,8 +1647,11 @@ After receiving the response, you will receive a snapshot of the ticker,
           ...
         ]
 }
+```
 
-//update
+> **Update**
+
+```json
 {
     "channel_id": CHANNEL_ID,
     "update":

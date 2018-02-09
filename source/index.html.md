@@ -661,9 +661,6 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + required
 
 + **Query Parameters**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USD`, ...]
-        + required
     + `price`:
         + string
         + required

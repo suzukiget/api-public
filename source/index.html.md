@@ -394,11 +394,11 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + required
 
 + **Query parameter**
-    + `start_time`: Unix timestamp in seconds
+    + `start_time`: Unix timestamp in milliseconds
         + int
         + optional
         + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in seconds
+    + `end_time`: Unix timestamp in milliseconds
         + int
         + optional
         + Defaults to current server time if not specified
@@ -408,7 +408,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + `timeframe` is limited to the range specified by the `start_time` and `end_time` fields, e.g. if range has a span of 3 hours, `timeframe` should only be one of `1m`, `5m`, `15m`, or `1h`
 
 + **Response**
-    + `timestamp`: Time of candlestick, Unix time in seconds, rounded up to zero point of each timeframe intervals
+    + `timestamp`: Time of candlestick, Unix time in milliseconds, rounded up to zero point of each timeframe intervals
         + int
     + `open`: The open price during the interval (the last trade price before the interval)
         + string

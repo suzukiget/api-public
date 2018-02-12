@@ -844,6 +844,57 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
     This module contains APIs for querying user account balances and history, generate deposit addresses, and deposit/withdraw funds.
 
+## Get Wallet Balances
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "balances": [
+            {
+                "currency": "BTC",
+                "type": "exchange",
+                "total": "1",
+                "on_order": "0.4",
+                "locked": false
+            },
+            {
+                "currency": "ETH",
+                "type": "exchange",
+                "total": "0.0855175219863032",
+                "on_order": "0.04",
+                "locked": false
+            },
+            {
+                "currency": "COB",
+                "type":" exchange",
+                "total": "100",
+                "on_order": "20",
+                "locked": false
+            },
+            ...
+        ]
+    }
+}
+```
+
+`/v1/wallet/balances [GET]`
+
+    Get balances of the current user
+
++ **Response**
+    + `currency`: Currency ID
+        + enum[`BTC`, `ETH`, ...]
+    + `type`: Type of balance
+        + enum[`exchange`]
+    + `total`: Total amount of balance
+        + string
+    + `on_order`: On order amount of balance
+        + string
+    + `locked`: If the balance is locked
+        + bool
+
 ## Get Ledger Entries
 > [Success] Response 200 (application/json)
 
@@ -912,7 +963,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `deposit_id`: Deposit ID
         + string
     + `withdrawal_id`: Withdrawal ID
-        +
+        + string
 
 ## Get Deposit Addresses
 

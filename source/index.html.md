@@ -244,15 +244,15 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "BTC-USD": {
             "id": "BTC-USD",
-            "latestPrice": "10005",
-            "lowestAsk": "10005",
-            "highestBid": "15200.1",
-            "baseVolume": "0.36255776",
-            "quoteVolume": "4197.431917146",
-            "isFrozen": false,
-            "high24hr": "16999.9",
-            "low24hr": "10000",
-            "percentChanged24hr": "-0.3417806461799593"
+            "last_price": "10005",
+            "lowest_ask": "10005",
+            "highest_bid": "15200.1",
+            "base_volume": "0.36255776",
+            "quote_volume": "4197.431917146",
+            "is_frozen": false,
+            "high_24hr": "16999.9",
+            "low_24hr": "10000",
+            "percent_changed_24hr": "-0.3417806461799593"
         }
     }
 }

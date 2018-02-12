@@ -321,6 +321,9 @@
             <a href="#wallet-em-auth-em" class="toc-h1 toc-link" data-title="Wallet <em>[Auth]</em>">Wallet <em>[Auth]</em></a>
               <ul class="toc-list-h2">
                   <li>
+                    <a href="#get-wallet-balances" class="toc-h2 toc-link" data-title="Get Wallet Balances">Get Wallet Balances</a>
+                  </li>
+                  <li>
                     <a href="#get-ledger-entries" class="toc-h2 toc-link" data-title="Get Ledger Entries">Get Ledger Entries</a>
                   </li>
                   <li>
@@ -588,11 +591,11 @@
         </span><span class="s2">"orderbook"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"sequence"</span><span class="p">:</span><span class="w"> </span><span class="mi">1938572</span><span class="p">,</span><span class="w">
             </span><span class="s2">"bids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">[</span><span class="w"> </span><span class="err">price</span><span class="p">,</span><span class="w"> </span><span class="err">size</span><span class="p">,</span><span class="w"> </span><span class="err">count</span><span class="w"> </span><span class="p">],</span><span class="w">
+                </span><span class="p">[</span><span class="w"> </span><span class="err">price</span><span class="p">,</span><span class="w"> </span><span class="err">count</span><span class="p">,</span><span class="w"> </span><span class="err">size</span><span class="w"> </span><span class="p">],</span><span class="w">
                 </span><span class="err">...</span><span class="w">
             </span><span class="p">],</span><span class="w">
             </span><span class="s2">"asks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">[</span><span class="w"> </span><span class="err">price</span><span class="p">,</span><span class="w"> </span><span class="err">size</span><span class="p">,</span><span class="w"> </span><span class="err">count</span><span class="w"> </span><span class="p">],</span><span class="w">
+                </span><span class="p">[</span><span class="w"> </span><span class="err">price</span><span class="p">,</span><span class="w"> </span><span class="err">count</span><span class="p">,</span><span class="w"> </span><span class="err">size</span><span class="w"> </span><span class="p">],</span><span class="w">
                 </span><span class="err">...</span><span class="w">
             </span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -1603,6 +1606,75 @@
 </ul>
 <h1 id='wallet-em-auth-em'>Wallet <em>[Auth]</em></h1>
 <p>This module contains APIs for querying user account balances and history, generate deposit addresses, and deposit/withdraw funds.</p>
+<h2 id='get-wallet-balances'>Get Wallet Balances</h2>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"balances"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"on_order"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.4"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ETH"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0855175219863032"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"on_order"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">" exchange"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"on_order"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>/v1/wallet/balances [GET]</code></p>
+
+<p>Get balances of the current user</p>
+
+<ul>
+<li><strong>Response</strong>
+
+<ul>
+<li><code>currency</code>: Currency ID
+
+<ul>
+<li>enum[<code>BTC</code>, <code>ETH</code>, ...]</li>
+</ul></li>
+<li><code>type</code>: Type of balance
+
+<ul>
+<li>enum[<code>exchange</code>]</li>
+</ul></li>
+<li><code>total</code>: Total amount of balance
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>on_order</code>: On order amount of balance
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>locked</code>: If the balance is locked
+
+<ul>
+<li>bool</li>
+</ul></li>
+</ul></li>
+</ul>
 <h2 id='get-ledger-entries'>Get Ledger Entries</h2>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
@@ -1702,7 +1774,10 @@
 <li>string</li>
 </ul></li>
 <li><code>withdrawal_id</code>: Withdrawal ID
-+</li>
+
+<ul>
+<li>string</li>
+</ul></li>
 </ul></li>
 </ul>
 <h2 id='get-deposit-addresses'>Get Deposit Addresses</h2>

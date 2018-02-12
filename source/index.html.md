@@ -198,11 +198,11 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "orderbook": {
             "sequence": 1938572,
             "bids": [
-                [ price, size, count ],
+                [ price, count, size ],
                 ...
             ],
             "asks": [
-                [ price, size, count ],
+                [ price, count, size ],
                 ...
             ]
         }

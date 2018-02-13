@@ -19,8 +19,8 @@ COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws`
 
 ## HTTP Request Headers
-`nonce` for 'POST' 'UPDATE' 'DELETE'  
-`authorization`
+`nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`  
+`authorization`  for APIs that require authentication.
 
 ## Timestamps
 All timestamps exchanged between client and server are based on server Unix UTC timestamp. Please refer to System Module for retrieving server timestamp.
@@ -133,8 +133,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "currencies": [
             {
                 "currency": "BTC",
-                "name": "Bitcoin"
-                "min_unit": "0.00000001"
+                "name": "Bitcoin",
+                "min_unit": "0.00000001",
+                "deposit_fee": "0",
+                "withdrawal_fee": "22.6"
             },
             ...
         ]
@@ -150,6 +152,12 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `currency`: Currency ID
         + (enum[`BTC`, `ETH`, ...])
     + `min_unit`: Minimum size unit, all order sizes must be an integer multiple of this number
+        + string
+    + `name`: The currency name
+        + string
+    + `deposit_fee`: The currency deposit fee
+        + string
+    + `withdrawal_fee`: The currency withdrawal fee
         + string
 
 ## Get All Trading Pairs
@@ -269,15 +277,15 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "ticker": {
-            "last_trade_id": "e015d51ae494f3edc3d921a091adab27",
-            "price":"244.82",
-            "highest_bid":"244.75",
-            "lowest_ask":"244.76",
-            "24h_volume": "7842.11542563",
+            "trading_pair_id": "COB-BTC"
+            "timestamp": 1504459805123,
             "24h_high": "23.456",
             "24h_low": "10.123",
             "24h_open": "15.764",
-            "timestamp": 1504459805123,
+            "24h_volume": "7842.11542563",
+            "last_trade_price":"244.82",
+            "highest_bid":"244.75",
+            "lowest_ask":"244.76",
         },
     }
 }
@@ -293,9 +301,9 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + required
         
 + **Response**
-    + `last_trade_id`: Latest trade ID
+    + `trading_pair_id`: Ticker trading pair id
         + string
-    + `price`: Latest trade price
+    + `last_trade_price`: Latest trade price
         + string
     + `highest_bid`: Best bid price in current order book
         + string
@@ -467,6 +475,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `timestamp`: Order timestamp in milliseconds
         + int
+    + `eq_price`: The equivalance price
+        + string
+    + `completed_at`: The order filled time
+        + string
 
 ## Get Trades of An Order 
 
@@ -529,7 +541,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "price": "5000.01",
                 "size": "1.0100",
                 "filled": "0.59",
-                "timestamp": 1504459805123
+                "timestamp": 1504459805123,
+                "eq_price": "5000.01"
             },
             ...
         ]
@@ -570,6 +583,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `timestamp`: Order timestamp in milliseconds
         + int
+    + `eq_price`: The equivalance price
+        + string
+    + `completed_at`: The order filled time
+        + string
 
 ## Place Order 
 > Payload
@@ -618,6 +635,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             "size": "1.0100",
             "filled": "0.59",
             "timestamp": 1504459805123
+            "eq_price": "5000.01",
         }
     }
 }
@@ -641,6 +659,11 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `timestamp`: Order timestamp in milliseconds
         + int
+    + `eq_price`: The equivalance price
+        + string
+    + `completed_at`: The order filled time
+        + string
+
 
 ## Modify Order 
 > [Success] Response 200 (application/json)
@@ -719,6 +742,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "size": "1.0100",
                 "filled": "0.59",
                 "timestamp": 1504459805123
+                "eq_price": "5000.01",
             },
             ...
         ]
@@ -745,6 +769,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `timestamp`: Order timestamp milliseconds
         + int
+    + `eq_price`: The equivalance price
+        + string
+    + `completed_at`: The order filled time
+        + string
 
 ## Get Trade 
 > [Success] Response 200 (application/json)
@@ -754,10 +782,11 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "trade": {
+            "trading_pair_id": "BTC-USDT",   
             "id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
+            "maker_side": "bid",
             "price": "10.00000000",
             "size": "0.01000000",
-            "maker_side": "bid",
             "timestamp": 1504459805123
         }
     }
@@ -774,14 +803,16 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + [UUID String](#uuid-string)
 
 + **Response**
+    + `trading_pair_id`: Trading pair ID
+        + string
     + `id`: Trade ID
         + [UUID String](#uuid-string)
+    + `maker_side`: Side of the maker
+        + enum[`ask`, `bid`]
     + `price`: Quote price
         + string
     + `size`: Base amount
         + string
-    + `maker_side`: Side of the maker
-        + enum[`ask`, `bid`]
     + `timestamp`: Closed timestamp in milliseconds
         + int
 
@@ -795,12 +826,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "trades": [
             {
                 "trading_pair_id": "BTC-USDT",
-                "trade_id": "09619448e48a3bd73d493a4194f9020b",
-                "maker_order_id": "54c692b3c0ad514bcc527fbcc4d29e6f",
-                "taker_order_id": "c7d4b777d9034fdcacf955d940284177",
+                "id": "09619448e48a3bd73d493a4194f9020b",
+                "maker_side": "ask",
                 "price": "10.00000000",
                 "size": "0.01000000",
-                "side": "buy"
                 "timestamp": 1504459805123
             },
             ...
@@ -825,18 +854,14 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + **Response**
     + `trading_pair_id`: Trading pair ID
         + string
-    + `trade_id`: Trade ID
-        + string
-    + `maker_order_id`: ID of maker order
-        + string
-    + `taker_order_id`: ID of taker order
-        + string
+    + `id`: Trade ID
+        + [UUID String](#uuid-string)
+    + `maker_side`: Side of the maker
+        + enum[`ask`, `bid`]
     + `price`: Quote price
         + string
     + `size`: Base amount
         + string
-    + `side`: Side of the taker
-        + enum[`bid`, `ask`]
     + `timestamp`: Closed timestamp in milliseconds
         + int
 
@@ -904,7 +929,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "ledger": [
             {
-                "type": "trade",
+                "action": "trade",
+                "type": "exchange",
                 "trade_id": "09619448e48a3bd73d493a4194f9020b",
                 "currency": "BTC",
                 "amount": "+635.77",
@@ -912,7 +938,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "timestamp": 1504685599302,
             },
             {
-                "type": "deposit",
+                "action": "deposit",
+                "type": "exchange",
                 "deposit_id": "09619448e48a3bd73d493a4194f9020b",
                 "currency": "BTC",
                 "amount": "+635.77",
@@ -920,7 +947,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "timestamp": 1504685599302,
             },
             {
-                "type": "withdrawal",
+                "action": "withdraw"
+                "type": "exchange",
                 "withdrawal_id": "09619448e48a3bd73d493a4194f9020b",
                 "currency": "BTC",
                 "amount": "-121.01",
@@ -948,8 +976,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + Defaults to 20 if not specified, Maximun 50.
         
 + **Response**
-    + `type`: Type of balance change
-        + enum[`trade`, `deposit`, `withdrawal`]
+    + `type`: Type of ledger
+        + enum[`funding`, `margin`, `exchange`]
     + `currency`: Currency ID
         + enum[`BTC`, `ETH`, ...]
     + `amount`: Amount of change
@@ -963,6 +991,12 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `deposit_id`: Deposit ID
         + string
     + `withdrawal_id`: Withdrawal ID
+        + string
+    + `action`: The ledger action
+        + enum[`deposit`, `fixup`, `withdrawal_fee`, `deposit_fee`, `trade`, `withdraw`]
+    + `fiat_deposit_id`: The fiat deposit ID
+        + string
+    + `fiat_withdrawal_id`: The fiat withdrawal ID
         + string
 
 ## Get Deposit Addresses
@@ -978,7 +1012,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             {
                 "currency": "BTC",
                 "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-                "created_at": 1504459805123
+                "created_at": 1504459805123,
+                "type": "exchange"
             },
             ...
         ]
@@ -1002,6 +1037,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `created_at`: Address creation time in milliseconds
         + int
+    + `type`: Ledger type
+        +enum[`exchange`, `margin`, `funding`]
 
 ## Get Withdrawal Addresses
 
@@ -1013,8 +1050,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "withdrawal_addresses": [
             {
+                "id": "09619448e48a3bd73d493a4194f9020b"
                 "currency": "BTC",
 		        "name": "Kihon's Bitcoin Wallet Address",
+                "type": "exchange"
                 "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
                 "created_at": 1504459805123
             },
@@ -1034,10 +1073,14 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + optional
 
 + **Response**
+    + `id`: Wallet ID
+        + string
     + `currency`: Currency ID
         + enum[`BTC`, ...]
     + `name`: A name to describe this withdrawal wallet address
         + string
+    + `type`: Ledger type
+        + enum[`exchange`, `funding`, `margin`]
     + `address`: User withdrawal address
         + string
     + `created_at`: Address creation time in milliseconds
@@ -1053,9 +1096,14 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "withdrawal": {
             "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
+            "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
             "status": "pending",
+            "confirmations": 25,
+            "required_confirmations": 25,
             "created_at": 1504459805123,
+            "sent_at": 1504459805123
             "completed_at": 1504459914233,
+            "updated_at": 1504459914233,
             "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
             "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
             "currency": "BTC",
@@ -1078,11 +1126,21 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + **Response**
     + `withdrawal_id`: Withdrawal ID
         + string
+    + `user_id`: Withdrawal user ID
+        + string
     + `status`: Status of the withdrawal request
-        + enum[`pending`, `completed`]
+        + enum[`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`]
+    + `confirmations`: Current confirmation count
+        + int
+    + `required_confirmations`: Required confirmation count
+        + int
     + `created_at`: Timestamp of withdrawal creation in milliseconds
         + int
+    + `sent_at`: Timestamp of issuing withdrawal in milliseconds
+        + int
     + `completed_at`: Timestamp of withdrawal completion in milliseconds
+        + int
+    + `updated_at`: Timestamp of withdrawal update time in milliseconds
         + int
     + `to_address`: Target address of withdrawal
         + string
@@ -1106,9 +1164,14 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "withdrawals": [
             {
                 "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
+                "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
                 "status": "pending",
+                "confirmations": 25,
+                "required_confirmations": 25,
                 "created_at": 1504459805123,
+                "sent_at": 1504459805123
                 "completed_at": 1504459914233,
+                "updated_at": 1504459914233,
                 "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
                 "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
                 "currency": "BTC",
@@ -1131,7 +1194,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + optional
         + Returns all currencies if not specified
     + `status`: Status of withdrawal
-        + enum[`pending`, `completed`]
+        + enum[`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`]
         + optional
         + Returns all status if not specified
     + `limit`: Limits number of withdrawals per page
@@ -1142,11 +1205,21 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + **Response**
     + `withdrawal_id`: Withdrawal ID
         + string
+    + `user_id`: Withdrawal user ID
+        + string
     + `status`: Status of the withdrawal request
-        + enum[`pending`, `completed`]
+        + enum[`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`]
+    + `confirmations`: Current confirmation count
+        + int
+    + `required_confirmations`: Required confirmation count
+        + int
     + `created_at`: Timestamp of withdrawal creation in milliseconds
         + int
+    + `sent_at`: Timestamp of issuing withdrawal in milliseconds
+        + int
     + `completed_at`: Timestamp of withdrawal completion in milliseconds
+        + int
+    + `updated_at`: Timestamp of withdrawal update time in milliseconds
         + int
     + `to_address`: Target address of withdrawal
         + string
@@ -1169,6 +1242,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "deposit": {
             "deposit_id": "62056df2d4cf8fb9b15c7238b89a1438",
+            "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
+            "status": "pending",
+            "confirmations": 25,
+            "required_confirmations": 25,    
             "created_at": 1504459805123,
             "completed_at": 1504459914233,
             "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
@@ -1193,6 +1270,14 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + **Response**
     + `deposit_id`: Deposit ID
         + string
+    + `user_id`: Deposit user ID
+        + string
+    + `status`: Transation status
+        + string
+    + `confirmations`: Current confirmation count
+        + int
+    + `required_confirmations`: Required confirmation count
+        + int
     + `created_at`: Timestamp of deposit creation in milliseconds
         + int
     + `completed_at`: Timestamp of deposit  completion in milliseconds
@@ -1219,6 +1304,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "deposits": [
             {
                 "deposit_id": "62056df2d4cf8fb9b15c7238b89a1438",
+                "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
+                "status": "pending",
+                "confirmations": 25,
+                "required_confirmations": 25,    
                 "created_at": 1504459805123,
                 "completed_at": 1504459914233,
                 "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
@@ -1239,6 +1328,14 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + **Response**
     + `deposit_id`: Deposit ID
         + string
+    + `user_id`: Deposit user ID
+        + string
+    + `status`: Transation status
+        + string
+    + `confirmations`: Current confirmation count
+        + int
+    + `required_confirmations`: Required confirmation count
+        + int
     + `created_at`: Timestamp of deposit creation in milliseconds
         + int
     + `completed_at`: Timestamp of deposit  completion in milliseconds

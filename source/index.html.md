@@ -16,7 +16,7 @@ toc_footers:
 # Overview
 COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 
-COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com`
+COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws`
 
 ## HTTP Request Headers
 `nonce` for 'POST' 'UPDATE' 'DELETE'  

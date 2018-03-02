@@ -19,8 +19,8 @@ COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws`
 
 ## HTTP Request Headers
-`nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`  
-`authorization`  for APIs that require authentication.
+`nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`
+`authorization`  for APIs that require authentication, value should be the API key token you obtain from the API key page in COBINHOOD exchange.
 
 ## Timestamps
 All timestamps exchanged between client and server are based on server Unix UTC timestamp. Please refer to System Module for retrieving server timestamp.
@@ -54,7 +54,7 @@ A successful response should have HTTP status codes ranging from 100 to 399, and
 {
     "success": false,
     "error": {
-        "error_code": <string>,
+        "error_code": "error_code_string"
     }
 }
 ```
@@ -90,11 +90,11 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 `/v1/system/time [GET]`
 
     Get the reference system time as Unix timestamp
-    
+
 + **Response**
     + `time`: Server Unix timestamp in milliseconds
         + int
-    
+
 ## Get System Information
 
 > [Success] Response 200 (application/json)
@@ -103,7 +103,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
     "success": true,
     "result": {
-    	"info": {
+	"info": {
             "phase": "production",
             "revision": "480bbd"
 	    }
@@ -113,7 +113,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 `/v1/system/info [GET]`
 
     Get system information
-    
+
 + **Response**
     + `phase`: System Phase
         + enum[`production`]
@@ -136,7 +136,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "name": "Bitcoin",
                 "min_unit": "0.00000001",
                 "deposit_fee": "0",
-                "withdrawal_fee": "22.6"
+                "withdrawal_fee": "22.6",
+		"type": "native",
+		"is_active": true,
+		"funding_frozen": false
             },
             ...
         ]
@@ -159,6 +162,12 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `withdrawal_fee`: The currency withdrawal fee
         + string
+    + `type`: The type of the currency, could be `native`, `erc20` ...
+        + string
+    + `is_active`: Whether or not the currency is active
+        + bool
+    + `funding_frozen`: Whether the funding service for the currency is frozen or not
+        + bool
 
 ## Get All Trading Pairs
 > [Success] Response 200 (application/json)
@@ -231,7 +240,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + int
         + optional
         + Defaults to 50 if not specified, if limit is `0`, it means to fetch the whole order book.
-        
+
 + **Response**
     + `sequence`: A sequence number that is updated on each orderbook state change
         + int
@@ -269,7 +278,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 `/v1/market/stats [GET]`
 
 ## Get Ticker
-        
+
 > [Success] Response 200 (application/json)
 
 ```json
@@ -277,7 +286,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "ticker": {
-            "trading_pair_id": "COB-BTC"
+            "trading_pair_id": "COB-BTC",
             "timestamp": 1504459805123,
             "24h_high": "23.456",
             "24h_low": "10.123",
@@ -285,21 +294,22 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             "24h_volume": "7842.11542563",
             "last_trade_price":"244.82",
             "highest_bid":"244.75",
-            "lowest_ask":"244.76",
-        },
+            "lowest_ask":"244.76"
+        }
     }
 }
 ```
 
 `/v1/market/tickers/<trading_pair_id> [GET]`
 
-    Returns ticker for specified trading pair
+    Returns ticker for specified trading pair.
 
 + **Path Parameters**
     + `trading_pair_id`
         + enum[`BTC-USDT`, ...]
-        + required
-        
+        + optional
+	+ If not specified, return tickers for all pairs.
+
 + **Response**
     + `trading_pair_id`: Ticker trading pair id
         + string
@@ -431,7 +441,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
 # Trading *[Auth]*
 
-## Get Order 
+## Get Order
 > [Success] Response 200 (application/json)
 
 ```json
@@ -480,7 +490,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `completed_at`: The order filled time
         + string
 
-## Get Trades of An Order 
+## Get Trades of An Order
 
 > [Success] Response 200 (application/json)
 
@@ -493,7 +503,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "id": "09619448e48a3bd73d493a4194f9020b",
                 "price": "10.00000000",
                 "size": "0.01000000",
-                "maker_side": "bid"
+                "maker_side": "bid",
                 "timestamp": 1504459805123
             },
             ...
@@ -523,7 +533,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `timestamp`: Closed timestamp in milliseconds
         + int
 
-## Get All Orders 
+## Get All Orders
 
 > [Success] Response 200 (application/json)
 
@@ -588,7 +598,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `completed_at`: The order filled time
         + string
 
-## Place Order 
+## Place Order
 > Payload
 
 ```json
@@ -634,8 +644,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             "price": "5000.01",
             "size": "1.0100",
             "filled": "0.59",
-            "timestamp": 1504459805123
-            "eq_price": "5000.01",
+            "timestamp": 1504459805123,
+            "eq_price": "5000.01"
         }
     }
 }
@@ -665,7 +675,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
 
 
-## Modify Order 
+## Modify Order
 > [Success] Response 200 (application/json)
 
 ```json
@@ -691,7 +701,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
         + required
 
-## Cancel Order 
+## Cancel Order
 > [Success] Response 200 (application/json)
 
 ```json
@@ -709,7 +719,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
         + required
 
-## Get Order History 
+## Get Order History
 `/v1/trading/order_history [GET]`
 
     Returns order history for the current user
@@ -741,9 +751,9 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "price": "5000.01",
                 "size": "1.0100",
                 "filled": "0.59",
-                "timestamp": 1504459805123
-                "eq_price": "5000.01",
-            },
+                "timestamp": 1504459805123,
+                "eq_price": "5000.01"
+            }
             ...
         ]
     }
@@ -774,7 +784,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `completed_at`: The order filled time
         + string
 
-## Get Trade 
+## Get Trade
 > [Success] Response 200 (application/json)
 
 ```json
@@ -782,7 +792,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "trade": {
-            "trading_pair_id": "BTC-USDT",   
+            "trading_pair_id": "BTC-USDT",
             "id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
             "maker_side": "bid",
             "price": "10.00000000",
@@ -816,7 +826,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `timestamp`: Closed timestamp in milliseconds
         + int
 
-## Get Trade History 
+## Get Trade History
 > [Success] Response 200 (application/json)
 
 ```json
@@ -882,21 +892,27 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "type": "exchange",
                 "total": "1",
                 "on_order": "0.4",
-                "locked": false
+                "locked": false,
+		"usd_value": "10000.0",
+		"btc_value": "1.0"
             },
             {
                 "currency": "ETH",
                 "type": "exchange",
                 "total": "0.0855175219863032",
                 "on_order": "0.04",
-                "locked": false
+                "locked": false,
+		"usd_value": "10000.0",
+		"btc_value": "0.008"
             },
             {
                 "currency": "COB",
                 "type":" exchange",
                 "total": "100",
                 "on_order": "20",
-                "locked": false
+                "locked": false,
+		"usd_value": "1000.0",
+		"btc_value": "0.1"
             },
             ...
         ]
@@ -919,6 +935,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `locked`: If the balance is locked
         + bool
+    + `usd_value`: market value in USD
+        + string
+    + `btc_value`: market value in BTC
+        + string
 
 ## Get Ledger Entries
 > [Success] Response 200 (application/json)
@@ -935,7 +955,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "currency": "BTC",
                 "amount": "+635.77",
                 "balance": "2930.33",
-                "timestamp": 1504685599302,
+                "timestamp": 1504685599302
             },
             {
                 "action": "deposit",
@@ -944,16 +964,16 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "currency": "BTC",
                 "amount": "+635.77",
                 "balance": "2930.33",
-                "timestamp": 1504685599302,
+                "timestamp": 1504685599302
             },
             {
-                "action": "withdraw"
+                "action": "withdraw",
                 "type": "exchange",
                 "withdrawal_id": "09619448e48a3bd73d493a4194f9020b",
                 "currency": "BTC",
                 "amount": "-121.01",
                 "balance": "2194.87",
-                "timestamp": 1504685599302,
+                "timestamp": 1504685599302
             },
             ...
         ]
@@ -974,7 +994,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + int
         + optional
         + Defaults to 20 if not specified, Maximun 50.
-        
+
 + **Response**
     + `type`: Type of ledger
         + enum[`funding`, `margin`, `exchange`]
@@ -1050,10 +1070,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "withdrawal_addresses": [
             {
-                "id": "09619448e48a3bd73d493a4194f9020b"
+                "id": "09619448e48a3bd73d493a4194f9020b",
                 "currency": "BTC",
-		        "name": "Kihon's Bitcoin Wallet Address",
-                "type": "exchange"
+	        "name": "Kihon's Bitcoin Wallet Address",
+                "type": "exchange",
                 "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
                 "created_at": 1504459805123
             },
@@ -1101,7 +1121,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             "confirmations": 25,
             "required_confirmations": 25,
             "created_at": 1504459805123,
-            "sent_at": 1504459805123
+            "sent_at": 1504459805123,
             "completed_at": 1504459914233,
             "updated_at": 1504459914233,
             "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
@@ -1169,7 +1189,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "confirmations": 25,
                 "required_confirmations": 25,
                 "created_at": 1504459805123,
-                "sent_at": 1504459805123
+                "sent_at": 1504459805123,
                 "completed_at": 1504459914233,
                 "updated_at": 1504459914233,
                 "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
@@ -1245,7 +1265,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
             "status": "pending",
             "confirmations": 25,
-            "required_confirmations": 25,    
+            "required_confirmations": 25,
             "created_at": 1504459805123,
             "completed_at": 1504459914233,
             "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
@@ -1307,7 +1327,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
                 "status": "pending",
                 "confirmations": 25,
-                "required_confirmations": 25,    
+                "required_confirmations": 25,
                 "created_at": 1504459805123,
                 "completed_at": 1504459914233,
                 "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
@@ -1359,8 +1379,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
 ```json
 {
-  "action": 'subscribe',
-  "type": 'order',
+  "action": "subscribe",
+  "type": "order"
 }
 ```
 
@@ -1370,7 +1390,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
   "event": "subscribed",
   "type": "order",
-  "channel_id": CHANNEL_ID,
+  "channel_id": CHANNEL_ID
 }
 ```
 
@@ -1425,8 +1445,8 @@ followed by any trade that occurs at COBINHOOD.
 
 ```json
 {
-  "action": 'subscribe',
-  "type": 'trade',
+  "action": "subscribe",
+  "type": "trade",
   "trading_pair_id": TRADING_PAIR_ID
 }
 ```
@@ -1496,8 +1516,8 @@ followed by updates upon any changes to the book.
 
 ```json
 {
-  "action": 'subscribe',
-  "type": 'order-book',
+  "action": "subscribe",
+  "type": "order-book",
   "trading_pair_id": TRADING_PAIR_ID
   "precision": PRECISION
 }
@@ -1511,7 +1531,7 @@ followed by updates upon any changes to the book.
   "type": "order-book",
   "channel_id": CHANNEL_ID,
   "trading_pair_id": TRADING_PAIR_ID
-  "precision": PRECISION      
+  "precision": PRECISION
 }
 ```
 
@@ -1567,15 +1587,15 @@ followed by updates upon any changes to the book.
     + string
 + `SIZE`: Total amount
     + string
-+ `PRECISION`: The precision of the target orderbook. 
++ `PRECISION`: The precision of the target orderbook.
     + string
 
 ## Ticker
 
 ```json
 {
-  "action": 'subscribe',
-  "type": 'ticker',
+  "action": "subscribe",
+  "type": "ticker",
   "trading_pair_id": TRADING_PAIR_ID
 }
 ```
@@ -1606,7 +1626,7 @@ followed by updates upon any changes to the book.
           24H_HIGH,
           24H_LOW,
           24H_OPEN,
-          TIME_STAMP,
+          TIME_STAMP
         ]
 }
 ```
@@ -1626,7 +1646,7 @@ followed by updates upon any changes to the book.
           24H_HIGH,
           24H_LOW,
           24H_OPEN,
-          TIME_STAMP,
+          TIME_STAMP
         ]
 }
 ```
@@ -1665,8 +1685,8 @@ After receiving the response, you will receive a snapshot of the ticker,
 
 ```json
 {
-  "action": 'subscribe',
-  "type": 'candle',
+  "action": "subscribe",
+  "type": "candle",
   "trading_pair_id": TRADING_PAIR_ID,
   "timeframe": TIMEFRAME
 }
@@ -1745,7 +1765,7 @@ timeframe interval are emitted.
 
 ```json
 {
-  "action": 'ping',
+  "action": "ping"
 }
 ```
 
@@ -1753,7 +1773,7 @@ timeframe interval are emitted.
 
 ```json
 {
-  "event": "pong",
+  "event": "pong"
 }
 ```
 
@@ -1765,7 +1785,7 @@ Send `ping` to test connection
 
 ```json
 {
-  "action": 'unsubscribe',
+  "action": "unsubscribe",
   "channel_id": CHANNEL_ID
 }
 ```
@@ -1774,7 +1794,7 @@ Send `ping` to test connection
 
 ```json
 {
-  "event": 'unsubscribed',
+  "event": "unsubscribed",
   "channel_id": CHANNEL_ID
 }
 ```
@@ -1786,13 +1806,13 @@ Send unsubscribe action to unsubscribe channel
     + string
 
 # WebSocket error code
-Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example: 
+Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example:
 
 ```json
 {
   "event": "error",
   "code": 4001,
-  "message": "undefined_action"
+  "message": "undefined_action",
   "type": "ticker",
   "trading_pair_id": "BTC-USD"
 }
@@ -1806,8 +1826,8 @@ Error code for the specified error event occured, server will reponse an error m
 + `4003`: subscribe_failed. Failed to subscribe a channel for specified request.
 + `4004`: unsubsribe_failed. Failed to unsubscribe a channel for specified request.
 + `4005`: invalid_payload. request is not avliable.
-+ `4006`: not_authenticated. Calling a authorization required chanel, but request without authorization.   
-+ `4007`: invalid_snapshot. Failed to get a snapshot. 
++ `4006`: not_authenticated. Calling a authorization required chanel, but request without authorization.
++ `4007`: invalid_snapshot. Failed to get a snapshot.
 + `4008`: place_order_failed. Failed to place a order.
 + `4009`: cancel_order_failed. Failed to cancel a order.
 + `4010`: modify_order_failed. Failed to modify a order.

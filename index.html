@@ -397,8 +397,8 @@
 
 <p>COBINHOOD WebSocket API URL: <code>wss://feed.cobinhood.com/ws</code></p>
 <h2 id='http-request-headers'>HTTP Request Headers</h2>
-<p><code>nonce</code> for &#39;POST&#39; &#39;UPDATE&#39; &#39;DELETE&#39;. Accept nonce in millisecond unix time format. ex: <code>1518166662197</code><br>
-<code>authorization</code>  for APIs that require authentication.</p>
+<p><code>nonce</code> for &#39;POST&#39; &#39;UPDATE&#39; &#39;DELETE&#39;. Accept nonce in millisecond unix time format. ex: <code>1518166662197</code>
+<code>authorization</code>  for APIs that require authentication, value should be the API key token you obtain from the API key page in COBINHOOD exchange.</p>
 <h2 id='timestamps'>Timestamps</h2>
 <p>All timestamps exchanged between client and server are based on server Unix UTC timestamp. Please refer to System Module for retrieving server timestamp.</p>
 <h2 id='floating-point-values'>Floating Point Values</h2>
@@ -420,7 +420,7 @@
 <h2 id='unsuccessful-response'>Unsuccessful Response</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"error_code"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;string&gt;</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"error_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error_code_string"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -465,7 +465,7 @@
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"phase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"revision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"480bbd"</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -505,7 +505,10 @@
                 </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bitcoin"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"min_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00000001"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"deposit_fee"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"withdrawal_fee"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22.6"</span><span class="w">
+                </span><span class="s2">"withdrawal_fee"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22.6"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"native"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"is_active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"funding_frozen"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="err">...</span><span class="w">
         </span><span class="p">]</span><span class="w">
@@ -544,6 +547,21 @@
 
 <ul>
 <li>string</li>
+</ul></li>
+<li><code>type</code>: The type of the currency, could be <code>native</code>, <code>erc20</code> ...
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>is_active</code>: Whether or not the currency is active
+
+<ul>
+<li>bool</li>
+</ul></li>
+<li><code>funding_frozen</code>: Whether the funding service for the currency is frozen or not
+
+<ul>
+<li>bool</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -702,7 +720,7 @@
     </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"ticker"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB-BTC"</span><span class="w">
+            </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB-BTC"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
             </span><span class="s2">"24h_high"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23.456"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"24h_low"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.123"</span><span class="p">,</span><span class="w">
@@ -710,14 +728,14 @@
             </span><span class="s2">"24h_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7842.11542563"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"last_trade_price"</span><span class="p">:</span><span class="s2">"244.82"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"highest_bid"</span><span class="p">:</span><span class="s2">"244.75"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"lowest_ask"</span><span class="p">:</span><span class="s2">"244.76"</span><span class="p">,</span><span class="w">
-        </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"lowest_ask"</span><span class="p">:</span><span class="s2">"244.76"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p><code>/v1/market/tickers/&lt;trading_pair_id&gt; [GET]</code></p>
 
-<p>Returns ticker for specified trading pair</p>
+<p>Returns ticker for specified trading pair.</p>
 
 <ul>
 <li><p><strong>Path Parameters</strong></p>
@@ -727,8 +745,9 @@
 
 <ul>
 <li>enum[<code>BTC-USDT</code>, ...]</li>
-<li>required</li>
+<li>optional</li>
 </ul></li>
+<li>If not specified, return tickers for all pairs.</li>
 </ul></li>
 <li><p><strong>Response</strong></p>
 
@@ -1045,7 +1064,7 @@
                 </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"09619448e48a3bd73d493a4194f9020b"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.00000000"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.01000000"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"maker_side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="w">
+                </span><span class="s2">"maker_side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="err">...</span><span class="w">
@@ -1271,8 +1290,8 @@
             </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5000.01"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0100"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"filled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.59"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
-            </span><span class="s2">"eq_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5000.01"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"eq_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5000.01"</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1443,9 +1462,9 @@
                 </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5000.01"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0100"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"filled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.59"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
-                </span><span class="s2">"eq_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5000.01"</span><span class="p">,</span><span class="w">
-            </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"eq_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5000.01"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
             </span><span class="err">...</span><span class="w">
         </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -1520,7 +1539,7 @@
     </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"trade"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC-USDT"</span><span class="p">,</span><span class="w">   
+            </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC-USDT"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"09619448-e48a-3bd7-3d49-3a4194f9020b"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"maker_side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.00000000"</span><span class="p">,</span><span class="w">
@@ -1673,21 +1692,27 @@
                 </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"on_order"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.4"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"usd_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"btc_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="p">{</span><span class="w">
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ETH"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0855175219863032"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"on_order"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"usd_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"btc_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.008"</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="p">{</span><span class="w">
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">" exchange"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"on_order"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="s2">"locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"usd_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"btc_value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.1"</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="err">...</span><span class="w">
         </span><span class="p">]</span><span class="w">
@@ -1727,6 +1752,16 @@
 <ul>
 <li>bool</li>
 </ul></li>
+<li><code>usd_value</code>: market value in USD
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>btc_value</code>: market value in BTC
+
+<ul>
+<li>string</li>
+</ul></li>
 </ul></li>
 </ul>
 <h2 id='get-ledger-entries'>Get Ledger Entries</h2>
@@ -1744,7 +1779,7 @@
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+635.77"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2930.33"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504685599302</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504685599302</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="p">{</span><span class="w">
                 </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deposit"</span><span class="p">,</span><span class="w">
@@ -1753,16 +1788,16 @@
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+635.77"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2930.33"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504685599302</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504685599302</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"withdraw"</span><span class="w">
+                </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"withdraw"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"withdrawal_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"09619448e48a3bd73d493a4194f9020b"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-121.01"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2194.87"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504685599302</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504685599302</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="err">...</span><span class="w">
         </span><span class="p">]</span><span class="w">
@@ -1917,10 +1952,10 @@
     </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"withdrawal_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
             </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"09619448e48a3bd73d493a4194f9020b"</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"09619448e48a3bd73d493a4194f9020b"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kihon's Bitcoin Wallet Address"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kihon's Bitcoin Wallet Address"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchange"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xbcd7defe48a19f758a1c1a9706e808072391bc20"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
             </span><span class="p">},</span><span class="w">
@@ -1993,7 +2028,7 @@
             </span><span class="s2">"confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
             </span><span class="s2">"required_confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
             </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"sent_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
+            </span><span class="s2">"sent_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
             </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459914233</span><span class="p">,</span><span class="w">
             </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459914233</span><span class="p">,</span><span class="w">
             </span><span class="s2">"to_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xbcd7defe48a19f758a1c1a9706e808072391bc20"</span><span class="p">,</span><span class="w">
@@ -2110,7 +2145,7 @@
                 </span><span class="s2">"confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"required_confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"sent_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="w">
+                </span><span class="s2">"sent_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459914233</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459914233</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"to_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xbcd7defe48a19f758a1c1a9706e808072391bc20"</span><span class="p">,</span><span class="w">
@@ -2241,7 +2276,7 @@
             </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"62056df2d4cf8fb9b15c7238b89a1438"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"required_confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">    
+            </span><span class="s2">"required_confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
             </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
             </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459914233</span><span class="p">,</span><span class="w">
             </span><span class="s2">"from_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xbcd7defe48a19f758a1c1a9706e808072391bc20"</span><span class="p">,</span><span class="w">
@@ -2346,7 +2381,7 @@
                 </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"62056df2d4cf8fb9b15c7238b89a1438"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"required_confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">    
+                </span><span class="s2">"required_confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459805123</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1504459914233</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"from_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xbcd7defe48a19f758a1c1a9706e808072391bc20"</span><span class="p">,</span><span class="w">
@@ -2433,8 +2468,8 @@
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'subscribe'</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">'order'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
@@ -2443,7 +2478,7 @@
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribed"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
@@ -2526,8 +2561,8 @@ followed by any trade that occurs at COBINHOOD.</p>
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'subscribe'</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">'trade'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trade"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2623,8 +2658,8 @@ followed by updates upon any changes to the book.</p>
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'subscribe'</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">'order-book'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order-book"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
   </span><span class="s2">"precision"</span><span class="p">:</span><span class="w"> </span><span class="err">PRECISION</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2637,7 +2672,7 @@ followed by updates upon any changes to the book.</p>
   </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order-book"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
-  </span><span class="s2">"precision"</span><span class="p">:</span><span class="w"> </span><span class="err">PRECISION</span><span class="w">      
+  </span><span class="s2">"precision"</span><span class="p">:</span><span class="w"> </span><span class="err">PRECISION</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
@@ -2712,15 +2747,15 @@ followed by updates upon any changes to the book.</p>
 <ul>
 <li>string</li>
 </ul></li>
-<li><code>PRECISION</code>: The precision of the target orderbook. 
+<li><code>PRECISION</code>: The precision of the target orderbook.
 
 <ul>
 <li>string</li>
 </ul></li>
 </ul>
 <h2 id='ticker'>Ticker</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'subscribe'</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">'ticker'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ticker"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2749,7 +2784,7 @@ followed by updates upon any changes to the book.</p>
           </span><span class="mi">24</span><span class="err">H_HIGH</span><span class="p">,</span><span class="w">
           </span><span class="mi">24</span><span class="err">H_LOW</span><span class="p">,</span><span class="w">
           </span><span class="mi">24</span><span class="err">H_OPEN</span><span class="p">,</span><span class="w">
-          </span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w">
+          </span><span class="err">TIME_STAMP</span><span class="w">
         </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2768,7 +2803,7 @@ followed by updates upon any changes to the book.</p>
           </span><span class="mi">24</span><span class="err">H_HIGH</span><span class="p">,</span><span class="w">
           </span><span class="mi">24</span><span class="err">H_LOW</span><span class="p">,</span><span class="w">
           </span><span class="mi">24</span><span class="err">H_OPEN</span><span class="p">,</span><span class="w">
-          </span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w">
+          </span><span class="err">TIME_STAMP</span><span class="w">
         </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2842,8 +2877,8 @@ followed by updates upon any changes to the book.</p>
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'subscribe'</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">'candle'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"candle"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="p">,</span><span class="w">
   </span><span class="s2">"timeframe"</span><span class="p">:</span><span class="w"> </span><span class="err">TIMEFRAME</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2954,14 +2989,14 @@ timeframe interval are emitted.</p>
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'ping'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ping"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
 <p><strong>Response</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pong"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pong"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>Send <code>ping</code> to test connection</p>
@@ -2970,7 +3005,7 @@ timeframe interval are emitted.</p>
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="err">'unsubscribe'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unsubscribe"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2978,7 +3013,7 @@ timeframe interval are emitted.</p>
 <p><strong>Response</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="err">'unsubscribed'</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unsubscribed"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2988,11 +3023,11 @@ timeframe interval are emitted.</p>
 + <code>CHANNEL_ID</code>: The channel id for event type
     + string</p>
 <h1 id='websocket-error-code'>WebSocket error code</h1>
-<p>Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example: </p>
+<p>Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example:</p>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">4001</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"undefined_action"</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"undefined_action"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ticker"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC-USD"</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3004,8 +3039,8 @@ timeframe interval are emitted.</p>
 <li><code>4003</code>: subscribe_failed. Failed to subscribe a channel for specified request.</li>
 <li><code>4004</code>: unsubsribe_failed. Failed to unsubscribe a channel for specified request.</li>
 <li><code>4005</code>: invalid_payload. request is not avliable.</li>
-<li><code>4006</code>: not_authenticated. Calling a authorization required chanel, but request without authorization.<br></li>
-<li><code>4007</code>: invalid_snapshot. Failed to get a snapshot. </li>
+<li><code>4006</code>: not_authenticated. Calling a authorization required chanel, but request without authorization.</li>
+<li><code>4007</code>: invalid_snapshot. Failed to get a snapshot.</li>
 <li><code>4008</code>: place_order_failed. Failed to place a order.</li>
 <li><code>4009</code>: cancel_order_failed. Failed to cancel a order.</li>
 <li><code>4010</code>: modify_order_failed. Failed to modify a order.</li>

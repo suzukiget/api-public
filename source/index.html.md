@@ -103,10 +103,10 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
     "success": true,
     "result": {
-	"info": {
+        "info": {
             "phase": "production",
             "revision": "480bbd"
-	    }
+        }
     }
 }
 ```
@@ -137,9 +137,9 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "min_unit": "0.00000001",
                 "deposit_fee": "0",
                 "withdrawal_fee": "22.6",
-		"type": "native",
-		"is_active": true,
-		"funding_frozen": false
+                "type": "native",
+                "is_active": true,
+                "funding_frozen": false
             },
             ...
         ]
@@ -308,7 +308,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `trading_pair_id`
         + enum[`BTC-USDT`, ...]
         + optional
-	+ If not specified, return tickers for all pairs.
+        + If not specified, return tickers for all pairs.
 
 + **Response**
     + `trading_pair_id`: Ticker trading pair id
@@ -893,8 +893,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "total": "1",
                 "on_order": "0.4",
                 "locked": false,
-		"usd_value": "10000.0",
-		"btc_value": "1.0"
+                "usd_value": "10000.0",
+                "btc_value": "1.0"
             },
             {
                 "currency": "ETH",
@@ -902,8 +902,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "total": "0.0855175219863032",
                 "on_order": "0.04",
                 "locked": false,
-		"usd_value": "10000.0",
-		"btc_value": "0.008"
+                "usd_value": "10000.0",
+                "btc_value": "0.008"
             },
             {
                 "currency": "COB",
@@ -911,8 +911,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
                 "total": "100",
                 "on_order": "20",
                 "locked": false,
-		"usd_value": "1000.0",
-		"btc_value": "0.1"
+                "usd_value": "1000.0",
+                "btc_value": "0.1"
             },
             ...
         ]
@@ -1072,7 +1072,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
             {
                 "id": "09619448e48a3bd73d493a4194f9020b",
                 "currency": "BTC",
-	        "name": "Kihon's Bitcoin Wallet Address",
+                "name": "Kihon's Bitcoin Wallet Address",
                 "type": "exchange",
                 "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
                 "created_at": 1504459805123

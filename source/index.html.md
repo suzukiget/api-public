@@ -178,9 +178,9 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "trading_pairs": [
             {
-                "id": "BTC-USD",
+                "id": "BTC-USDT",
                 "base_currency_id": "BTC",
-                "quote_currency_id": "USD",
+                "quote_currency_id": "USDT",
                 "base_min_size": "0.004",
                 "base_max_size": "10000",
                 "quote_increment": "0.1"
@@ -259,8 +259,8 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
     "success": true,
     "result": {
-        "BTC-USD": {
-            "id": "BTC-USD",
+        "BTC-USDT": {
+            "id": "BTC-USDT",
             "last_price": "10005",
             "lowest_ask": "10005",
             "highest_bid": "15200.1",
@@ -450,7 +450,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "order": {
             "id": "37f550a202aa6a3fe120f420637c894c",
-            "trading_pair": "BTC-USD",
+            "trading_pair": "BTC-USDT",
             "state": "open",
             "side": "bid",
             "type": "limit",
@@ -470,7 +470,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `id`: Order ID
         + string
     + `trading_pair`: Trading pair ID
-        + enum[`BTC-USD`, ...]
+        + enum[`BTC-USDT`, ...]
     + `state`: Order status
         + enum[`new`, `queued`, `open`, `partially_filled`, `filled`, `cancelled`]
     + `side`: Order side
@@ -544,7 +544,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "orders": [
             {
                 "id": "37f550a202aa6a3fe120f420637c894c",
-                "trading_pair": "BTC-USD",
+                "trading_pair": "BTC-USDT",
                 "state": "open",
                 "side": "bid",
                 "type": "limit",
@@ -576,7 +576,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
 + **Response**
     + `trading_pair`: Trading pair ID
-        + enum[`BTC-USD`, ...]
+        + enum[`BTC-USDT`, ...]
     + `id`: Order ID
         + string
     + `state`: Order status
@@ -603,7 +603,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
 ```json
 {
-    "trading_pair_id": "BTC-USD",
+    "trading_pair_id": "BTC-USDT",
     "side": "bid",
     "type": "limit",
     "price": "5000.01000000",
@@ -637,7 +637,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "order": {
             "id": "37f550a202aa6a3fe120f420637c894c",
-            "trading_pair": "BTC-USD",
+            "trading_pair": "BTC-USDT",
             "state": "open",
             "side": "bid",
             "type": "limit",
@@ -652,7 +652,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 ```
 + **Response**
     + `trading_pair`: Trading pair ID
-        + enum[`BTC-USD`, ...]
+        + enum[`BTC-USDT`, ...]
     + `id`: Order ID
         + string
     + `state`: Order status
@@ -726,7 +726,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
 + **Query Parameters**
     + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USD`, ...]
+        + enum[`BTC-USDT`, ...]
         + optional
     + `limit`: Limits number of orders per page
         + int
@@ -744,7 +744,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "order_history": [
             {
                 "id": "37f550a202aa6a3fe120f420637c894c",
-                "trading_pair": "BTC-USD",
+                "trading_pair": "BTC-USDT",
                 "state": "filled",
                 "side": "bid",
                 "type": "limit",
@@ -762,7 +762,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 
 + **Response**
     + `trading_pair`: Trading pair ID
-        + enum[`BTC-USD`, ...]
+        + enum[`BTC-USDT`, ...]
     + `id`: Order ID
         + string
     + `status`: Order status
@@ -935,7 +935,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + string
     + `locked`: If the balance is locked
         + bool
-    + `usd_value`: market value in USD
+    + `usd_value`: market value in USDT
         + string
     + `btc_value`: market value in BTC
         + string
@@ -1814,7 +1814,7 @@ Error code for the specified error event occured, server will reponse an error m
   "code": 4001,
   "message": "undefined_action",
   "type": "ticker",
-  "trading_pair_id": "BTC-USD"
+  "trading_pair_id": "BTC-USDT"
 }
 ```
 

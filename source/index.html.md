@@ -16,7 +16,8 @@ toc_footers:
 # Overview
 COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 
-COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws`
+COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws` [Will deprecate in June, 2018]
+COBINHOOD WebSocket V2 API URL: `wss://ws.cobinhood.com/v2/ws`
 
 ## HTTP Request Headers
 `nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`
@@ -251,6 +252,28 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `count`: The number of orders within current price range
         + string
         + e.g. when `precision=2`,  4137.181 and 4137.1837 would both fall into price group 4137.18
+
+## Get Order Book Precisions
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": []
+}
+```
+`/v1/market/orderbook/precisions/<trading_pair_id> [GET]`
+
+    Get order book available precisions for the trading pair
+
++ **Path Parameters**
+    + `trading_pair_id`: Trading pair ID
+        + enum[`BTC-USDT`, ...]
+        + required
+
+
++ **Response**
+    + `result`: available precisions in scientific notation format.
 
 ## Get Trading Statistics
 > [Success] Response 200 (application/json)
@@ -1371,7 +1394,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     + `fee`: Transfer fee of the deposit
         + string
 
-# WebSocket
+# WebSocket [Will deprecate in June, 2018]
 
 ## Order *[Auth]*
 
@@ -1832,3 +1855,471 @@ Error code for the specified error event occured, server will reponse an error m
 + `4009`: cancel_order_failed. Failed to cancel a order.
 + `4010`: modify_order_failed. Failed to modify a order.
 
+
+# Websocket V2
+
+To reduce payload size, using abbreviation and supporting message compression (RFC 7692), and support extendable structure, using key-value pair, JSON payload would result in following schema:
+
+```json
+ {
+ 	"h": [],	// header: extendable payload header.
+ 				// Format: [channel_id, version, type]
+ 				//  * version for future iteration.
+ 				//  * type is defined according to resource.
+ 				//
+ 				// Generally, we have following types:
+ 				//  * "s" for snapshot
+ 				//  * "u" for update.
+ 				//
+ 				// For order response, we may have enum mapping to order type.
+
+ 	"d": [],	// data: array most time, will be ordered by uniqueness.
+ 				// For exmpale:
+ 				//	* data with uuid, uuid would be the first
+ 				//	* data without uuid, timestamp is more
+ 				//      distinguishable than other fields.
+
+ }
+```
+
+## Common Parameters
+
+*NOTE: all fields are converted to string for correct precision*
+
+**Version**
+
++ `2`: first version after v2 payload announced.
+
+**Type**
+
+For control response (see sessions below):
+
++ `pong`
++ `subscribe`
++ `unsubscribe`
++ `error`
+
+For data response (seed sessions below):
+
++ `s`: snapshot
++ `u`: update
+
+
+## Control Request/Response
+
+### Ping/Pong
+
+Ping/pong extends disconnection timeout. If no ping/pong message recieved, connection will be dropped by server in 64 seconds after last seen ping/pong message.
+
+> **Request**
+
+```json
+{
+  "action": "ping"
+}
+```
+
+> **Response**
+
+```json
+{
+    // [channel_id, version, type]
+    "h": ["", "2", "pong"],
+    "d": []
+}
+```
+
+### Subscribe
+
+Please check channels below. the optional parameters are different from channel to channel.
+
+### Unsubscribe
+
+Unsubscribe from given channel to reduce unused data stream.
+
+**PARAMS**
+
++ `CHANNEL_ID`: recieved from subscribe request and response.
+
+> **Request**
+
+```json
+{
+  "action": "unsubscribe",
+  "type": CHANNEL_ID
+
+}
+```
+
+> **Response**
+
+```json
+{
+    // [channel_id, version, type]
+    "h": ["trade.ETH-BTC", "2", "unsubscribed"],
+    "d": []
+}
+```
+
+### Error
+
+Error code for the specified error event occured, server will reponse an error message including error code. For example:
+
+**Error Code**
+
++ `4000`: undefined_error. Unknown error.
++ `4001`: undefined_action. Request action is not defined.
++ `4002`: cannel_not_found. Cound't found a  channel according the request.
++ `4003`: subscribe_failed. Failed to subscribe a channel for specified request.
++ `4004`: unsubsribe_failed. Failed to unsubscribe a channel for specified request.
++ `4005`: invalid_payload. request is not avliable.
++ `4006`: not_authenticated. Calling a authorization required chanel, but request without authorization.
++ `4007`: invalid_snapshot. Failed to get a snapshot.
++ `4008`: place_order_failed. Failed to place a order.
++ `4009`: cancel_order_failed. Failed to cancel a order.
++ `4010`: modify_order_failed. Failed to modify a order.
++ `4011`: invalid_client_version. Not supported client.
++ `4012`: order_operation_rate_limit. Order operation (including place, modify, cancel) reaches rate limit. Note that limit counter are platform-wide, counting both REST and websocket.
+
+> **Response**
+
+```json
+{
+    // [channel_id, version, type, error_code, msg]
+    "h": ["", "2", "error", "4002", "channel_not_found"],
+    "d": []
+}
+```
+
+## Channel Request/Response
+
+### Order [Auth]
+
+Order response provides extra information for recognition, the following sessions show all values of field enumerations.
+
+**Type**
+
++ `0`: limit
++ `1`: market
++ `2`: market_stop
++ `3`: limit_stop
++ `4`: trailing_fiat_stop       (not valid yet)
++ `5`: fill_or_kill             (not valid yet)
++ `6`: trailing_percent_stop    (not valid yet)
+
+**Event**
+
++ `opened`: order placed.
++ `modified`: order modified.
++ `executed`: order executed/matched.
++ `triggered`: conditional order been triggered.
++ `cancelled`: order cancelled.
++ `cancel_pending`: server is processing cancelation.
++ `cancel_rejected`: cancel request is rejected.
++ `modify_rejected`: modify request is rejected.
++ `execute_rejected`: rejected while executing.
++ `trigger_rejected`: rejected while triggering.
+
+**State**
+
++ `queued`
++ `open`
++ `partially_filled`
++ `filled`
++ `cancelled`
++ `pending_cancellation`
++ `rejected`
++ `triggered`
+
+**Side**
+
++ `ask`
++ `bid`
+
+**PARAMS**
+
++ `ORDER_ID`: order's ID.
++ `TIMESTAMP`: order's timestamp.
++ `COMPLETED_AT`: order executed timestamp.
++ `TRADING_PAIR_ID`: trading pairs ID
++ `STATE`: order state, the state saved in database.
++ `EVENT`: order event, the state changing event.
++ `SIDE`: place side
++ `PRICE`: order price
++ `EQ_PRICE`: equal/average price
++ `SIZE`: order size
++ `PARIIAL_FILLED_SIZE`: partially filled size
++ `STOP_PRICE`: conditional stop price
+
+> **Request**
+
+```json
+{
+  "action": "subscribe",
+  "type": "order"
+}
+```
+
+> **Response**
+
+*Limit Order*
+
+```json
+{
+    // [channel_id, version, type]
+    "h": ["order", "2", "u", "0"],
+    "d": [
+        ORDER_ID,
+        TIMESTAMP,
+        COMPLETED_AT,
+        TRADING_PAIR_ID,
+        STATE,
+        EVENT,
+        SIDE,
+        PRICE,
+        EQ_PRICE,
+        SIZE,
+        PARTIAL_FILLED_SIZE
+    ]
+}
+```
+
+*Market Order*
+
+```json
+{
+    // [channel_id, version, type]
+    "h": ["order", "2", "u", "1"],
+    "d": [
+        ORDER_ID,
+        TIMESTAMP,
+        COMPLETED_AT,
+        TRADING_PAIR_ID,
+        STATE,
+        EVENT,
+        SIDE,
+        EQ_PRICE,
+        SIZE,
+        PARTIAL_FILLED_SIZE
+    ]
+}
+```
+
+*Market Stop Order*
+
+```json
+{
+    // [channel_id, version, type]
+    "h": ["order", "2", "u", "3"],
+    "d": [
+        ORDER_ID,
+        TIMESTAMP,
+        COMPLETED_AT,
+        TRADING_PAIR_ID,
+        STATE,
+        EVENT,
+        SIDE,
+        EQ_PRICE,
+        SIZE,
+        PARTIAL_FILLED_SIZE,
+        STOP_PRICE
+    ]
+}
+```
+
+*Limit Stop Order*
+
+```json
+{
+    // [channel_id, version, type]
+    "h": ["order", "2", "u", "4"],
+    "d": [
+        ORDER_ID,
+        TIMESTAMP,
+        COMPLETED_AT,
+        TRADING_PAIR_ID,
+        STATE,
+        EVENT,
+        SIDE,
+        PRICE,
+        EQ_PRICE,
+        SIZE,
+        PARTIAL_FILLED_SIZE,
+        STOP_PRICE
+    ]
+}
+```
+
+### Orderbook
+
+After receiving the response, you will receive a snapshot of the book, followed by updates upon any changes to the book.
+The updates is published as **DIFF**.
+
+**PARAMS**
+
++ `PRECISION`: available precisions could be acquired from REST, endpoint: `/v1/market/orderbook/precisions/<trading_pair_id>`
++ `PRICE`: order price
++ `SIZE`: order amount, diff maybe minus value
++ `COUNT`: order count, diff maybe minus value
+
+> **Request**
+
+```json
+{
+  "action": "subscribe",
+  "type": "order-book",
+  "trading_pair_id": TRADING_PAIR_ID
+  "precision": PRECISION
+}
+```
+
+> **Response**
+```json
+{
+    // [channel_id, version, type]
+    "h": ["order-book.COB-ETH.1E-7", "2", "u"],
+    "d": {
+        "bids": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ],
+        "asks": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+    }
+}
+```
+
+### Trade
+
+After receiving the response, you will start receiving recent trade,
+followed by any trade that occurs at COBINHOOD.
+
+**PARAMS**
+
++ `TRADING_PAIR_ID`: Subscribe trading pair ID
++ `TRADE_ID`: Trade ID
++ `TIME_STAMP`: Trade timestamp in milliseconds
++ `PRICE`: Trade quote price
++ `SIZE`: Trade base amount
++ `MAKER_SIDE`: The order side
+
+> **Request**
+
+```json
+{
+  "action": "subscribe",
+  "type": "trade",
+  "trading_pair_id": TRADING_PAIR_ID
+}
+```
+
+> **Response**
+
+```json
+{
+    "h": ["trade.COB-ETH", "2", "u"],
+    "d":
+        [
+          [TRADE_ID, TIME_STAMP, PRICE, SIZE, MAKER_SIDE],
+          ...
+        ]
+}
+```
+
+### Ticker
+
++ `TRADING_PAIR_ID`: Subscribe trading pair ID
++ `TIME_STAMP`: Ticker timestamp in milliseconds
++ `HIGHEST_BID`: Best bid price in current order book
++ `LOWEST_ASK`: Best ask price in current order book
++ `24H_VOLUME`: Trading volume of the last 24 hours
++ `24H_LOW`: Lowest trade price of the last 24 hours
++ `24H_HIGH`: Highest trade price of the last 24 hours
++ `LAST_TRADE_PRICE`: Latest trade price
+
+> **Request**
+
+```json
+{
+  "action": "subscribe",
+  "type": "ticker",
+  "trading_pair_id": TRADING_PAIR_ID
+}
+```
+
+> **Response**
+
+```json
+{
+    "h": ["ticker.COB-ETH", "2", "u"],
+    "d": [
+        [
+          TIME_STAMP,
+          HIGHEST_BID,
+          LOWEST_ASK,
+          24H_VOLUME,
+          24H_HIGH,
+          24H_LOW,
+          24H_OPEN,
+          LAST_TRADE_PRICE
+        ]
+    ]
+}
+```
+
+
+### Candle
+
+After receiving the response, you will receive a snapshot of the candle data,
+followed by updates upon any changes to the chart. Updates to the most recent
+timeframe interval are emitted.
+
+**Timeframe**
+
++ `1m`: 1 minute
++ `5m`: 5 minute
++ `15m`: 15 minute
++ `30m`: 30 minute
++ `1h`: 1 hour
++ `3h`: 3 hour
++ `6h`: 6 hour
++ `12h`: 12 hour
++ `1D`: 1 day
++ `7D`: 7 day
++ `14D`: 14 day
++ `1M`: 1 month
+
+**PARAMS**
++ `TRADING_PAIR_ID`: Subscribe trading pair ID
++ `TIMEFRAME`: Timespan granularity, check enumeration above
++ `TIME_STAMP`: Timestamp in milliseconds
++ `VOL`:  Trading volume of the time frame
++ `HIGH`: Highest price during the time frame
++ `LOW`: Lowest price during the time frame
++ `OPEN`: First price during the time frame
++ `CLOSE`: Last price during the time frame
+
+> **Request**
+
+```json
+{
+  "action": "subscribe",
+  "type": "candle",
+  "trading_pair_id": TRADING_PAIR_ID,
+  "timeframe": TIMEFRAME
+}
+```
+
+> **Response**
+
+```json
+{
+    "channel_id": CHANNEL_ID,
+    "snapshot":
+        [
+          [TIME_STAMP, VOL, HIGH, LOW,OPEN, CLOSE],
+          ...
+        ]
+}
+```

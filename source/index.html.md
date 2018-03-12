@@ -1828,7 +1828,7 @@ Send unsubscribe action to unsubscribe channel
 + `CHANNEL_ID`: The channel id for event type
     + string
 
-# WebSocket error code
+## WebSocket error code
 Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example:
 
 ```json
@@ -1841,7 +1841,7 @@ Error code for the specified error event occured, server will reponse an error m
 }
 ```
 
-## Error Code
+### Error Code
 
 + `4000`: undefined_error. Unknown error.
 + `4001`: undefined_action. Request action is not defined.
@@ -1907,7 +1907,7 @@ For data response (seed sessions below):
 
 ## Control Request/Response
 
-### Ping/Pong
+## Ping/Pong
 
 Ping/pong extends disconnection timeout. If no ping/pong message recieved, connection will be dropped by server in 64 seconds after last seen ping/pong message.
 
@@ -1929,11 +1929,11 @@ Ping/pong extends disconnection timeout. If no ping/pong message recieved, conne
 }
 ```
 
-### Subscribe
+## Subscribe
 
 Please check channels below. the optional parameters are different from channel to channel.
 
-### Unsubscribe
+## Unsubscribe
 
 Unsubscribe from given channel to reduce unused data stream.
 
@@ -1961,7 +1961,7 @@ Unsubscribe from given channel to reduce unused data stream.
 }
 ```
 
-### Error
+## Error
 
 Error code for the specified error event occured, server will reponse an error message including error code. For example:
 
@@ -1993,7 +1993,7 @@ Error code for the specified error event occured, server will reponse an error m
 
 ## Channel Request/Response
 
-### Order [Auth]
+## Order [Auth]
 
 Order response provides extra information for recognition, the following sessions show all values of field enumerations.
 
@@ -2062,7 +2062,7 @@ Order response provides extra information for recognition, the following session
 
 > **Response**
 
-*Limit Order*
+##Limit Order
 
 ```json
 {
@@ -2084,7 +2084,7 @@ Order response provides extra information for recognition, the following session
 }
 ```
 
-*Market Order*
+##Market Order
 
 ```json
 {
@@ -2105,7 +2105,7 @@ Order response provides extra information for recognition, the following session
 }
 ```
 
-*Market Stop Order*
+##Market Stop Order
 
 ```json
 {
@@ -2127,7 +2127,7 @@ Order response provides extra information for recognition, the following session
 }
 ```
 
-*Limit Stop Order*
+##Limit Stop Order
 
 ```json
 {
@@ -2150,7 +2150,7 @@ Order response provides extra information for recognition, the following session
 }
 ```
 
-### Orderbook
+## Orderbook
 
 After receiving the response, you will receive a snapshot of the book, followed by updates upon any changes to the book.
 The updates is published as **DIFF**.
@@ -2174,6 +2174,7 @@ The updates is published as **DIFF**.
 ```
 
 > **Response**
+
 ```json
 {
     // [channel_id, version, type]
@@ -2190,7 +2191,7 @@ The updates is published as **DIFF**.
 }
 ```
 
-### Trade
+## Trade
 
 After receiving the response, you will start receiving recent trade,
 followed by any trade that occurs at COBINHOOD.
@@ -2269,7 +2270,7 @@ followed by any trade that occurs at COBINHOOD.
 ```
 
 
-### Candle
+## Candle
 
 After receiving the response, you will receive a snapshot of the candle data,
 followed by updates upon any changes to the chart. Updates to the most recent

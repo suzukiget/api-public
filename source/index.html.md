@@ -2292,6 +2292,7 @@ timeframe interval are emitted.
 + `1M`: 1 month
 
 **PARAMS**
+
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
 + `TIMEFRAME`: Timespan granularity, check enumeration above
 + `TIME_STAMP`: Timestamp in milliseconds

@@ -492,7 +492,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + **Response**
     + `id`: Order ID
         + string
-    + `trading_pair`: Trading pair ID
+    + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, ...]
     + `state`: Order status
         + enum[`new`, `queued`, `open`, `partially_filled`, `filled`, `cancelled`]
@@ -598,7 +598,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         + Defaults to 20 if not specified, Maximun 50.
 
 + **Response**
-    + `trading_pair`: Trading pair ID
+    + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, ...]
     + `id`: Order ID
         + string
@@ -674,7 +674,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 }
 ```
 + **Response**
-    + `trading_pair`: Trading pair ID
+    + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, ...]
     + `id`: Order ID
         + string
@@ -784,7 +784,7 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 ```
 
 + **Response**
-    + `trading_pair`: Trading pair ID
+    + `trading_pair_id`: Trading pair ID
         + enum[`BTC-USDT`, ...]
     + `id`: Order ID
         + string

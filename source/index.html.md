@@ -1800,7 +1800,7 @@ timeframe interval are emitted.
 }
 ```
 
-Send `ping` to test connection
+Send `ping` to test connection and extends disconnection timeout which is 64 seconds.
 
 ## Unsubscribe
 

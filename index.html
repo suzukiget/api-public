@@ -267,6 +267,9 @@
                     <a href="#get-order-book" class="toc-h2 toc-link" data-title="Get Order Book">Get Order Book</a>
                   </li>
                   <li>
+                    <a href="#get-order-book-precisions" class="toc-h2 toc-link" data-title="Get Order Book Precisions">Get Order Book Precisions</a>
+                  </li>
+                  <li>
                     <a href="#get-trading-statistics" class="toc-h2 toc-link" data-title="Get Trading Statistics">Get Trading Statistics</a>
                   </li>
                   <li>
@@ -347,7 +350,7 @@
               </ul>
           </li>
           <li>
-            <a href="#websocket" class="toc-h1 toc-link" data-title="WebSocket">WebSocket</a>
+            <a href="#websocket-will-deprecate-in-june-2018" class="toc-h1 toc-link" data-title="WebSocket [Will deprecate in June, 2018]">WebSocket [Will deprecate in June, 2018]</a>
               <ul class="toc-list-h2">
                   <li>
                     <a href="#order-em-auth-em" class="toc-h2 toc-link" data-title="Order <em>[Auth]</em>">Order <em>[Auth]</em></a>
@@ -370,13 +373,58 @@
                   <li>
                     <a href="#unsubscribe" class="toc-h2 toc-link" data-title="Unsubscribe">Unsubscribe</a>
                   </li>
+                  <li>
+                    <a href="#websocket-error-code" class="toc-h2 toc-link" data-title="WebSocket error code">WebSocket error code</a>
+                  </li>
               </ul>
           </li>
           <li>
-            <a href="#websocket-error-code" class="toc-h1 toc-link" data-title="WebSocket error code">WebSocket error code</a>
+            <a href="#websocket-v2" class="toc-h1 toc-link" data-title="Websocket V2">Websocket V2</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#error-code" class="toc-h2 toc-link" data-title="Error Code">Error Code</a>
+                    <a href="#common-parameters" class="toc-h2 toc-link" data-title="Common Parameters">Common Parameters</a>
+                  </li>
+                  <li>
+                    <a href="#control-request-response" class="toc-h2 toc-link" data-title="Control Request/Response">Control Request/Response</a>
+                  </li>
+                  <li>
+                    <a href="#ping-pong-2" class="toc-h2 toc-link" data-title="Ping/Pong">Ping/Pong</a>
+                  </li>
+                  <li>
+                    <a href="#subscribe" class="toc-h2 toc-link" data-title="Subscribe">Subscribe</a>
+                  </li>
+                  <li>
+                    <a href="#unsubscribe-2" class="toc-h2 toc-link" data-title="Unsubscribe">Unsubscribe</a>
+                  </li>
+                  <li>
+                    <a href="#error" class="toc-h2 toc-link" data-title="Error">Error</a>
+                  </li>
+                  <li>
+                    <a href="#channel-request-response" class="toc-h2 toc-link" data-title="Channel Request/Response">Channel Request/Response</a>
+                  </li>
+                  <li>
+                    <a href="#order-auth" class="toc-h2 toc-link" data-title="Order [Auth]">Order [Auth]</a>
+                  </li>
+                  <li>
+                    <a href="#limit-order" class="toc-h2 toc-link" data-title="Limit Order">Limit Order</a>
+                  </li>
+                  <li>
+                    <a href="#market-order" class="toc-h2 toc-link" data-title="Market Order">Market Order</a>
+                  </li>
+                  <li>
+                    <a href="#market-stop-order" class="toc-h2 toc-link" data-title="Market Stop Order">Market Stop Order</a>
+                  </li>
+                  <li>
+                    <a href="#limit-stop-order" class="toc-h2 toc-link" data-title="Limit Stop Order">Limit Stop Order</a>
+                  </li>
+                  <li>
+                    <a href="#orderbook" class="toc-h2 toc-link" data-title="Orderbook">Orderbook</a>
+                  </li>
+                  <li>
+                    <a href="#trade" class="toc-h2 toc-link" data-title="Trade">Trade</a>
+                  </li>
+                  <li>
+                    <a href="#candle-2" class="toc-h2 toc-link" data-title="Candle">Candle</a>
                   </li>
               </ul>
           </li>
@@ -395,7 +443,8 @@
 <h1 id='overview'>Overview</h1>
 <p>COBINHOOD RESTful API URL: <code>https://api.cobinhood.com</code></p>
 
-<p>COBINHOOD WebSocket API URL: <code>wss://feed.cobinhood.com/ws</code></p>
+<p>COBINHOOD WebSocket API URL: <code>wss://feed.cobinhood.com/ws</code> [Will deprecate in June, 2018]
+COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
 <h2 id='http-request-headers'>HTTP Request Headers</h2>
 <p><code>nonce</code> for &#39;POST&#39; &#39;UPDATE&#39; &#39;DELETE&#39;. Accept nonce in millisecond unix time format. ex: <code>1518166662197</code>
 <code>authorization</code>  for APIs that require authentication, value should be the API key token you obtain from the API key page in COBINHOOD exchange.</p>
@@ -687,6 +736,36 @@
 <li>string</li>
 <li>e.g. when <code>precision=2</code>,  4137.181 and 4137.1837 would both fall into price group 4137.18</li>
 </ul></li>
+</ul></li>
+</ul>
+<h2 id='get-order-book-precisions'>Get Order Book Precisions</h2>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>/v1/market/orderbook/precisions/&lt;trading_pair_id&gt; [GET]</code></p>
+
+<p>Get order book available precisions for the trading pair</p>
+
+<ul>
+<li><p><strong>Path Parameters</strong></p>
+
+<ul>
+<li><code>trading_pair_id</code>: Trading pair ID
+
+<ul>
+<li>enum[<code>BTC-USDT</code>, ...]</li>
+<li>required</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Response</strong></p>
+
+<ul>
+<li><code>result</code>: available precisions in scientific notation format.</li>
 </ul></li>
 </ul>
 <h2 id='get-trading-statistics'>Get Trading Statistics</h2>
@@ -2463,7 +2542,7 @@
 </ul></li>
 </ul></li>
 </ul>
-<h1 id='websocket'>WebSocket</h1><h2 id='order-em-auth-em'>Order <em>[Auth]</em></h2>
+<h1 id='websocket-will-deprecate-in-june-2018'>WebSocket [Will deprecate in June, 2018]</h1><h2 id='order-em-auth-em'>Order <em>[Auth]</em></h2>
 <blockquote>
 <p><strong>Request</strong></p>
 </blockquote>
@@ -2999,7 +3078,7 @@ timeframe interval are emitted.</p>
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pong"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>Send <code>ping</code> to test connection</p>
+<p>Send <code>ping</code> to test connection and extends disconnection timeout which is 64 seconds.</p>
 <h2 id='unsubscribe'>Unsubscribe</h2>
 <blockquote>
 <p><strong>Request</strong></p>
@@ -3022,7 +3101,7 @@ timeframe interval are emitted.</p>
     + string
 + <code>CHANNEL_ID</code>: The channel id for event type
     + string</p>
-<h1 id='websocket-error-code'>WebSocket error code</h1>
+<h2 id='websocket-error-code'>WebSocket error code</h2>
 <p>Error code for the specified error event occured, server will reponse an error message including error code and request parameters. For example:</p>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w">
@@ -3031,7 +3110,7 @@ timeframe interval are emitted.</p>
   </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ticker"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC-USDT"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre><h2 id='error-code'>Error Code</h2>
+</span></code></pre><h3 id='error-code'>Error Code</h3>
 <ul>
 <li><code>4000</code>: undefined_error. Unknown error.</li>
 <li><code>4001</code>: undefined_action. Request action is not defined.</li>
@@ -3045,7 +3124,441 @@ timeframe interval are emitted.</p>
 <li><code>4009</code>: cancel_order_failed. Failed to cancel a order.</li>
 <li><code>4010</code>: modify_order_failed. Failed to modify a order.</li>
 </ul>
+<h1 id='websocket-v2'>Websocket V2</h1>
+<p>To reduce payload size, using abbreviation and supporting message compression (RFC 7692), and support extendable structure, using key-value pair, JSON payload would result in following schema:</p>
+<pre class="highlight json tab-json"><code><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">header</span><span class="p">:</span><span class="w"> </span><span class="err">extendable</span><span class="w"> </span><span class="err">payload</span><span class="w"> </span><span class="err">header.</span><span class="w">
+                </span><span class="err">//</span><span class="w"> </span><span class="err">Format</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+                </span><span class="err">//</span><span class="w">  </span><span class="err">*</span><span class="w"> </span><span class="err">version</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">future</span><span class="w"> </span><span class="err">iteration.</span><span class="w">
+                </span><span class="err">//</span><span class="w">  </span><span class="err">*</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">defined</span><span class="w"> </span><span class="err">according</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">resource.</span><span class="w">
+                </span><span class="err">//</span><span class="w">
+                </span><span class="err">//</span><span class="w"> </span><span class="err">Generally</span><span class="p">,</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">have</span><span class="w"> </span><span class="err">following</span><span class="w"> </span><span class="err">types</span><span class="p">:</span><span class="w">
+                </span><span class="err">//</span><span class="w">  </span><span class="err">*</span><span class="w"> </span><span class="s2">"s"</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">snapshot</span><span class="w">
+                </span><span class="err">//</span><span class="w">  </span><span class="err">*</span><span class="w"> </span><span class="s2">"u"</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">update.</span><span class="w">
+                </span><span class="err">//</span><span class="w">
+                </span><span class="err">//</span><span class="w"> </span><span class="err">For</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">response</span><span class="p">,</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">may</span><span class="w"> </span><span class="err">have</span><span class="w"> </span><span class="err">enum</span><span class="w"> </span><span class="err">mapping</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">type.</span><span class="w">
 
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">data</span><span class="p">:</span><span class="w"> </span><span class="err">array</span><span class="w"> </span><span class="err">most</span><span class="w"> </span><span class="err">time</span><span class="p">,</span><span class="w"> </span><span class="err">will</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">ordered</span><span class="w"> </span><span class="err">by</span><span class="w"> </span><span class="err">uniqueness.</span><span class="w">
+                </span><span class="err">//</span><span class="w"> </span><span class="err">For</span><span class="w"> </span><span class="err">exmpale</span><span class="p">:</span><span class="w">
+                </span><span class="err">//</span><span class="w">  </span><span class="err">*</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">uuid</span><span class="p">,</span><span class="w"> </span><span class="err">uuid</span><span class="w"> </span><span class="err">would</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">first</span><span class="w">
+                </span><span class="err">//</span><span class="w">  </span><span class="err">*</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">without</span><span class="w"> </span><span class="err">uuid</span><span class="p">,</span><span class="w"> </span><span class="err">timestamp</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">more</span><span class="w">
+                </span><span class="err">//</span><span class="w">      </span><span class="err">distinguishable</span><span class="w"> </span><span class="err">than</span><span class="w"> </span><span class="err">other</span><span class="w"> </span><span class="err">fields.</span><span class="w">
+
+ </span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='common-parameters'>Common Parameters</h2>
+<p><em>NOTE: all fields are converted to string for correct precision</em></p>
+
+<p><strong>Version</strong></p>
+
+<ul>
+<li><code>2</code>: first version after v2 payload announced.</li>
+</ul>
+
+<p><strong>Type</strong></p>
+
+<p>For control response (see sessions below):</p>
+
+<ul>
+<li><code>pong</code></li>
+<li><code>subscribe</code></li>
+<li><code>unsubscribe</code></li>
+<li><code>error</code></li>
+</ul>
+
+<p>For data response (seed sessions below):</p>
+
+<ul>
+<li><code>s</code>: snapshot</li>
+<li><code>u</code>: update</li>
+</ul>
+<h2 id='control-request-response'>Control Request/Response</h2><h2 id='ping-pong-2'>Ping/Pong</h2>
+<p>Ping/pong extends disconnection timeout. If no ping/pong message recieved, connection will be dropped by server in 64 seconds after last seen ping/pong message.</p>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ping"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pong"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='subscribe'>Subscribe</h2>
+<p>Please check channels below. the optional parameters are different from channel to channel.</p>
+<h2 id='unsubscribe-2'>Unsubscribe</h2>
+<p>Unsubscribe from given channel to reduce unused data stream.</p>
+
+<p><strong>PARAMS</strong></p>
+
+<ul>
+<li><code>CHANNEL_ID</code>: recieved from subscribe request and response.</li>
+</ul>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unsubscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="w">
+
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"trade.ETH-BTC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unsubscribed"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='error'>Error</h2>
+<p>Error code for the specified error event occured, server will reponse an error message including error code. For example:</p>
+
+<p><strong>Error Code</strong></p>
+
+<ul>
+<li><code>4000</code>: undefined_error. Unknown error.</li>
+<li><code>4001</code>: undefined_action. Request action is not defined.</li>
+<li><code>4002</code>: cannel_not_found. Cound&#39;t found a  channel according the request.</li>
+<li><code>4003</code>: subscribe_failed. Failed to subscribe a channel for specified request.</li>
+<li><code>4004</code>: unsubsribe_failed. Failed to unsubscribe a channel for specified request.</li>
+<li><code>4005</code>: invalid_payload. request is not avliable.</li>
+<li><code>4006</code>: not_authenticated. Calling a authorization required chanel, but request without authorization.</li>
+<li><code>4007</code>: invalid_snapshot. Failed to get a snapshot.</li>
+<li><code>4008</code>: place_order_failed. Failed to place a order.</li>
+<li><code>4009</code>: cancel_order_failed. Failed to cancel a order.</li>
+<li><code>4010</code>: modify_order_failed. Failed to modify a order.</li>
+<li><code>4011</code>: invalid_client_version. Not supported client.</li>
+<li><code>4012</code>: order_operation_rate_limit. Order operation (including place, modify, cancel) reaches rate limit. Note that limit counter are platform-wide, counting both REST and websocket.</li>
+</ul>
+
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">error_code</span><span class="p">,</span><span class="w"> </span><span class="err">msg</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"4002"</span><span class="p">,</span><span class="w"> </span><span class="s2">"channel_not_found"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='channel-request-response'>Channel Request/Response</h2><h2 id='order-auth'>Order [Auth]</h2>
+<p>Order response provides extra information for recognition, the following sessions show all values of field enumerations.</p>
+
+<p><strong>Type</strong></p>
+
+<ul>
+<li><code>0</code>: limit</li>
+<li><code>1</code>: market</li>
+<li><code>2</code>: market_stop</li>
+<li><code>3</code>: limit_stop</li>
+<li><code>4</code>: trailing_fiat_stop       (not valid yet)</li>
+<li><code>5</code>: fill_or_kill             (not valid yet)</li>
+<li><code>6</code>: trailing_percent_stop    (not valid yet)</li>
+</ul>
+
+<p><strong>Event</strong></p>
+
+<ul>
+<li><code>opened</code>: order placed.</li>
+<li><code>modified</code>: order modified.</li>
+<li><code>executed</code>: order executed/matched.</li>
+<li><code>triggered</code>: conditional order been triggered.</li>
+<li><code>cancelled</code>: order cancelled.</li>
+<li><code>cancel_pending</code>: server is processing cancelation.</li>
+<li><code>cancel_rejected</code>: cancel request is rejected.</li>
+<li><code>modify_rejected</code>: modify request is rejected.</li>
+<li><code>execute_rejected</code>: rejected while executing.</li>
+<li><code>trigger_rejected</code>: rejected while triggering.</li>
+</ul>
+
+<p><strong>State</strong></p>
+
+<ul>
+<li><code>queued</code></li>
+<li><code>open</code></li>
+<li><code>partially_filled</code></li>
+<li><code>filled</code></li>
+<li><code>cancelled</code></li>
+<li><code>pending_cancellation</code></li>
+<li><code>rejected</code></li>
+<li><code>triggered</code></li>
+</ul>
+
+<p><strong>Side</strong></p>
+
+<ul>
+<li><code>ask</code></li>
+<li><code>bid</code></li>
+</ul>
+
+<p><strong>PARAMS</strong></p>
+
+<ul>
+<li><code>ORDER_ID</code>: order&#39;s ID.</li>
+<li><code>TIMESTAMP</code>: order&#39;s timestamp.</li>
+<li><code>COMPLETED_AT</code>: order executed timestamp.</li>
+<li><code>TRADING_PAIR_ID</code>: trading pairs ID</li>
+<li><code>STATE</code>: order state, the state saved in database.</li>
+<li><code>EVENT</code>: order event, the state changing event.</li>
+<li><code>SIDE</code>: place side</li>
+<li><code>PRICE</code>: order price</li>
+<li><code>EQ_PRICE</code>: equal/average price</li>
+<li><code>SIZE</code>: order size</li>
+<li><code>PARIIAL_FILLED_SIZE</code>: partially filled size</li>
+<li><code>STOP_PRICE</code>: conditional stop price</li>
+</ul>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<h2 id='limit-order'>Limit Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">TIMESTAMP</span><span class="p">,</span><span class="w">
+        </span><span class="err">COMPLETED_AT</span><span class="p">,</span><span class="w">
+        </span><span class="err">TRADING_PAIR_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">STATE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EVENT</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIDE</span><span class="p">,</span><span class="w">
+        </span><span class="err">PRICE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EQ_PRICE</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIZE</span><span class="p">,</span><span class="w">
+        </span><span class="err">PARTIAL_FILLED_SIZE</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='market-order'>Market Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">TIMESTAMP</span><span class="p">,</span><span class="w">
+        </span><span class="err">COMPLETED_AT</span><span class="p">,</span><span class="w">
+        </span><span class="err">TRADING_PAIR_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">STATE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EVENT</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIDE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EQ_PRICE</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIZE</span><span class="p">,</span><span class="w">
+        </span><span class="err">PARTIAL_FILLED_SIZE</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='market-stop-order'>Market Stop Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"3"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">TIMESTAMP</span><span class="p">,</span><span class="w">
+        </span><span class="err">COMPLETED_AT</span><span class="p">,</span><span class="w">
+        </span><span class="err">TRADING_PAIR_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">STATE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EVENT</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIDE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EQ_PRICE</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIZE</span><span class="p">,</span><span class="w">
+        </span><span class="err">PARTIAL_FILLED_SIZE</span><span class="p">,</span><span class="w">
+        </span><span class="err">STOP_PRICE</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='limit-stop-order'>Limit Stop Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"4"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">TIMESTAMP</span><span class="p">,</span><span class="w">
+        </span><span class="err">COMPLETED_AT</span><span class="p">,</span><span class="w">
+        </span><span class="err">TRADING_PAIR_ID</span><span class="p">,</span><span class="w">
+        </span><span class="err">STATE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EVENT</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIDE</span><span class="p">,</span><span class="w">
+        </span><span class="err">PRICE</span><span class="p">,</span><span class="w">
+        </span><span class="err">EQ_PRICE</span><span class="p">,</span><span class="w">
+        </span><span class="err">SIZE</span><span class="p">,</span><span class="w">
+        </span><span class="err">PARTIAL_FILLED_SIZE</span><span class="p">,</span><span class="w">
+        </span><span class="err">STOP_PRICE</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='orderbook'>Orderbook</h2>
+<p>After receiving the response, you will receive a snapshot of the book, followed by updates upon any changes to the book.
+The updates is published as <strong>DIFF</strong>.</p>
+
+<p><strong>PARAMS</strong></p>
+
+<ul>
+<li><code>PRECISION</code>: available precisions could be acquired from REST, endpoint: <code>/v1/market/orderbook/precisions/&lt;trading_pair_id&gt;</code></li>
+<li><code>PRICE</code>: order price</li>
+<li><code>SIZE</code>: order amount, diff maybe minus value</li>
+<li><code>COUNT</code>: order count, diff maybe minus value</li>
+</ul>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order-book"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
+  </span><span class="s2">"precision"</span><span class="p">:</span><span class="w"> </span><span class="err">PRECISION</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order-book.COB-ETH.1E-7"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"bids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">[</span><span class="w"> </span><span class="err">PRICE</span><span class="p">,</span><span class="w"> </span><span class="err">SIZE</span><span class="p">,</span><span class="w"> </span><span class="err">COUNT</span><span class="w"> </span><span class="p">],</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"asks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">[</span><span class="w"> </span><span class="err">PRICE</span><span class="p">,</span><span class="w"> </span><span class="err">SIZE</span><span class="p">,</span><span class="w"> </span><span class="err">COUNT</span><span class="w"> </span><span class="p">],</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='trade'>Trade</h2>
+<p>After receiving the response, you will start receiving recent trade,
+followed by any trade that occurs at COBINHOOD.</p>
+
+<p><strong>PARAMS</strong></p>
+
+<ul>
+<li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID</li>
+<li><code>TRADE_ID</code>: Trade ID</li>
+<li><code>TIME_STAMP</code>: Trade timestamp in milliseconds</li>
+<li><code>PRICE</code>: Trade quote price</li>
+<li><code>SIZE</code>: Trade base amount</li>
+<li><code>MAKER_SIDE</code>: The order side</li>
+</ul>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trade"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"trade.COB-ETH"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w">
+        </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="err">TRADE_ID</span><span class="p">,</span><span class="w"> </span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w"> </span><span class="err">PRICE</span><span class="p">,</span><span class="w"> </span><span class="err">SIZE</span><span class="p">,</span><span class="w"> </span><span class="err">MAKER_SIDE</span><span class="p">],</span><span class="w">
+          </span><span class="err">...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='ticker-2'>Ticker</h3>
+<ul>
+<li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID</li>
+<li><code>TIME_STAMP</code>: Ticker timestamp in milliseconds</li>
+<li><code>HIGHEST_BID</code>: Best bid price in current order book</li>
+<li><code>LOWEST_ASK</code>: Best ask price in current order book</li>
+<li><code>24H_VOLUME</code>: Trading volume of the last 24 hours</li>
+<li><code>24H_LOW</code>: Lowest trade price of the last 24 hours</li>
+<li><code>24H_HIGH</code>: Highest trade price of the last 24 hours</li>
+<li><code>LAST_TRADE_PRICE</code>: Latest trade price</li>
+</ul>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ticker"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ticker.COB-ETH"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">[</span><span class="w">
+          </span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w">
+          </span><span class="err">HIGHEST_BID</span><span class="p">,</span><span class="w">
+          </span><span class="err">LOWEST_ASK</span><span class="p">,</span><span class="w">
+          </span><span class="mi">24</span><span class="err">H_VOLUME</span><span class="p">,</span><span class="w">
+          </span><span class="mi">24</span><span class="err">H_HIGH</span><span class="p">,</span><span class="w">
+          </span><span class="mi">24</span><span class="err">H_LOW</span><span class="p">,</span><span class="w">
+          </span><span class="mi">24</span><span class="err">H_OPEN</span><span class="p">,</span><span class="w">
+          </span><span class="err">LAST_TRADE_PRICE</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='candle-2'>Candle</h2>
+<p>After receiving the response, you will receive a snapshot of the candle data,
+followed by updates upon any changes to the chart. Updates to the most recent
+timeframe interval are emitted.</p>
+
+<p><strong>Timeframe</strong></p>
+
+<ul>
+<li><code>1m</code>: 1 minute</li>
+<li><code>5m</code>: 5 minute</li>
+<li><code>15m</code>: 15 minute</li>
+<li><code>30m</code>: 30 minute</li>
+<li><code>1h</code>: 1 hour</li>
+<li><code>3h</code>: 3 hour</li>
+<li><code>6h</code>: 6 hour</li>
+<li><code>12h</code>: 12 hour</li>
+<li><code>1D</code>: 1 day</li>
+<li><code>7D</code>: 7 day</li>
+<li><code>14D</code>: 14 day</li>
+<li><code>1M</code>: 1 month</li>
+</ul>
+
+<p><strong>PARAMS</strong>
++ <code>TRADING_PAIR_ID</code>: Subscribe trading pair ID
++ <code>TIMEFRAME</code>: Timespan granularity, check enumeration above
++ <code>TIME_STAMP</code>: Timestamp in milliseconds
++ <code>VOL</code>:  Trading volume of the time frame
++ <code>HIGH</code>: Highest price during the time frame
++ <code>LOW</code>: Lowest price during the time frame
++ <code>OPEN</code>: First price during the time frame
++ <code>CLOSE</code>: Last price during the time frame</p>
+
+<blockquote>
+<p><strong>Request</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"candle"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="err">TRADING_PAIR_ID</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"timeframe"</span><span class="p">:</span><span class="w"> </span><span class="err">TIMEFRAME</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p><strong>Response</strong></p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"snapshot"</span><span class="p">:</span><span class="w">
+        </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w"> </span><span class="err">VOL</span><span class="p">,</span><span class="w"> </span><span class="err">HIGH</span><span class="p">,</span><span class="w"> </span><span class="err">LOW</span><span class="p">,</span><span class="err">OPEN</span><span class="p">,</span><span class="w"> </span><span class="err">CLOSE</span><span class="p">],</span><span class="w">
+          </span><span class="err">...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
       </div>
       <div class="dark-box">
           <div class="lang-selector">

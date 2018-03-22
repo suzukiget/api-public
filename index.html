@@ -1082,7 +1082,7 @@ COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
 <ul>
 <li>string</li>
 </ul></li>
-<li><code>trading_pair</code>: Trading pair ID
+<li><code>trading_pair_id</code>: Trading pair ID
 
 <ul>
 <li>enum[<code>BTC-USDT</code>, ...]</li>
@@ -1250,7 +1250,7 @@ COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
 <li><p><strong>Response</strong></p>
 
 <ul>
-<li><code>trading_pair</code>: Trading pair ID
+<li><code>trading_pair_id</code>: Trading pair ID
 
 <ul>
 <li>enum[<code>BTC-USDT</code>, ...]</li>
@@ -1382,7 +1382,7 @@ COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
 <li><strong>Response</strong>
 
 <ul>
-<li><code>trading_pair</code>: Trading pair ID
+<li><code>trading_pair_id</code>: Trading pair ID
 
 <ul>
 <li>enum[<code>BTC-USDT</code>, ...]</li>
@@ -1556,7 +1556,7 @@ COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
 <li><strong>Response</strong>
 
 <ul>
-<li><code>trading_pair</code>: Trading pair ID
+<li><code>trading_pair_id</code>: Trading pair ID
 
 <ul>
 <li>enum[<code>BTC-USDT</code>, ...]</li>
@@ -3435,8 +3435,7 @@ The updates is published as <strong>DIFF</strong>.</p>
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='trade'>Trade</h2>
-<p>After receiving the response, you will start receiving recent trade,
-followed by any trade that occurs at COBINHOOD.</p>
+<p>After receiving the response, you will start receiving ticker updates.</p>
 
 <p><strong>PARAMS</strong></p>
 
@@ -3470,6 +3469,9 @@ followed by any trade that occurs at COBINHOOD.</p>
         </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='ticker-2'>Ticker</h2>
+<p>After receiving the response, you will start receiving recent trade,
+followed by any trade that occurs at COBINHOOD.</p>
+
 <ul>
 <li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID</li>
 <li><code>TIME_STAMP</code>: Ticker timestamp in milliseconds</li>

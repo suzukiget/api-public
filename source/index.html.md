@@ -2193,8 +2193,7 @@ The updates is published as **DIFF**.
 
 ## Trade
 
-After receiving the response, you will start receiving recent trade,
-followed by any trade that occurs at COBINHOOD.
+After receiving the response, you will start receiving ticker updates.
 
 **PARAMS**
 
@@ -2228,7 +2227,12 @@ followed by any trade that occurs at COBINHOOD.
 }
 ```
 
-### Ticker
+## Ticker
+
+
+After receiving the response, you will start receiving recent trade,
+followed by any trade that occurs at COBINHOOD.
+
 
 + `TRADING_PAIR_ID`: Subscribe trading pair ID
 + `TIME_STAMP`: Ticker timestamp in milliseconds

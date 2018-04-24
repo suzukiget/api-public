@@ -18,7 +18,8 @@ COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 
 COBINHOOD WebSocket API URL: `wss://ws.cobinhood.com/ws` [V1 will deprecate in June, 2018]
 COBINHOOD WebSocket V2 API URL: `wss://ws.cobinhood.com/v2/ws`
-WARN: Domain name `feed.cobinhood.com` is deprecated. Please use `ws.cobinhood.com`.
+
+**WARN**: Domain name `feed.cobinhood.com` is deprecated. Please use `ws.cobinhood.com`.
 
 ## HTTP Request Headers
 `nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`

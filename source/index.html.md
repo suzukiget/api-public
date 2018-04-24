@@ -2227,7 +2227,7 @@ After receiving the response, you will start receiving ticker updates.
     "h": ["trade.COB-ETH", "2", "u"],
     "d":
         [
-          [TRADE_ID, TIME_STAMP, PRICE, SIZE, MAKER_SIDE],
+          [TRADE_ID, TIME_STAMP, MAKER_SIDE, PRICE, SIZE],
           ...
         ]
 }

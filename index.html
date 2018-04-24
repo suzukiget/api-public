@@ -446,8 +446,9 @@
 <h1 id='overview'>Overview</h1>
 <p>COBINHOOD RESTful API URL: <code>https://api.cobinhood.com</code></p>
 
-<p>COBINHOOD WebSocket API URL: <code>wss://feed.cobinhood.com/ws</code> [Will deprecate in June, 2018]
-COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
+<p>COBINHOOD WebSocket API URL: <code>wss://ws.cobinhood.com/ws</code> [V1 will deprecate in June, 2018]
+COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code>
+WARN: Domain name <code>feed.cobinhood.com</code> is deprecated. Please use <code>ws.cobinhood.com</code>.</p>
 <h2 id='http-request-headers'>HTTP Request Headers</h2>
 <p><code>nonce</code> for &#39;POST&#39; &#39;UPDATE&#39; &#39;DELETE&#39;. Accept nonce in millisecond unix time format. ex: <code>1518166662197</code>
 <code>authorization</code>  for APIs that require authentication, value should be the API key token you obtain from the API key page in COBINHOOD exchange.</p>
@@ -3432,6 +3433,7 @@ The updates is published as <strong>DIFF</strong>.</p>
         </span><span class="s2">"asks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
             </span><span class="p">[</span><span class="w"> </span><span class="err">PRICE</span><span class="p">,</span><span class="w"> </span><span class="err">SIZE</span><span class="p">,</span><span class="w"> </span><span class="err">COUNT</span><span class="w"> </span><span class="p">],</span><span class="w">
             </span><span class="err">...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='trade'>Trade</h2>
@@ -3559,8 +3561,8 @@ timeframe interval are emitted.</p>
 <p><strong>Response</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"channel_id"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"snapshot"</span><span class="p">:</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"candle.ETH-BTC.1h"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"d"</span><span class="p">:</span><span class="w">
         </span><span class="p">[</span><span class="w">
           </span><span class="p">[</span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w"> </span><span class="err">VOL</span><span class="p">,</span><span class="w"> </span><span class="err">HIGH</span><span class="p">,</span><span class="w"> </span><span class="err">LOW</span><span class="p">,</span><span class="err">OPEN</span><span class="p">,</span><span class="w"> </span><span class="err">CLOSE</span><span class="p">],</span><span class="w">
           </span><span class="err">...</span><span class="w">

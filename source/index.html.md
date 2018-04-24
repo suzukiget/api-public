@@ -1461,6 +1461,9 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 + `TIME_STAMP`: Order timestamp in milliseconds
     + string
 
+**WARN**: v1 order update won't support complete conditional order and will deprecate. Please check v2 order update.
+
+
 ## Trades
 
 After receiving the response, you will start receiving recent trade,

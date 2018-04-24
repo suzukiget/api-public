@@ -2637,6 +2637,8 @@ COBINHOOD WebSocket V2 API URL: <code>wss://ws.cobinhood.com/v2/ws</code></p>
 <li>string</li>
 </ul></li>
 </ul>
+
+<p><strong>WARN</strong>: v1 order update won&#39;t support complete conditional order and will deprecate. Please check v2 order update.</p>
 <h2 id='trades'>Trades</h2>
 <p>After receiving the response, you will start receiving recent trade,
 followed by any trade that occurs at COBINHOOD.</p>
@@ -3467,7 +3469,7 @@ The updates is published as <strong>DIFF</strong>.</p>
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"trade.COB-ETH"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w">
         </span><span class="p">[</span><span class="w">
-          </span><span class="p">[</span><span class="err">TRADE_ID</span><span class="p">,</span><span class="w"> </span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w"> </span><span class="err">PRICE</span><span class="p">,</span><span class="w"> </span><span class="err">SIZE</span><span class="p">,</span><span class="w"> </span><span class="err">MAKER_SIDE</span><span class="p">],</span><span class="w">
+          </span><span class="p">[</span><span class="err">TRADE_ID</span><span class="p">,</span><span class="w"> </span><span class="err">TIME_STAMP</span><span class="p">,</span><span class="w"> </span><span class="err">MAKER_SIDE</span><span class="p">,</span><span class="w"> </span><span class="err">PRICE</span><span class="p">,</span><span class="w"> </span><span class="err">SIZE</span><span class="p">],</span><span class="w">
           </span><span class="err">...</span><span class="w">
         </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">

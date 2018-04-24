@@ -16,8 +16,9 @@ toc_footers:
 # Overview
 COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 
-COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws` [Will deprecate in June, 2018]
+COBINHOOD WebSocket API URL: `wss://ws.cobinhood.com/ws` [V1 will deprecate in June, 2018]
 COBINHOOD WebSocket V2 API URL: `wss://ws.cobinhood.com/v2/ws`
+WARN: Domain name `feed.cobinhood.com` is deprecated. Please use `ws.cobinhood.com`.
 
 ## HTTP Request Headers
 `nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`
@@ -2187,6 +2188,7 @@ The updates is published as **DIFF**.
         "asks": [
             [ PRICE, SIZE, COUNT ],
             ...
+        ]
     }
 }
 ```
@@ -2321,8 +2323,8 @@ timeframe interval are emitted.
 
 ```json
 {
-    "channel_id": CHANNEL_ID,
-    "snapshot":
+	"h": ["candle.ETH-BTC.1h", "2", "u"],
+    "d":
         [
           [TIME_STAMP, VOL, HIGH, LOW,OPEN, CLOSE],
           ...

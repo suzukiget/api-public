@@ -1590,11 +1590,11 @@ followed by updates upon any changes to the book.
     "channel_id": CHANNEL_ID,
     "update":  {
         "bids": [
-            [ PRICE, SIZE, COUNT ],
+            [ PRICE, COUNT, SIZE ],
             ...
         ],
         "asks": [
-            [ PRICE, SIZE, COUNT ],
+            [ PRICE, COUNT, SIZE ],
             ...
         ]
     }
@@ -2186,11 +2186,11 @@ The updates is published as **DIFF**.
     "h": ["order-book.COB-ETH.1E-7", "2", "u"],
     "d": {
         "bids": [
-            [ PRICE, SIZE, COUNT ],
+            [ PRICE, COUNT, SIZE ],
             ...
         ],
         "asks": [
-            [ PRICE, SIZE, COUNT ],
+            [ PRICE, COUNT, SIZE ],
             ...
         ]
     }

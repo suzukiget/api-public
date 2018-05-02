@@ -2155,7 +2155,7 @@ Order response provides extra information for recognition, the following session
 ```json
 {
     // [channel_id, version, type]
-    "h": ["order", "2", "u", "3"],
+    "h": ["order", "2", "u", "2"],
     "d": [
         ORDER_ID,
         TIMESTAMP,
@@ -2177,7 +2177,7 @@ Order response provides extra information for recognition, the following session
 ```json
 {
     // [channel_id, version, type]
-    "h": ["order", "2", "u", "4"],
+    "h": ["order", "2", "u", "3"],
     "d": [
         ORDER_ID,
         TIMESTAMP,

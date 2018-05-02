@@ -412,7 +412,7 @@
                     <a href="#market-order" class="toc-h2 toc-link" data-title="Market Order">Market Order</a>
                   </li>
                   <li>
-                    <a href="#market-stop-order" class="toc-h2 toc-link" data-title="Market Stop Order">Market Stop Order</a>
+                    <a href="#stop-order" class="toc-h2 toc-link" data-title="Stop Order">Stop Order</a>
                   </li>
                   <li>
                     <a href="#limit-stop-order" class="toc-h2 toc-link" data-title="Limit Stop Order">Limit Stop Order</a>
@@ -2798,11 +2798,7 @@ followed by updates upon any changes to the book.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <ul>
-<li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID
-
-<ul>
-<li>enum[<code>BTC-USDT</code>, <code>ETH-USDT</code>, ...]</li>
-</ul></li>
+<li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID + enum[<code>BTC-USDT</code>, <code>ETH-USDT</code>, ...]</li>
 <li><code>CHANNEL_ID</code>: The channel id for event type
 
 <ul>
@@ -3256,12 +3252,20 @@ timeframe interval are emitted.</p>
 </span></code></pre><h2 id='channel-request-response'>Channel Request/Response</h2><h2 id='order-auth'>Order [Auth]</h2>
 <p>Order response provides extra information for recognition, the following sessions show all values of field enumerations.</p>
 
+<p><strong>Action</strong></p>
+
+<ul>
+<li><code>place_order</code>: place new order</li>
+<li><code>modify_order</code>: modify existing and valid order</li>
+<li><code>cancel_order</code>: cancel existing and valid order</li>
+</ul>
+
 <p><strong>Type</strong></p>
 
 <ul>
 <li><code>0</code>: limit</li>
 <li><code>1</code>: market</li>
-<li><code>2</code>: market_stop</li>
+<li><code>2</code>: stop</li>
 <li><code>3</code>: limit_stop</li>
 <li><code>4</code>: trailing_fiat_stop       (not valid yet)</li>
 <li><code>5</code>: fill_or_kill             (not valid yet)</li>
@@ -3327,6 +3331,33 @@ timeframe interval are emitted.</p>
   </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscribe"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order"</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">(place)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"place_order"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"trading_pair_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB-ETH"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">Type</span><span class="w"> </span><span class="err">enum</span><span class="w"> </span><span class="err">above</span><span class="w">
+    </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123.4567"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="err">/</span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"stop_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">stop/stop-limit</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"trailing_distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">trailing-stop</span><span class="w"> </span><span class="err">order</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">(modify)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"modify_order"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">Type</span><span class="w"> </span><span class="err">enum</span><span class="w"> </span><span class="err">above</span><span class="w">
+    </span><span class="s2">"order_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxxx-xxxx-xxxx-xxxx"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123.4567"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"stop_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">stop/stop-limit</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"trailing_distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">trailing</span><span class="w"> </span><span class="err">stop</span><span class="w"> </span><span class="err">order</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">(cancel)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cancel_order"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">Type</span><span class="w"> </span><span class="err">enum</span><span class="w"> </span><span class="err">above</span><span class="w">
+    </span><span class="s2">"order_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxxx-xxxx-xxxx-xxxx"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
 <p><strong>Response</strong></p>
@@ -3364,7 +3395,7 @@ timeframe interval are emitted.</p>
         </span><span class="err">PARTIAL_FILLED_SIZE</span><span class="w">
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre><h2 id='market-stop-order'>Market Stop Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+</span></code></pre><h2 id='stop-order'>Stop Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
     </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"3"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">

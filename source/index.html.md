@@ -1600,9 +1600,7 @@ followed by updates upon any changes to the book.
     }
 }
 ```
-
-+ `TRADING_PAIR_ID`: Subscribe trading pair ID
-    + enum[`BTC-USDT`, `ETH-USDT`, ...]
++ `TRADING_PAIR_ID`: Subscribe trading pair ID + enum[`BTC-USDT`, `ETH-USDT`, ...]
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
@@ -2002,11 +2000,17 @@ Error code for the specified error event occured, server will reponse an error m
 
 Order response provides extra information for recognition, the following sessions show all values of field enumerations.
 
+**Action**
+
++ `place_order`: place new order
++ `modify_order`: modify existing and valid order
++ `cancel_order`: cancel existing and valid order
+
 **Type**
 
 + `0`: limit
 + `1`: market
-+ `2`: market_stop
++ `2`: stop
 + `3`: limit_stop
 + `4`: trailing_fiat_stop       (not valid yet)
 + `5`: fill_or_kill             (not valid yet)
@@ -2065,6 +2069,42 @@ Order response provides extra information for recognition, the following session
 }
 ```
 
+```json
+// order operation (place)
+{
+    "action": "place_order",
+    "trading_pair_id": "COB-ETH",
+    "type": "0",    // Type enum above
+    "price": "123.4567",
+    "size": "1000.000",
+    "side": "bid"/"ask",
+    "stop_price": "",       // mandatory for stop/stop-limit order
+    "trailing_distance": "" // mandatory for trailing-stop order
+}
+```
+
+```json
+// order operation (modify)
+{
+    "action": "modify_order",
+    "type": "0",    // Type enum above
+    "order_id": "xxxx-xxxx-xxxx-xxxx",
+    "price": "123.4567",
+    "size": "1000.000",
+    "stop_price": "",       // mandatory for stop/stop-limit order
+    "trailing_distance": "" // mandatory for trailing stop order
+}
+```
+
+```json
+// order operation (cancel)
+{
+    "action": "cancel_order",
+    "type": "0",    // Type enum above
+    "order_id": "xxxx-xxxx-xxxx-xxxx"
+}
+```
+
 > **Response**
 
 ##Limit Order
@@ -2110,7 +2150,7 @@ Order response provides extra information for recognition, the following session
 }
 ```
 
-##Market Stop Order
+##Stop Order
 
 ```json
 {

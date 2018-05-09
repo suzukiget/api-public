@@ -3126,6 +3126,18 @@ timeframe interval are emitted.</p>
 <li><code>4008</code>: place_order_failed. Failed to place a order.</li>
 <li><code>4009</code>: cancel_order_failed. Failed to cancel a order.</li>
 <li><code>4010</code>: modify_order_failed. Failed to modify a order.</li>
+<li><code>4011</code>: invalid_client_version. Wrong url endpoint for request/action.</li>
+<li><code>4012</code>: order_operation_rate_limit.</li>
+<li><code>4013</code>: order_operation_not_authorized.</li>
+<li><code>4014</code>: invalid_order_type.</li>
+<li><code>4015</code>: invalid_order.</li>
+<li><code>4016</code>: invalid_trading_pair.</li>
+<li><code>4017</code>: invalid_json</li>
+<li><code>4018</code>: exceed_unprocessed_order_limit</li>
+<li><code>4019</code>: orderbook_service_is_down</li>
+<li><code>4020</code>: insufficient_balance</li>
+<li><code>4021</code>: balance_locked</li>
+<li><code>4022</code>: invalid_order_size</li>
 </ul>
 <h1 id='websocket-v2'>Websocket V2</h1>
 <p>To reduce payload size, using abbreviation and supporting message compression (RFC 7692), and support extendable structure, using key-value pair, JSON payload would result in following schema:</p>
@@ -3298,6 +3310,7 @@ timeframe interval are emitted.</p>
 <li><code>pending_cancellation</code></li>
 <li><code>rejected</code></li>
 <li><code>triggered</code></li>
+<li><code>pending_modification</code></li>
 </ul>
 
 <p><strong>Side</strong></p>

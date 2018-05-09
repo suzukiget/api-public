@@ -1857,6 +1857,18 @@ Error code for the specified error event occured, server will reponse an error m
 + `4008`: place_order_failed. Failed to place a order.
 + `4009`: cancel_order_failed. Failed to cancel a order.
 + `4010`: modify_order_failed. Failed to modify a order.
++ `4011`: invalid_client_version. Wrong url endpoint for request/action.
++ `4012`: order_operation_rate_limit.
++ `4013`: order_operation_not_authorized.
++ `4014`: invalid_order_type.
++ `4015`: invalid_order.
++ `4016`: invalid_trading_pair.
++ `4017`: invalid_json
++ `4018`: exceed_unprocessed_order_limit
++ `4019`: orderbook_service_is_down
++ `4020`: insufficient_balance
++ `4021`: balance_locked
++ `4022`: invalid_order_size
 
 
 # Websocket V2
@@ -2039,6 +2051,7 @@ Order response provides extra information for recognition, the following session
 + `pending_cancellation`
 + `rejected`
 + `triggered`
++ `pending_modification`
 
 **Side**
 

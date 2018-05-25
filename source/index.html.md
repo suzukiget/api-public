@@ -1600,7 +1600,9 @@ followed by updates upon any changes to the book.
     }
 }
 ```
-+ `TRADING_PAIR_ID`: Subscribe trading pair ID + enum[`BTC-USDT`, `ETH-USDT`, ...]
+
++ `TRADING_PAIR_ID`: Subscribe trading pair ID
+    + enum[`BTC-USDT`, `ETH-USDT`, ...]
 + `CHANNEL_ID`: The channel id for event type
     + string
 + `TRADING_PAIR_ID`: Trading pair ID
@@ -1922,6 +1924,8 @@ For data response (seed sessions below):
 
 ## Control Request/Response
 
+* NOTE: client could add a request id for identifying. The id would be appended to headers and returned as same value. For more details, please check example.
+
 ## Ping/Pong
 
 Ping/pong extends disconnection timeout. If no ping/pong message recieved, connection will be dropped by server in 64 seconds after last seen ping/pong message.
@@ -1930,7 +1934,8 @@ Ping/pong extends disconnection timeout. If no ping/pong message recieved, conne
 
 ```json
 {
-  "action": "ping"
+  "action": "ping",
+  "id": "sample_id"
 }
 ```
 
@@ -1938,8 +1943,8 @@ Ping/pong extends disconnection timeout. If no ping/pong message recieved, conne
 
 ```json
 {
-    // [channel_id, version, type]
-    "h": ["", "2", "pong"],
+    // [channel_id, version, type, request_id (optional)]
+    "h": ["", "2", "pong", "sample_id"],
     "d": []
 }
 ```
@@ -1961,7 +1966,8 @@ Unsubscribe from given channel to reduce unused data stream.
 ```json
 {
   "action": "unsubscribe",
-  "type": CHANNEL_ID
+  "type": CHANNEL_ID,
+  "id": "sample_id2"
 
 }
 ```
@@ -1970,8 +1976,8 @@ Unsubscribe from given channel to reduce unused data stream.
 
 ```json
 {
-    // [channel_id, version, type]
-    "h": ["trade.ETH-BTC", "2", "unsubscribed"],
+    // [channel_id, version, type, request_id (optional)]
+    "h": ["trade.ETH-BTC", "2", "unsubscribed", "sample_id2"],
     "d": []
 }
 ```
@@ -2000,7 +2006,7 @@ Error code for the specified error event occured, server will reponse an error m
 
 ```json
 {
-    // [channel_id, version, type, error_code, msg]
+    // [channel_id, version, type, error_code, msg, request_id (optional)]
     "h": ["", "2", "error", "4002", "channel_not_found"],
     "d": []
 }
@@ -2091,8 +2097,9 @@ Order response provides extra information for recognition, the following session
     "price": "123.4567",
     "size": "1000.000",
     "side": "bid"/"ask",
-    "stop_price": "",       // mandatory for stop/stop-limit order
-    "trailing_distance": "" // mandatory for trailing-stop order
+    "stop_price": "",        // mandatory for stop/stop-limit order
+    "trailing_distance": "", // mandatory for trailing-stop order
+    "id": "order_req_id1"
 }
 ```
 
@@ -2104,8 +2111,9 @@ Order response provides extra information for recognition, the following session
     "order_id": "xxxx-xxxx-xxxx-xxxx",
     "price": "123.4567",
     "size": "1000.000",
-    "stop_price": "",       // mandatory for stop/stop-limit order
-    "trailing_distance": "" // mandatory for trailing stop order
+    "stop_price": "",        // mandatory for stop/stop-limit order
+    "trailing_distance": "", // mandatory for trailing stop order
+    "id": "order_req_id2"
 }
 ```
 
@@ -2124,7 +2132,7 @@ Order response provides extra information for recognition, the following session
 
 ```json
 {
-    // [channel_id, version, type]
+    // [channel_id, version, type, request_id (optional)]
     "h": ["order", "2", "u", "0"],
     "d": [
         ORDER_ID,
@@ -2146,7 +2154,7 @@ Order response provides extra information for recognition, the following session
 
 ```json
 {
-    // [channel_id, version, type]
+    // [channel_id, version, type, request_id (optional)]
     "h": ["order", "2", "u", "1"],
     "d": [
         ORDER_ID,
@@ -2167,7 +2175,7 @@ Order response provides extra information for recognition, the following session
 
 ```json
 {
-    // [channel_id, version, type]
+    // [channel_id, version, type, request_id (optional)]
     "h": ["order", "2", "u", "2"],
     "d": [
         ORDER_ID,
@@ -2189,7 +2197,7 @@ Order response provides extra information for recognition, the following session
 
 ```json
 {
-    // [channel_id, version, type]
+    // [channel_id, version, type, request_id (optional)]
     "h": ["order", "2", "u", "3"],
     "d": [
         ORDER_ID,
@@ -2252,7 +2260,8 @@ The updates is published as **DIFF**.
 
 ## Trade
 
-After receiving the response, you will start receiving ticker updates.
+After receiving the response, you will start receiving recent trade,
+followed by any trade that occurs at COBINHOOD.
 
 **PARAMS**
 
@@ -2288,9 +2297,7 @@ After receiving the response, you will start receiving ticker updates.
 
 ## Ticker
 
-
-After receiving the response, you will start receiving recent trade,
-followed by any trade that occurs at COBINHOOD.
+After receiving the response, you will start receiving ticker updates
 
 
 + `TRADING_PAIR_ID`: Subscribe trading pair ID

@@ -2798,7 +2798,11 @@ followed by updates upon any changes to the book.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <ul>
-<li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID + enum[<code>BTC-USDT</code>, <code>ETH-USDT</code>, ...]</li>
+<li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID
+
+<ul>
+<li>enum[<code>BTC-USDT</code>, <code>ETH-USDT</code>, ...]</li>
+</ul></li>
 <li><code>CHANNEL_ID</code>: The channel id for event type
 
 <ul>
@@ -3186,22 +3190,27 @@ timeframe interval are emitted.</p>
 <li><code>s</code>: snapshot</li>
 <li><code>u</code>: update</li>
 </ul>
-<h2 id='control-request-response'>Control Request/Response</h2><h2 id='ping-pong-2'>Ping/Pong</h2>
+<h2 id='control-request-response'>Control Request/Response</h2>
+<ul>
+<li>NOTE: client could add a request id for identifying. The id would be appended to headers and returned as same value. For more details, please check example.</li>
+</ul>
+<h2 id='ping-pong-2'>Ping/Pong</h2>
 <p>Ping/pong extends disconnection timeout. If no ping/pong message recieved, connection will be dropped by server in 64 seconds after last seen ping/pong message.</p>
 
 <blockquote>
 <p><strong>Request</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ping"</span><span class="w">
+  </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ping"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sample_id"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
 <p><strong>Response</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
-    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pong"</span><span class="p">],</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pong"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sample_id"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='subscribe'>Subscribe</h2>
@@ -3220,7 +3229,8 @@ timeframe interval are emitted.</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unsubscribe"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="err">CHANNEL_ID</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sample_id2"</span><span class="w">
 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -3228,8 +3238,8 @@ timeframe interval are emitted.</p>
 <p><strong>Response</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
-    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"trade.ETH-BTC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unsubscribed"</span><span class="p">],</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
+    </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"trade.ETH-BTC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unsubscribed"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sample_id2"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='error'>Error</h2>
@@ -3257,7 +3267,7 @@ timeframe interval are emitted.</p>
 <p><strong>Response</strong></p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">error_code</span><span class="p">,</span><span class="w"> </span><span class="err">msg</span><span class="p">]</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">error_code</span><span class="p">,</span><span class="w"> </span><span class="err">msg</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"4002"</span><span class="p">,</span><span class="w"> </span><span class="s2">"channel_not_found"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3352,8 +3362,9 @@ timeframe interval are emitted.</p>
     </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123.4567"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.000"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="err">/</span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"stop_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">stop/stop-limit</span><span class="w"> </span><span class="err">order</span><span class="w">
-    </span><span class="s2">"trailing_distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">trailing-stop</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"stop_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">        </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">stop/stop-limit</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"trailing_distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">trailing-stop</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order_req_id1"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">(modify)</span><span class="w">
 </span><span class="p">{</span><span class="w">
@@ -3362,8 +3373,9 @@ timeframe interval are emitted.</p>
     </span><span class="s2">"order_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxxx-xxxx-xxxx-xxxx"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123.4567"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"stop_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">stop/stop-limit</span><span class="w"> </span><span class="err">order</span><span class="w">
-    </span><span class="s2">"trailing_distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">trailing</span><span class="w"> </span><span class="err">stop</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"stop_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">        </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">stop/stop-limit</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"trailing_distance"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">mandatory</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">trailing</span><span class="w"> </span><span class="err">stop</span><span class="w"> </span><span class="err">order</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"order_req_id2"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><pre class="highlight json tab-json"><code><span class="err">//</span><span class="w"> </span><span class="err">order</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">(cancel)</span><span class="w">
 </span><span class="p">{</span><span class="w">
@@ -3376,7 +3388,7 @@ timeframe interval are emitted.</p>
 <p><strong>Response</strong></p>
 </blockquote>
 <h2 id='limit-order'>Limit Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
@@ -3393,7 +3405,7 @@ timeframe interval are emitted.</p>
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='market-order'>Market Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
@@ -3409,7 +3421,7 @@ timeframe interval are emitted.</p>
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='stop-order'>Stop Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
@@ -3426,7 +3438,7 @@ timeframe interval are emitted.</p>
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='limit-stop-order'>Limit Stop Order</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">]</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="p">[</span><span class="err">channel_id</span><span class="p">,</span><span class="w"> </span><span class="err">version</span><span class="p">,</span><span class="w"> </span><span class="err">type</span><span class="p">,</span><span class="w"> </span><span class="err">request_id</span><span class="w"> </span><span class="err">(optional)</span><span class="p">]</span><span class="w">
     </span><span class="s2">"h"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"u"</span><span class="p">,</span><span class="w"> </span><span class="s2">"3"</span><span class="p">],</span><span class="w">
     </span><span class="s2">"d"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="err">ORDER_ID</span><span class="p">,</span><span class="w">
@@ -3484,7 +3496,8 @@ The updates is published as <strong>DIFF</strong>.</p>
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='trade'>Trade</h2>
-<p>After receiving the response, you will start receiving ticker updates.</p>
+<p>After receiving the response, you will start receiving recent trade,
+followed by any trade that occurs at COBINHOOD.</p>
 
 <p><strong>PARAMS</strong></p>
 
@@ -3518,8 +3531,7 @@ The updates is published as <strong>DIFF</strong>.</p>
         </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='ticker-2'>Ticker</h2>
-<p>After receiving the response, you will start receiving recent trade,
-followed by any trade that occurs at COBINHOOD.</p>
+<p>After receiving the response, you will start receiving ticker updates</p>
 
 <ul>
 <li><code>TRADING_PAIR_ID</code>: Subscribe trading pair ID</li>

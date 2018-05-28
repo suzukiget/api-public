@@ -16,10 +16,8 @@ toc_footers:
 # Overview
 COBINHOOD RESTful API URL: `https://api.cobinhood.com`
 
-COBINHOOD WebSocket API URL: `wss://ws.cobinhood.com/ws` [V1 will deprecate in June, 2018]
+COBINHOOD WebSocket API URL: `wss://feed.cobinhood.com/ws` [Will be removed in June, 2018]
 COBINHOOD WebSocket V2 API URL: `wss://ws.cobinhood.com/v2/ws`
-
-**WARN**: Domain name `feed.cobinhood.com` is deprecated. Please use `ws.cobinhood.com`.
 
 ## HTTP Request Headers
 `nonce` for 'POST' 'UPDATE' 'DELETE'. Accept nonce in millisecond unix time format. ex: `1518166662197`
@@ -67,17 +65,171 @@ An unsuccessful response would result in HTTP status codes ranging from 400 to 5
 ## Rate-limiting
 All API requests are rate-limited.
 
-## Pagination
+## Custom Query & Pagination
+APIs equipped with custom query functionality enable users to query with different `filter`, `order`, `limit` and `page`.
 
-> Request URL:
+### Query Parameters
 
+  + `filter`: object
+    + `and`: array
+        + `column`: column to filter on
+          + string
+        + `value`: the value to fitler with
+          + ['string', 'number']
+    + `not_equal`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `like`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `smaller_than`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `greater_than_or_equal`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `in`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `equal`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `between`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `greater_than`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `smaller_than_or_equal`: object
+      + `column`: column to filter on
+        + string
+      + `value`: the value to fitler with
+        + ['string', 'number']
+    + `or`: array
+        + `column`: column to filter on
+          + string
+        + `value`: the value to fitler with
+          + ['string', 'number']
+  + `limit`: limit
+    + integer
+  + `page`: page number
+    + integer
+  + `order`: object
+    + `column`: column name
+      + string
+    + `keyword`: [`asc`, `desc`]
+      + string
+
+### Filter
+> Ex. 1: `Where column_a = 'A'`
+
+```json
+{
+	"equal": {
+		"column": "column_a",
+		"value": "A"
+	}
+}
 ```
-https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
+
+> Ex. 2: `Where ((column_a = 'A') AND (column_b != 'B'))`
+
+```json
+{
+	"and": [
+		{
+			"equal": {
+				"column": "column_a",
+				"value": "A"
+			}
+		},{
+			"not_equal": {
+				"column": "column_b",
+				"value": "A"
+			}
+		}
+	]
+}
 ```
+
+Pass the JSON stringified object as the `filter` query parameter in url to filter the queried data.
+Filter object is a nested JSON object that will be evaluated to `Where` arguments in a SQL query. Each layer is a single-key map, with operator as the key and parameters as the value. There are two kinds of filters (operators), comparison filters and logic filters. Comparison filter is the atomic element of a filter and logic filter is to combine multiple filters into one single filter.
+
+The allowed column, values and operators can differ in APIs according to different use cases.
+
+### Comparison Operators:
+- `equal`
+- `not_equal`
+- `greater_than`
+- `greater_than_or_equal`
+- `smaller_than`
+- `smaller_than_or_equal`
+- `in`
+- `like`
+- `between`
+
+### Logic Operators:
+
+- `and`
+- `or`
+
+### Order
+
+Pass the JSON stringified JSON array as the `order` query parameter in url to order the queried data.
+Order array will be evaluated to `ORDER BY` arguments in a SQL query. Each element is a order object with column to order by and the order keyword(`asc`|`desc`).
+
+The allowed column, values and operators can differ in APIs according to different use cases.
+
+> Ex. `ORDER BY column_a ASC`
+
+```json
+[
+	{
+		"column":"column_a",
+		"keyword":"asc"
+	}
+]
+```
+
+### Pagination
+
+Pass `limit` and `page` query parameter to specify the pagination. Page starts from `1` and the maximum `limit` is `100`
+
+
 
 # System
 
+
 ## Get System Time
+
+`/v1/system/time [GET]`
+
+    Get the reference system time as Unix timestamp.
+
+
+
+
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -88,44 +240,32 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
         "time": 1505204498376
     }
 }
+
 ```
 
-`/v1/system/time [GET]`
 
-    Get the reference system time as Unix timestamp
 
-+ **Response**
-    + `time`: Server Unix timestamp in milliseconds
-        + int
+  + `time`: server Unix timestamp in milliseconds
+    + integer
 
-## Get System Information
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "info": {
-            "phase": "production",
-            "revision": "480bbd"
-        }
-    }
-}
-```
-`/v1/system/info [GET]`
-
-    Get system information
-
-+ **Response**
-    + `phase`: System Phase
-        + enum[`production`]
-    + `revision`: Revision number of the system deployment
-        + string
 
 # Market
 
-## Get All Currencies
+
+## Get Currencies
+
+`/v1/market/currencies [GET]`
+
+    This endpoint returns all supported currencies and related information.
+
+
+
+
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -135,80 +275,126 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "currencies": [
             {
-                "currency": "BTC",
-                "name": "Bitcoin",
+                "currency": "REP",
+                "name": "Augur",
+                "type": "erc20",
                 "min_unit": "0.00000001",
                 "deposit_fee": "0",
-                "withdrawal_fee": "22.6",
-                "type": "native",
-                "is_active": true,
-                "funding_frozen": false
-            },
-            ...
+                "withdrawal_fee": "0.06",
+                "min_withdrawal": "0.20387",
+                "funding_min_size": "0.611",
+                "interest_increment": "0.001",
+                "margin_enabled": false,
+                "deposit_frozen": false,
+                "withdrawal_frozen": false,
+                "cob_withdrawal_fee": "18.16970378"
+            }
         ]
     }
 }
+
 ```
 
-`/v1/market/currencies [GET]`
 
-    Returns info for all currencies available for trade
 
-+ **Response**
-    + `currency`: Currency ID
-        + (enum[`BTC`, `ETH`, ...])
-    + `min_unit`: Minimum size unit, all order sizes must be an integer multiple of this number
+  + `currencies`: array
+      + `deposit_frozen`: available for deposit
+        + boolean
+      + `name`: the currency name
         + string
-    + `name`: The currency name
+      + `margin_enabled`: available for margin
+        + boolean
+      + `min_withdrawal`: minimal available withdrawal size
         + string
-    + `deposit_fee`: The currency deposit fee
+      + `currency`: the currency id
         + string
-    + `withdrawal_fee`: The currency withdrawal fee
+      + `funding_min_size`: minimal funding size
         + string
-    + `type`: The type of the currency, could be `native`, `erc20` ...
+      + `withdrawal_fee`: withdrawal fee with same currency
         + string
-    + `is_active`: Whether or not the currency is active
-        + bool
-    + `funding_frozen`: Whether the funding service for the currency is frozen or not
-        + bool
+      + `withdrawal_frozen`: available for withdrawal
+        + boolean
+      + `deposit_fee`: deposite fee with same currency
+        + string
+      + `min_unit`: the currency mininum unit
+        + string
+      + `type`: currency type
+        + enum [`erc20`, `native`, `qrc20`, `atp10`]
+      + `interest_increment`: the interest increment rate while margining
+        + string
+      + `cob_withdrawal_fee`: withdrawal fee with COB
+        + string
 
-## Get All Trading Pairs
+
+## Get Orderbook Precisions
+
+`/v1/market/orderbook/precisions/:trading_pair_id [GET]`
+
+    Returns available precisions in scientific notation of orderbook by given trading pair.
+
+
+
+### Path Parameters
+  + `trading_pair_id`: trading pair symbol/id
+    + string
+
+
+
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
 {
     "success": true,
-    "result": {
-        "trading_pairs": [
-            {
-                "id": "BTC-USDT",
-                "base_currency_id": "BTC",
-                "quote_currency_id": "USDT",
-                "base_min_size": "0.004",
-                "base_max_size": "10000",
-                "quote_increment": "0.1"
-            },
-            ...
-        ]
-    }
+    "result": [
+      "1E-7",
+      "5E-7",
+      "1E-6",
+      "5E-6",
+      "1E-5",
+      "5E-5",
+      "1E-4",
+      "5E-4",
+      "1E-3",
+      "5E-3",
+      "1E-2",
+      "5E-2"
+    ]
 }
+
 ```
 
-`/v1/market/trading_pairs [GET]`
 
-    Get info for all trading pairs
 
-+ **Response**
-    + `id`: Trading pair ID
-        + enum[`BTC-USDT`, `ETH-USDT`, ...] (Base-Quote)
-    + `base_min_size`: Minimum amount of base
-        + string
-    + `base_max_size`: Maximum amount of base
-        + string
-    + `quote_increment`: Minimum quote currency increment
-        + string
+    + string
 
-## Get Order Book
+
+## Get Orderbook
+
+`/v1/market/orderbooks/:trading_pair_id [GET]`
+
+    Return orderbook of given trading pair.
+
+
+
+### Path Parameters
+  + `trading_pair_id`: trading pair symbol/id
+    + string
+
+### Query Parameters
+  + `limit`: limits number of price point. Optional. If limit is 0, the whole orderbook is returned. Default and max as 50, min 1
+    + integer
+  + `precision`: precision of orderbook aggregation. Optional. Default the most precise level
+    + string
+
+
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
@@ -216,93 +402,256 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "orderbook": {
-            "sequence": 1938572,
+            "sequence": 0,
             "bids": [
-                [ price, count, size ],
-                ...
+                [
+                    "0.0830804",
+                    "1",
+                    "3.7387"
+                ]
             ],
             "asks": [
-                [ price, count, size ],
-                ...
+                [
+                    "0.0834349",
+                    "1",
+                    "5.3396"
+                ]
             ]
         }
     }
 }
+
 ```
-`/v1/market/orderbooks/<trading_pair_id> [GET]`
-
-    Get order book for the trading pair containing all asks/bids
-
-+ **Path Parameters**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-        + required
-
-+ **Query parameters**
-    + `limit`: Limits number of entries of asks/bids list, beginning from the best price for both sides
-        + int
-        + optional
-        + Defaults to 50 if not specified, if limit is `0`, it means to fetch the whole order book.
-
-+ **Response**
-    + `sequence`: A sequence number that is updated on each orderbook state change
-        + int
-    + `price`: Order price
-        + string
-    + `size`: The aggregated total amount in the price group
-        + string
-    + `count`: The number of orders within current price range
-        + string
-        + e.g. when `precision=2`,  4137.181 and 4137.1837 would both fall into price group 4137.18
-
-## Get Order Book Precisions
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": []
-}
-```
-`/v1/market/orderbook/precisions/<trading_pair_id> [GET]`
-
-    Get order book available precisions for the trading pair
-
-+ **Path Parameters**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-        + required
 
 
-+ **Response**
-    + `result`: available precisions in scientific notation format.
 
-## Get Trading Statistics
+  + `orderbook`: object
+    + `bids`: volume, count, price
+      + array
+          + string
+    + `asks`: volume, count, price
+      + array
+          + string
+    + `sequence`: legacy attribute
+      + integer
+
+
+## Get Quote Currencies
+
+`/v1/market/quote_currencies [GET]`
+
+    This endpoint returns all supported quote currencies and related information.
+
+
+
+
+
+
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
 {
     "success": true,
     "result": {
-        "BTC-USDT": {
-            "id": "BTC-USDT",
-            "last_price": "10005",
-            "lowest_ask": "10005",
-            "highest_bid": "15200.1",
-            "base_volume": "0.36255776",
-            "quote_volume": "4197.431917146",
-            "is_frozen": false,
-            "high_24hr": "16999.9",
-            "low_24hr": "10000",
-            "percent_changed_24hr": "-0.3417806461799593"
-        }
+        "quote_currencies": [
+            {
+                "currency": "BTC",
+                "name": "Bitcoin",
+                "type": "native",
+                "min_unit": "0.00000001",
+                "deposit_fee": "0",
+                "withdrawal_fee": "0.001",
+                "min_withdrawal": "0.00109",
+                "funding_min_size": "0.003",
+                "interest_increment": "0.001",
+                "margin_enabled": false,
+                "deposit_frozen": false,
+                "withdrawal_frozen": false,
+                "cob_withdrawal_fee": "51.02040816"
+            }
+        ]
     }
 }
+
 ```
+
+
+
+  + `quote_currencies`: array
+      + `deposit_frozen`: available for deposit
+        + boolean
+      + `name`: the currency name
+        + string
+      + `margin_enabled`: available for margin
+        + boolean
+      + `min_withdrawal`: minimal available withdrawal size
+        + string
+      + `currency`: the currency id
+        + string
+      + `funding_min_size`: minimal funding size
+        + string
+      + `withdrawal_fee`: withdrawal fee with same currency
+        + string
+      + `withdrawal_frozen`: available for withdrawal
+        + boolean
+      + `deposit_fee`: deposite fee with same currency
+        + string
+      + `min_unit`: the currency mininum unit
+        + string
+      + `type`: currency type
+        + enum [`erc20`, `native`, `qrc20`, `atp10`]
+      + `interest_increment`: the interest increment rate while margining
+        + string
+      + `cob_withdrawal_fee`: withdrawal fee with COB
+        + string
+
+
+## Show Exchange statistics
 
 `/v1/market/stats [GET]`
 
+    Returns exchange statistics in past 24 hours by trading pair.
+
+
+
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "ETH-BTC": {
+            "id": "ETH-BTC",
+            "last_price": "0.0836",
+            "lowest_ask": "0.0837158",
+            "highest_bid": "0.083461",
+            "base_volume": "302.09964207",
+            "quote_volume": "25.347837637256305",
+            "is_frozen": false,
+            "high_24hr": "0.08519",
+            "low_24hr": "0.0825143",
+            "percent_changed_24hr": "0.0023980815347722"
+        }
+    }
+}
+
+```
+
+
+
+  + `[A-Z]{3,5}-[A-Z]{3,5}`: object
+    + `percent_changed_24hr`: the precent changed in previous 24hr
+      + string
+    + `lowest_ask`: the lowest ask on orderbook when querying
+      + string
+    + `base_volume`: the volume of base currency
+      + string
+    + `last_price`: latest price in previous 24hr
+      + string
+    + `high_24hr`: the highest price in previous 24hr
+      + string
+    + `highest_bid`: the highest bid on orderbook when querying
+      + string
+    + `low_24hr`: the lowest price in previous 24hr
+      + string
+    + `quote_volume`: the volume of quote currency
+      + string
+    + `is_frozen`: trading pair available or not
+      + boolean
+    + `id`: trading pair id
+      + string
+
+
+## Get Tickers
+
+`/v1/market/tickers [GET]`
+
+    Returns all trading pair tickers.
+
+
+
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "tickers": [
+            {
+                "trading_pair_id": "ETH-BTC",
+                "timestamp": 1526442600000,
+                "24h_high": "0.08519",
+                "24h_low": "0.0825143",
+                "24h_open": "0.0832193",
+                "24h_volume": "297.48782148000026",
+                "last_trade_price": "0.0839425",
+                "highest_bid": "0.083694",
+                "lowest_ask": "0.0839903"
+            }
+        ]
+    }
+}
+
+```
+
+
+
+  + `tickers`: array
+      + `trading_pair_id`: trading pair symbol
+        + string
+      + `lowest_ask`: lowest ask on orderbook while querying
+        + string
+      + `24h_volume`: summation of volume in previous 24hr
+        + string
+      + `timestamp`: unix timestamp in milliseconds
+        + integer
+      + `highest_bid`: highest bid on orderbook while querying
+        + string
+      + `24h_low`: lowest price in previous 24hr
+        + string
+      + `24h_high`: highest price in previous 24hr
+        + string
+      + `last_trade_price`: last price in previous 24hr
+        + string
+      + `24h_open`: first price in previous 24hr
+        + string
+
+
 ## Get Ticker
+
+`/v1/market/tickers/:trading_pair_id [GET]`
+
+    Return trading pair of given trading pair.
+
+
+
+### Path Parameters
+  + `trading_pair_id`: trading pair symbol/id
+    + string
+
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -311,49 +660,64 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "ticker": {
-            "trading_pair_id": "COB-BTC",
-            "timestamp": 1504459805123,
-            "24h_high": "23.456",
-            "24h_low": "10.123",
-            "24h_open": "15.764",
-            "24h_volume": "7842.11542563",
-            "last_trade_price":"244.82",
-            "highest_bid":"244.75",
-            "lowest_ask":"244.76"
+          "trading_pair_id": "ETH-BTC",
+          "timestamp": 1526442660000,
+          "24h_high": "0.08519",
+          "24h_low": "0.0825143",
+          "24h_open": "0.083655",
+          "24h_volume": "296.60529380000025",
+          "last_trade_price": "0.0839425",
+          "highest_bid": "0.0836897",
+          "lowest_ask": "0.0839091"
         }
     }
 }
+
 ```
 
-`/v1/market/tickers/<trading_pair_id> [GET]`
 
-    Returns ticker for specified trading pair.
 
-+ **Path Parameters**
-    + `trading_pair_id`
-        + enum[`BTC-USDT`, ...]
-        + optional
-        + If not specified, return tickers for all pairs.
+  + `ticker`: object
+    + `trading_pair_id`: trading pair symbol
+      + string
+    + `lowest_ask`: lowest ask on orderbook while querying
+      + string
+    + `24h_volume`: summation of volume in previous 24hr
+      + string
+    + `timestamp`: unix timestamp in milliseconds
+      + integer
+    + `highest_bid`: highest bid on orderbook while querying
+      + string
+    + `24h_low`: lowest price in previous 24hr
+      + string
+    + `24h_high`: highest price in previous 24hr
+      + string
+    + `last_trade_price`: last price in previous 24hr
+      + string
+    + `24h_open`: first price in previous 24hr
+      + string
 
-+ **Response**
-    + `trading_pair_id`: Ticker trading pair id
-        + string
-    + `last_trade_price`: Latest trade price
-        + string
-    + `highest_bid`: Best bid price in current order book
-        + string
-    + `lowest_ask`: Best ask price in current order book
-        + string
-    + `24h_volume`: Trading volume of the last 24 hours
-        + string
-    + `24h_low`: Lowest trade price of the last 24 hours
-        + string
-    + `24h_high`: Highest trade price of the last 24 hours
-        + string
-    + `timestamp`: Ticker timestamp in milliseconds
-        + int
 
-## Get Recent Trades
+## Get Trades
+
+`/v1/market/trades/:trading_pair_id [GET]`
+
+    Returns recently trades of given trading pair.
+
+
+
+### Path Parameters
+  + `trading_pair_id`: trading pair symbol/id
+    + string
+
+### Query Parameters
+  + `limit`: limits number of trades. Optional. Default and max as 50, min 1
+    + integer
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -363,48 +727,119 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "trades": [
             {
-                "id": "09619448e48a3bd73d493a4194f9020b",
-                "price": "10.00000000",
-                "size": "0.01000000",
-                "maker_side": "buy",
-                "timestamp": 1504459805123
-            },
-            ...
+                "id": "c0008469-1dd0-45d7-bbcc-97879ded8232",
+                "trading_pair_id": "BTC-USDT",
+                "maker_side": "bid",
+                "timestamp": 1526441812535,
+                "price": "0.0837002",
+                "size": "0.06135"
+            }
         ]
     }
 }
+
 ```
 
-`/v1/market/trades/<trading_pair_id> [GET]`
 
-    Returns most recent trades for the specified trading pair
 
-+ **Path Parameters**
-    + `trading_pair_id`
-        + enum[`BTC-USDT`, ...]
-        + required
-
-+ **Query parameters**
-    + `limit`: Limits number of trades beginning from the most recent
-        + int
-        + optional
-        + Defaults to 20 if not specified, Maximun 50.
-
-+ **Response**
-    + `id`: Trade ID
+  + `trades`: array
+      + `maker_side`: order side
+        + enum [`bid`, `ask`]
+      + `trading_pair_id`: trading pair ID
         + string
-    + `price`: Quote price
+      + `timestamp`: unix timestamp in milliseconds
+        + integer
+      + `price`: the trade price
         + string
-    + `size`: Base amount
+      + `id`: unique id of trade
         + string
-    + `maker_side`: Side of the taker
-        + enum[`bid`, `ask`]
-    + `timestamp`: Closed timestamp in milliseconds
-        + int
+      + `size`: the trade size
+        + string
+
+
+## Get Trading Pairs
+
+`/v1/market/trading_pairs [GET]`
+
+    Returns all supported trading pairs and related inforamtion.
+
+
+
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "trading_pairs": [
+            {
+                "id": "ETH-BTC",
+                "base_currency_id": "ETH",
+                "quote_currency_id": "BTC",
+                "base_max_size": "1361.889",
+                "base_min_size": "0.027",
+                "quote_increment": "0.0000001",
+                "margin_enabled": false
+            }
+        ]
+    }
+}
+
+```
+
+
+
+  + `trading_pairs`: array
+      + `base_currency_id`: the base currency symbol
+        + string
+      + `margin_enabled`: available for margin
+        + boolean
+      + `base_max_size`: max base volume size
+        + string
+      + `quote_increment`: the quote incremental step
+        + string
+      + `quote_currency_id`: the quote currency symbol
+        + string
+      + `id`: the trading pair symbol
+        + string
+      + `base_min_size`: min base volume size
+        + string
+
 
 # Chart
 
-## Get Candles
+
+## Get Candle
+
+`/v1/chart/candles/:trading_pair_id [GET]`
+
+    returns candle of given trading pair, timeframe, time range.
+
+
+
+### Path Parameters
+  + `order_id`: trading pair ID
+    + string
+
+### Query Parameters
+  + `start_time`: unix timestamp in milliseconds
+    + integer
+  + `end_time`: unix timestamp in milliseconds
+    + integer
+  + `timeframe`: timeframe type
+    + enum [`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -414,108 +849,82 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "candles": [
             {
-                "timestamp": 1507366756,
-                "open": "4378.6",
-                "close": "4379.0",
-                "high": "4379.0",
-                "low": "4378.3",
-                "volume": "23.91460172"
-            },
-            ...
+                "timeframe": "1h",
+                "trading_pair_id": "COB-BTC",
+                "timestamp": 1521280800000,
+                "volume": "59775.03494641",
+                "open": "0.00001138",
+                "close": "0.00001143",
+                "high": "0.00001151",
+                "low": "0.00001118"
+            }
         ]
     }
 }
+
 ```
 
-`/v1/chart/candles/<trading_pair_id>`
 
-    Get charting candles
 
-+ **Path Parameters**
-    + `trading_pair_id`
-        + enum[`BTC-USDT`, ...]
-        + required
-
-+ **Query parameter**
-    + `start_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to 0 if not specified
-    + `end_time`: Unix timestamp in milliseconds
-        + int
-        + optional
-        + Defaults to current server time if not specified
-    + `timeframe`: Time span of data aggregation
-        + enum[`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
-        + required
-        + `timeframe` is limited to the range specified by the `start_time` and `end_time` fields, e.g. if range has a span of 3 hours, `timeframe` should only be one of `1m`, `5m`, `15m`, or `1h`
-
-+ **Response**
-    + `timestamp`: Time of candlestick, Unix time in milliseconds, rounded up to zero point of each timeframe intervals
-        + int
-    + `open`: The open price during the interval (the last trade price before the interval)
+  + `candles`: array
+      + `trading_pair_id`: trading pair symbol/id
         + string
-    + `close`: The close price during the interval
+      + `timestamp`: unix timestamp in milliseconds
+        + integer
+      + `volume`: summation volume of this candle
         + string
-    + `high`: The highest price during the interval
+      + `high`: highest price of this candle
         + string
-    + `low`: The lowest  price during the interval
+      + `low`: lowest price of this candle
         + string
-    + `volume`: The volume of trading during the interval
+      + `timeframe`: timeframe type
+        + enum [`1m`, `5m`, `15m`, `30m`, `1h`, `3h`, `6h`, `12h`, `1D`, `7D`, `14D`, `1M`]
+      + `close`: last price of this candle
+        + string
+      + `open`: first price of this candle
         + string
 
-# Trading *[Auth]*
 
-## Get Order
-> [Success] Response 200 (application/json)
+# Trading [Auth]
+
+
+## Check Order
+
+`/v1/trading/check_order [POST]`
+
+    Check conditional order will be executed immediately.
+
+
+
+
+
+### Request
+
+> Payload
 
 ```json
 {
-    "success": true,
-    "result": {
-        "order": {
-            "id": "37f550a202aa6a3fe120f420637c894c",
-            "trading_pair": "BTC-USDT",
-            "state": "open",
-            "side": "bid",
-            "type": "limit",
-            "price": "5000.01",
-            "size": "1.0100",
-            "filled": "0.59",
-            "timestamp": 1504459805123
-        }
-    }
+    "trading_pair_id": "BTC-USDT",
+    "side": "bid",
+    "type": "limit_stop",
+    "stop_price": "5000.01000000"
 }
+
 ```
-`/v1/trading/orders/<order_id> [GET]`
 
-    Get information for a single order
 
-+ **Response**
-    + `id`: Order ID
-        + string
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-    + `state`: Order status
-        + enum[`new`, `queued`, `open`, `partially_filled`, `filled`, `cancelled`]
-    + `side`: Order side
-        + enum[`bid`, `ask`]
-    + `type`: Order type
-        + enum[`market`, `limit`, `stop`, `stop_limit`, `trailing_stop`,`fill_or_kill`]
-    + `price`: Quote price
-        + string
-    + `size`: Base amount
-        + string
-    + `filled`: Amount filled in current order
-        + string
-    + `timestamp`: Order timestamp in milliseconds
-        + int
-    + `eq_price`: The equivalance price
-        + string
-    + `completed_at`: The order filled time
-        + string
 
-## Get Trades of An Order
+  + `trading_pair_id`: trading pair ID
+    + string
+  + `stop_price`: order stop price
+    + string
+  + `side`: order side
+    + enum [`bid`, `ask`]
+  + `type`: order type
+    + enum [`market_stop`, `limit_stop`]
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -523,42 +932,38 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
     "success": true,
     "result": {
-        "trades": [
-            {
-                "id": "09619448e48a3bd73d493a4194f9020b",
-                "price": "10.00000000",
-                "size": "0.01000000",
-                "maker_side": "bid",
-                "timestamp": 1504459805123
-            },
-            ...
-        ]
+        "may_execute_immediately": true
     }
 }
+
 ```
 
-`/v1/trading/orders/<order_id>/trades [GET]`
 
-    Get all trades originating from the specific order
 
-+ **Path Parameters**
-    + `order_id`: Order ID
-        + string
-        + required
+  + `may_execute_immediately`: boolean
 
-+ **Response**
-    + `id`: Trade ID
-        + string
-    + `price`: Quote price
-        + string
-    + `size`: Base amount
-        + string
-    + `maker_side`: Side of the taker
-        + enum[`bid`, `ask`]
-    + `timestamp`: Closed timestamp in milliseconds
-        + int
 
-## Get All Orders
+## Get Order History
+
+`/v1/trading/order_history [GET]`
+
+    Get historical orders.
+
+
+
+
+### Query Parameters
+  + `trading_pair_id`: trading pair ID
+    + string
+  + `limit`: pagingnation limit number
+    + integer
+  + `page`: pagingnation page number
+    + integer
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -568,62 +973,70 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "orders": [
             {
-                "id": "37f550a202aa6a3fe120f420637c894c",
-                "trading_pair": "BTC-USDT",
-                "state": "open",
+                "id": "8850805e-d783-46ec-9af5-30712035e760",
+                "trading_pair_id": "COB-ETH",
                 "side": "bid",
                 "type": "limit",
-                "price": "5000.01",
-                "size": "1.0100",
-                "filled": "0.59",
-                "timestamp": 1504459805123,
-                "eq_price": "5000.01"
-            },
-            ...
+                "price": "0.0001195",
+                "size": "212",
+                "filled": "212",
+                "state": "filled",
+                "timestamp": 1526018972869,
+                "eq_price": "0.0001194999996323",
+                "completed_at": "2018-05-11T06:09:38.946678Z",
+                "source": "exchange"
+            }
         ]
     }
 }
+
 ```
 
-`/v1/trading/orders [GET]`
 
-    List all current orders for user
 
-+ **Query parameters**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-        + optional
-        + Returns orders of all trading pairs if not specified
-    + `limit`: Limits number of orders per page
-        + int
-        + optional
-        + Defaults to 20 if not specified, Maximun 50.
+  + `orders`: array
+      + `eq_price`: the equivalance(average) price
+        + string
+      + `trading_pair_id`: trading pair ID
+        + string
+      + `stop_price`: order stop price
+        + string
+      + `completed_at`: order filled time
+        + string
+      + `timestamp`: order timestamp in milliseconds
+        + integer
+      + `price`: quote price
+        + string
+      + `id`: order ID
+        + string
+      + `source`: order source
+        + string
+      + `state`: order status
+        + enum [`queued`, `open`, `partially_filled`, `filled`, `cancelled`, `rejected`, `pending_cancellation`, `pending_modifications`, `triggered`]
+      + `trailing_distance`: order trailing distance
+        + string
+      + `type`: order type
+        + enum [`market`, `limit`, `market_stop`, `limit_stop`]
+      + `side`: order side
+        + enum [`bid`, `ask`]
+      + `filled`: amount filled in current order
+        + string
+      + `size`: base amount
+        + string
 
-+ **Response**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-    + `id`: Order ID
-        + string
-    + `state`: Order status
-        + enum[`new`, `queued`, `open`, `partially_filled`]
-    + `side`: Order side
-        + enum[`bid`, `ask`]
-    + `type`: Order type
-        + enum[`market`, `limit`, `stop`, `stop_limit`, `trailing_stop`,`fill_or_kill`]
-    + `price`: Quote price
-        + string
-    + `size`: Base amount
-        + string
-    + `filled`: Amount filled in current order
-        + string
-    + `timestamp`: Order timestamp in milliseconds
-        + int
-    + `eq_price`: The equivalance price
-        + string
-    + `completed_at`: The order filled time
-        + string
 
 ## Place Order
+
+`/v1/trading/orders [POST]`
+
+    Place an order.
+
+
+
+
+
+### Request
+
 > Payload
 
 ```json
@@ -634,25 +1047,26 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "price": "5000.01000000",
     "size": "1.0100"
 }
+
 ```
 
-`/v1/trading/orders [POST]`
 
-    Place orders to ask or bid
 
-+ **Request**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-    + `side`: Order side
-        + enum[`bid`, `ask`]
-    + `type`: Order type
-        + enum[`market`, `limit`, `stop`, `stop_limit`]
-    + `price`: Quote price
-        + string
-        + optional
-        + `market` type will ignore
-    + `size`: Base amount
-        + string
+  + `trading_pair_id`: trading pair ID
+    + string
+  + `stop_price`: optional, type should be `limit_stop` or `market_stop`
+    + string
+  + `price`: optional, `market` type will ignore
+    + string
+  + `type`: order type
+    + enum [`market`, `limit`, `market_stop`, `limit_stop`]
+  + `side`: order side
+    + enum [`bid`, `ask`]
+  + `size`: base amount
+    + string
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -661,104 +1075,206 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "success": true,
     "result": {
         "order": {
-            "id": "37f550a202aa6a3fe120f420637c894c",
-            "trading_pair": "BTC-USDT",
-            "state": "open",
+            "id": "8850805e-d783-46ec-9af5-30712035e760",
+            "trading_pair_id": "COB-ETH",
             "side": "bid",
             "type": "limit",
-            "price": "5000.01",
-            "size": "1.0100",
-            "filled": "0.59",
-            "timestamp": 1504459805123,
-            "eq_price": "5000.01"
+            "price": "0.0001195",
+            "size": "212",
+            "filled": "212",
+            "state": "filled",
+            "timestamp": 1526018972869,
+            "eq_price": "0.0001194999996323",
+            "completed_at": "2018-05-11T06:09:38.946678Z",
+            "source": "exchange"
         }
     }
 }
+
 ```
-+ **Response**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-    + `id`: Order ID
+
+
+
+  + `order`: object
+    + `eq_price`: the equivalance(average) price
+      + string
+    + `trading_pair_id`: trading pair ID
+      + string
+    + `stop_price`: order stop price
+      + string
+    + `completed_at`: order filled time
+      + string
+    + `timestamp`: order timestamp in milliseconds
+      + integer
+    + `price`: quote price
+      + string
+    + `id`: order ID
+      + string
+    + `source`: order source
+      + string
+    + `state`: order status
+      + enum [`queued`, `open`, `partially_filled`, `filled`, `cancelled`, `rejected`, `pending_cancellation`, `pending_modifications`, `triggered`]
+    + `trailing_distance`: order trailing distance
+      + string
+    + `type`: order type
+      + enum [`market`, `limit`, `market_stop`, `limit_stop`]
+    + `side`: order side
+      + enum [`bid`, `ask`]
+    + `filled`: amount filled in current order
+      + string
+    + `size`: base amount
+      + string
+
+
+## Get Open Orders
+
+`/v1/trading/orders [GET]`
+
+    List all open orders for a user.
+
+
+
+
+### Query Parameters
+  + `trading_pair_id`: trading pair ID
+    + string
+  + `limit`: pagingnation limit number
+    + integer
+  + `page`: pagingnation page number
+    + integer
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "orders": [
+            {
+                "id": "8850805e-d783-46ec-9af5-30712035e760",
+                "trading_pair_id": "COB-ETH",
+                "side": "bid",
+                "type": "limit",
+                "price": "0.0001195",
+                "size": "212",
+                "filled": "212",
+                "state": "filled",
+                "timestamp": 1526018972869,
+                "eq_price": "0.0001194999996323",
+                "completed_at": "2018-05-11T06:09:38.946678Z",
+                "source": "exchange"
+            }
+        ]
+    }
+}
+
+```
+
+
+
+  + `orders`: array
+      + `eq_price`: the equivalance(average) price
         + string
-    + `state`: Order status
-        + enum[`open`]
-    + `side`: Order side
-        + enum[`bid`, `ask`]
-    + `type`: Order type
-        + enum[`market`, `limit`, `stop`, `stop_limit`]
-    + `price`: Quote price
+      + `trading_pair_id`: trading pair ID
         + string
-    + `size`: Base amount
+      + `stop_price`: order stop price
         + string
-    + `filled`: Amount filled in current order
+      + `completed_at`: order filled time
         + string
-    + `timestamp`: Order timestamp in milliseconds
-        + int
-    + `eq_price`: The equivalance price
+      + `timestamp`: order timestamp in milliseconds
+        + integer
+      + `price`: quote price
         + string
-    + `completed_at`: The order filled time
+      + `id`: order ID
+        + string
+      + `source`: order source
+        + string
+      + `state`: order status
+        + enum [`queued`, `open`, `partially_filled`, `filled`, `cancelled`, `rejected`, `pending_cancellation`, `pending_modifications`, `triggered`]
+      + `trailing_distance`: order trailing distance
+        + string
+      + `type`: order type
+        + enum [`market`, `limit`, `market_stop`, `limit_stop`]
+      + `side`: order side
+        + enum [`bid`, `ask`]
+      + `filled`: amount filled in current order
+        + string
+      + `size`: base amount
         + string
 
 
 ## Modify Order
+
+`/v1/trading/orders/:order_id [PUT]`
+
+    Modify an order.
+
+
+
+### Path Parameters
+  + `order_id`: order ID
+    + string
+
+
+### Request
+
+> Payload
+
+```json
+{
+    "price": "5000.01000000",
+    "size": "1.0100"
+}
+
+```
+
+
+
+  + `price`: order price
+    + string
+  + `size`: base amount
+    + string
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
 {
-    "success": true
+    "success": true,
+    "result": null
 }
+
 ```
 
-`/v1/trading/orders/<order_id> [PUT]`
 
-    Modify a single order
 
-+ **Path Parameter**
-    + `order_id`: Order ID
-        + string
-        + required
+  + null
 
-+ **Query Parameters**
-    + `price`:
-        + string
-        + required
-    + `size`:
-        + string
-        + required
 
-## Cancel Order
-> [Success] Response 200 (application/json)
+## Get Order
 
-```json
-{
-    "success": true
-}
-```
+`/v1/trading/orders/:order_id [GET]`
 
-`/v1/trading/orders/<order_id> [DELETE]`
+    Get information for a single order.
 
-    Cancel a single order
 
-+ **Path parameter**
-    + `order_id`: Order ID
-        + string
-        + required
 
-## Get Order History
-`/v1/trading/order_history [GET]`
+### Path Parameters
+  + `order_id`: order ID
+    + string
 
-    Returns order history for the current user
 
-+ **Query Parameters**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-        + optional
-    + `limit`: Limits number of orders per page
-        + int
-        + optional
-        + Defaults to 50 if not specified
 
-### Success
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -766,92 +1282,109 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
     "success": true,
     "result": {
-        "order_history": [
-            {
-                "id": "37f550a202aa6a3fe120f420637c894c",
-                "trading_pair": "BTC-USDT",
-                "state": "filled",
-                "side": "bid",
-                "type": "limit",
-                "price": "5000.01",
-                "size": "1.0100",
-                "filled": "0.59",
-                "timestamp": 1504459805123,
-                "eq_price": "5000.01"
-            }
-            ...
-        ]
-    }
-}
-```
-
-+ **Response**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-    + `id`: Order ID
-        + string
-    + `status`: Order status
-        + enum[`cancelled`, `filled`]
-    + `side`: Order side
-        + enum[`bid`, `ask`]
-    + `type`: Order type
-        + enum[`market`, `limit`, `stop`, `stop_limit`]
-    + `price`: Quote price
-        + string
-    + `size`: Base amount
-        + string
-    + `filled`: Amount filled in current order
-        + string
-    + `timestamp`: Order timestamp milliseconds
-        + int
-    + `eq_price`: The equivalance price
-        + string
-    + `completed_at`: The order filled time
-        + string
-
-## Get Trade
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "trade": {
-            "trading_pair_id": "BTC-USDT",
-            "id": "09619448-e48a-3bd7-3d49-3a4194f9020b",
-            "maker_side": "bid",
-            "price": "10.00000000",
-            "size": "0.01000000",
-            "timestamp": 1504459805123
+        "order": {
+            "id": "8850805e-d783-46ec-9af5-30712035e760",
+            "trading_pair_id": "COB-ETH",
+            "side": "bid",
+            "type": "limit",
+            "price": "0.0001195",
+            "size": "212",
+            "filled": "212",
+            "state": "filled",
+            "timestamp": 1526018972869,
+            "eq_price": "0.0001194999996323",
+            "completed_at": "2018-05-11T06:09:38.946678Z",
+            "source": "exchange"
         }
     }
 }
+
 ```
 
-`/v1/trading/trades/<trade_id> [GET]`
 
-    Get trade information. A user only can get their own trade.
 
-+ **Path Parameters**
-    + `trade_id`: Trading ID
-        + Required
-        + [UUID String](#uuid-string)
+  + `order`: object
+    + `eq_price`: the equivalance(average) price
+      + string
+    + `trading_pair_id`: trading pair ID
+      + string
+    + `stop_price`: order stop price
+      + string
+    + `completed_at`: order filled time
+      + string
+    + `timestamp`: order timestamp in milliseconds
+      + integer
+    + `price`: quote price
+      + string
+    + `id`: order ID
+      + string
+    + `source`: order source
+      + string
+    + `state`: order status
+      + enum [`queued`, `open`, `partially_filled`, `filled`, `cancelled`, `rejected`, `pending_cancellation`, `pending_modifications`, `triggered`]
+    + `trailing_distance`: order trailing distance
+      + string
+    + `type`: order type
+      + enum [`market`, `limit`, `market_stop`, `limit_stop`]
+    + `side`: order side
+      + enum [`bid`, `ask`]
+    + `filled`: amount filled in current order
+      + string
+    + `size`: base amount
+      + string
 
-+ **Response**
-    + `trading_pair_id`: Trading pair ID
-        + string
-    + `id`: Trade ID
-        + [UUID String](#uuid-string)
-    + `maker_side`: Side of the maker
-        + enum[`ask`, `bid`]
-    + `price`: Quote price
-        + string
-    + `size`: Base amount
-        + string
-    + `timestamp`: Closed timestamp in milliseconds
-        + int
 
-## Get Trade History
+## Cancel Order
+
+`/v1/trading/orders/:order_id [DELETE]`
+
+    Cancel an order.
+
+
+
+### Path Parameters
+  + `order_id`: order ID
+    + string
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": null
+}
+
+```
+
+
+
+  + null
+
+
+## Get Trades of Order
+
+`/v1/trading/orders/:order_id/trades [GET]`
+
+    Get trades which fill the specific order.
+
+
+
+### Path Parameters
+  + `order_id`: order ID
+    + string
+
+
+
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
@@ -860,51 +1393,213 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "trades": [
             {
-                "trading_pair_id": "BTC-USDT",
-                "id": "09619448e48a3bd73d493a4194f9020b",
-                "maker_side": "ask",
-                "price": "10.00000000",
-                "size": "0.01000000",
-                "timestamp": 1504459805123
-            },
-            ...
+                "id": "8850805e-d783-46ec-9af5-30712035e760",
+                "trading_pair_id": "COB-ETH",
+                "maker_side": "bid",
+                "price": "0.0001195",
+                "size": "212",
+                "timestamp": 1526540686123
+            }
         ]
     }
 }
+
 ```
+
+
+
+  + `trades`: array
+      + `maker_side`: order side
+        + enum [`bid`, `ask`]
+      + `trading_pair_id`: trading pair ID
+        + string
+      + `timestamp`: unix timestamp in milliseconds
+        + integer
+      + `price`: the trade price
+        + string
+      + `id`: unique id of trade
+        + string
+      + `size`: the trade size
+        + string
+
+
+## Get Trade History
 
 `/v1/trading/trades [GET]`
 
-    Returns trade history for the current user
+    Get historical trades.
 
-+ **Path Parameters**
-    + `trading_pair_id`: Trading pair ID
-        + enum[`BTC-USDT`, ...]
-        + required
-    + `limit`: Limits number of trades per page
-        + int
-        + optional
-        + Defaults to 20 if not specified, Maximun 50.
 
-+ **Response**
-    + `trading_pair_id`: Trading pair ID
+
+
+### Query Parameters
+  + `trading_pair_id`: trading pair ID
+    + string
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "trades": [
+            {
+                "id": "8850805e-d783-46ec-9af5-30712035e760",
+                "trading_pair_id": "COB-ETH",
+                "maker_side": "bid",
+                "price": "0.0001195",
+                "size": "212",
+                "timestamp": 1526540686123
+            }
+        ]
+    }
+}
+
+```
+
+
+
+  + `trades`: array
+      + `maker_side`: order side
+        + enum [`bid`, `ask`]
+      + `trading_pair_id`: trading pair ID
         + string
-    + `id`: Trade ID
-        + [UUID String](#uuid-string)
-    + `maker_side`: Side of the maker
-        + enum[`ask`, `bid`]
-    + `price`: Quote price
+      + `timestamp`: unix timestamp in milliseconds
+        + integer
+      + `price`: the trade price
         + string
-    + `size`: Base amount
+      + `id`: unique id of trade
         + string
-    + `timestamp`: Closed timestamp in milliseconds
-        + int
+      + `size`: the trade size
+        + string
 
-# Wallet *[Auth]*
 
-    This module contains APIs for querying user account balances and history, generate deposit addresses, and deposit/withdraw funds.
+## Get Trade
 
-## Get Wallet Balances
+`/v1/trading/trades/:trade_id [GET]`
+
+    Get information for a single trade.
+
+
+
+### Path Parameters
+  + `trade_id`: trade ID
+    + string
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "trade": {
+            "id": "8850805e-d783-46ec-9af5-30712035e760",
+            "trading_pair_id": "COB-ETH",
+            "maker_side": "bid",
+            "price": "0.0001195",
+            "size": "212",
+            "timestamp": 1526540686123
+        }
+    }
+}
+
+```
+
+
+
+  + `trade`: object
+    + `maker_side`: order side
+      + enum [`bid`, `ask`]
+    + `trading_pair_id`: trading pair ID
+      + string
+    + `timestamp`: unix timestamp in milliseconds
+      + integer
+    + `price`: the trade price
+      + string
+    + `id`: unique id of trade
+      + string
+    + `size`: the trade size
+      + string
+
+
+## Get Trading Volume
+
+`/v1/trading/volume [GET]`
+
+    Get trading volume within a time.
+
+
+
+
+### Query Parameters
+  + `currency_id`: currency ID
+    + string
+  + `start_time`: optional, start timestamp unix timestamp in milliseconds, default is 1 month before now
+    + integer
+  + `end_time`: optional, end timestamp unix timestamp in milliseconds, default is now
+    + integer
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "volume": {
+            "currency_id": "BTC",
+            "sum": "0.1"
+        }
+    }
+}
+
+```
+
+
+
+  + `volume`: object
+    + `currency_id`: currency ID
+      + string
+    + `sum`: trading volume
+      + string
+
+
+# Wallet [Auth]
+
+
+## Get Balances
+
+`/v1/wallet/balances [GET]`
+
+    Get currencies, amounts, types, status of balances.
+
+
+
+
+### Query Parameters
+  + `currency`: Currency ID (optional, default to all currencies)
+    + string
+
+
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
@@ -913,139 +1608,366 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
     "result": {
         "balances": [
             {
-                "currency": "BTC",
-                "type": "exchange",
-                "total": "1",
-                "on_order": "0.4",
-                "locked": false,
-                "usd_value": "10000.0",
-                "btc_value": "1.0"
-            },
-            {
                 "currency": "ETH",
                 "type": "exchange",
-                "total": "0.0855175219863032",
-                "on_order": "0.04",
+                "total": "1.2",
+                "on_order": "0",
                 "locked": false,
-                "usd_value": "10000.0",
-                "btc_value": "0.008"
-            },
-            {
-                "currency": "COB",
-                "type":" exchange",
-                "total": "100",
-                "on_order": "20",
-                "locked": false,
-                "usd_value": "1000.0",
-                "btc_value": "0.1"
-            },
-            ...
+                "usd_value": "866.0784",
+                "btc_value": "0.06095616"
+            }
         ]
     }
 }
+
 ```
 
-`/v1/wallet/balances [GET]`
 
-    Get balances of the current user
 
-+ **Response**
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-    + `type`: Type of balance
-        + enum[`exchange`]
-    + `total`: Total amount of balance
+  + `balances`: array
+      + `currency`: Currency ID
         + string
-    + `on_order`: On order amount of balance
+      + `btc_value`: Market value in BTC
         + string
-    + `locked`: If the balance is locked
-        + bool
-    + `usd_value`: market value in USDT
+      + `locked`: Whether the balance is locked
+        + boolean
+      + `on_order`: Amount of the balance on order
         + string
-    + `btc_value`: market value in BTC
+      + `total`: Total amount of the balance
+        + string
+      + `type`: ledger type
+        + enum [`funding`, `margin`, `tradable`, `exchange`]
+      + `usd_value`: Market value in USDT
         + string
 
-## Get Ledger Entries
+
+## Get All Generic Deposits
+
+`/v1/wallet/generic_deposits [GET]`
+
+    Get informations for generic deposits.
+This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-query</a>.
+
+
+
+
+
+
+
+
+
+### Response
+
 > [Success] Response 200 (application/json)
 
 ```json
 {
     "success": true,
     "result": {
-        "ledger": [
+        "generic_deposits": [
             {
-                "action": "trade",
-                "type": "exchange",
-                "trade_id": "09619448e48a3bd73d493a4194f9020b",
-                "currency": "BTC",
-                "amount": "+635.77",
-                "balance": "2930.33",
-                "timestamp": 1504685599302
-            },
-            {
-                "action": "deposit",
-                "type": "exchange",
-                "deposit_id": "09619448e48a3bd73d493a4194f9020b",
-                "currency": "BTC",
-                "amount": "+635.77",
-                "balance": "2930.33",
-                "timestamp": 1504685599302
-            },
-            {
-                "action": "withdraw",
-                "type": "exchange",
-                "withdrawal_id": "09619448e48a3bd73d493a4194f9020b",
-                "currency": "BTC",
-                "amount": "-121.01",
-                "balance": "2194.87",
-                "timestamp": 1504685599302
-            },
-            ...
+               "id": "ac7a286d-8524-435c-9606-0453a620fe52",
+               "is_cancelled": false,
+               "type": "deposit_type_internal_transfer",
+               "user_id": "e28cd9d9-3121-48f5-aec1-dc82161f2e5d",
+               "currency_id": "SHPING",
+               "ledger_type": "exchange",
+               "description": "Internal transfer [0xd47ed407b54f4124f90f9e09bbd1f981ddfc7e4fd201e9fc6bea5008b2c3987e]. Slot machine reward SHPING.",
+               "amount": "1",
+               "fee": "0",
+               "created_at": 1526355806190,
+               "completed_at": 1526355806208,
+               "status": "tx_confirmed",
+               "additional_info": {
+                   "tx_hash": "d47ed407b54f4124f90f9e09bbd1f981ddfc7e4fd201e9fc6bea5008b2c3987e"
+               }
+            }
         ]
     }
 }
+
 ```
+
+
+
+  + `generic_deposits`: array
+      + `status`: tx status
+        + enum [`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`, `tx_unexpected`]
+      + `fee`: fee of this generic deposit
+        + string
+      + `user_id`: user id of this generic deposit
+        + string
+      + `description`: human readable description
+        + string
+      + `created_at`: created time of this generic deposit
+        + integer
+      + `id`: unique id of generic deposit
+        + string
+      + `currency_id`: currency id
+        + string
+      + `completed_at`: updated time of this generic deposit
+        + integer
+      + `amount`: amount of this generic deposit
+        + string
+      + `ledger_type`: ledger type
+        + enum [`funding`, `margin`, `tradable`, `exchange`]
+      + `is_cancelled`: cancelled or not
+        + boolean
+      + `type`: generic deposit type
+        + enum [`deposit_type_blockchain`, `deposit_type_iota`, `deposit_type_fiat_ctbc`, `deposit_type_internal_transfer`, `deposit_type_internal_deposit`]
+      + `additional_info`: additional info
+        + object
+
+
+## Get Generic Deposit
+
+`/v1/wallet/generic_deposits/:generic_deposit_id [GET]`
+
+    Get information for a single generic deposit.
+
+
+
+### Path Parameters
+  + `generic_deposit_id`: generic deposit ID
+    + string
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "generic_deposit": {
+            "id": "ac7a286d-8524-435c-9606-0453a620fe52",
+            "is_cancelled": false,
+            "type": "deposit_type_internal_transfer",
+            "user_id": "e28cd9d9-3121-48f5-aec1-dc82161f2e5d",
+            "currency_id": "SHPING",
+            "ledger_type": "exchange",
+            "description": "Internal transfer [0xd47ed407b54f4124f90f9e09bbd1f981ddfc7e4fd201e9fc6bea5008b2c3987e]. Slot machine reward SHPING.",
+            "amount": "1",
+            "fee": "0",
+            "created_at": 1526355806190,
+            "completed_at": 1526355806208,
+            "status": "tx_confirmed",
+            "additional_info": {
+                "tx_hash": "d47ed407b54f4124f90f9e09bbd1f981ddfc7e4fd201e9fc6bea5008b2c3987e"
+            }
+        }
+    }
+}
+
+```
+
+
+
+  + `generic_deposit`: object
+    + `status`: tx status
+      + enum [`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`, `tx_unexpected`]
+    + `fee`: fee of this generic deposit
+      + string
+    + `user_id`: user id of this generic deposit
+      + string
+    + `description`: human readable description
+      + string
+    + `created_at`: created time of this generic deposit
+      + integer
+    + `id`: unique id of generic deposit
+      + string
+    + `currency_id`: currency id
+      + string
+    + `completed_at`: updated time of this generic deposit
+      + integer
+    + `amount`: amount of this generic deposit
+      + string
+    + `ledger_type`: ledger type
+      + enum [`funding`, `margin`, `tradable`, `exchange`]
+    + `is_cancelled`: cancelled or not
+      + boolean
+    + `type`: generic deposit type
+      + enum [`deposit_type_blockchain`, `deposit_type_iota`, `deposit_type_fiat_ctbc`, `deposit_type_internal_transfer`, `deposit_type_internal_deposit`]
+    + `additional_info`: additional info
+      + object
+
+
+## Get All Generic Withdrawals
+
+`/v1/wallet/generic_withdrawals [GET]`
+
+    Get informations for generic withdrawals.
+This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-query</a>.
+
+
+
+
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "generic_withdrawals": [
+            {
+                "id": "2560c791-f874-4abd-bb40-647b2d38ef71",
+                "is_cancelled": false,
+                "type": "withdrawal_type_internal_transfer",
+                "user_id": "e28cd9d9-3121-48f5-aec1-dc82161f2e5d",
+                "currency_id": "COB",
+                "ledger_type": "exchange",
+                "description": "Internal transfer [0x304a396347cdf858bd3ce7337f061b5de04788d16b19d105d77816301614c1ef]. Prize redemption of 10 COB",
+                "amount": "10",
+                "approval_motion_id": null,
+                "created_at": 1526020394504,
+                "completed_at": 1526020394523,
+                "status": "tx_confirmed",
+                "additional_info": {
+                    "tx_hash": "304a396347cdf858bd3ce7337f061b5de04788d16b19d105d77816301614c1ef"
+                }
+            }
+        ]
+    }
+}
+
+```
+
+
+
+  + `generic_withdrawals`: array
+      + `status`: tx status
+        + enum [`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`, `tx_unexpected`]
+      + `user_id`: user id of this generic deposit
+        + string
+      + `description`: human readable description
+        + string
+      + `is_cancelled`: cancelled or not
+        + boolean
+      + `created_at`: created time of this generic deposit
+        + integer
+      + `id`: unique id of generic deposit
+        + string
+      + `currency_id`: currency id
+        + string
+      + `completed_at`: updated time of this generic deposit
+        + integer
+      + `amount`: amount of this generic deposit
+        + string
+      + `ledger_type`: ledger type
+        + enum [`funding`, `margin`, `tradable`, `exchange`]
+      + `approval_motion_id`: approve motion id
+        + ['string', 'null']
+      + `type`: generic withdrawal type
+        + enum [`withdrawal_type_blockchain`, `withdrawal_type_iota`, `withdrawal_type_fiat_ctbc`, `withdrawal_type_internal_transfer`, `withdrawal_type_internal_withdrawal`]
+      + `additional_info`: additional info
+        + object
+
+
+## Get Generic Withdrawal
+
+`/v1/wallet/generic_withdrawals/:generic_withdrawal_id [GET]`
+
+    Get infomation for a single generic withdrawal.
+
+
+
+### Path Parameters
+  + `generic_withdrawal_id`: generic withdrawal ID
+    + string
+
+
+
+
+
+### Response
+
+> [Success] Response 200 (application/json)
+
+```json
+{
+    "success": true,
+    "result": {
+        "generic_withdrawal": {
+            "id": "2560c791-f874-4abd-bb40-647b2d38ef71",
+            "is_cancelled": false,
+            "type": "withdrawal_type_internal_transfer",
+            "user_id": "e28cd9d9-3121-48f5-aec1-dc82161f2e5d",
+            "currency_id": "COB",
+            "ledger_type": "exchange",
+            "description": "Internal transfer [0x304a396347cdf858bd3ce7337f061b5de04788d16b19d105d77816301614c1ef]. Prize redemption of 10 COB",
+            "amount": "10",
+            "approval_motion_id": null,
+            "created_at": 1526020394504,
+            "completed_at": 1526020394523,
+            "status": "tx_confirmed",
+            "additional_info": {
+                "tx_hash": "304a396347cdf858bd3ce7337f061b5de04788d16b19d105d77816301614c1ef"
+            }
+        }
+    }
+}
+
+```
+
+
+
+  + `generic_withdrawal`: object
+    + `status`: tx status
+      + enum [`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`, `tx_unexpected`]
+    + `user_id`: user id of this generic deposit
+      + string
+    + `description`: human readable description
+      + string
+    + `is_cancelled`: cancelled or not
+      + boolean
+    + `created_at`: created time of this generic deposit
+      + integer
+    + `id`: unique id of generic deposit
+      + string
+    + `currency_id`: currency id
+      + string
+    + `completed_at`: updated time of this generic deposit
+      + integer
+    + `amount`: amount of this generic deposit
+      + string
+    + `ledger_type`: ledger type
+      + enum [`funding`, `margin`, `tradable`, `exchange`]
+    + `approval_motion_id`: approve motion id
+      + ['string', 'null']
+    + `type`: generic withdrawal type
+      + enum [`withdrawal_type_blockchain`, `withdrawal_type_iota`, `withdrawal_type_fiat_ctbc`, `withdrawal_type_internal_transfer`, `withdrawal_type_internal_withdrawal`]
+    + `additional_info`: additional info
+      + object
+
+
+## Get Ledger Entries
 
 `/v1/wallet/ledger [GET]`
 
-    Get balance history for the current user
+    Get balance change logs. Pagination is supported.
 
-+ **Query Parameter**
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-        + optional
-        + returns balance history for all currencies if not given
-    + `limit`: Limits the number of balance changes per page
-        + int
-        + optional
-        + Defaults to 20 if not specified, Maximun 50.
 
-+ **Response**
-    + `type`: Type of ledger
-        + enum[`funding`, `margin`, `exchange`]
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-    + `amount`: Amount of change
-        + string
-    + `balance`: Total balance after amount change
-        + string
-    + `timestamp`: Unix timestamp in milliseconds
-        + int
-    + `trade_id`: Trade ID
-        + string
-    + `deposit_id`: Deposit ID
-        + string
-    + `withdrawal_id`: Withdrawal ID
-        + string
-    + `action`: The ledger action
-        + enum[`deposit`, `fixup`, `withdrawal_fee`, `deposit_fee`, `trade`, `withdraw`]
-    + `fiat_deposit_id`: The fiat deposit ID
-        + string
-    + `fiat_withdrawal_id`: The fiat withdrawal ID
-        + string
 
-## Get Deposit Addresses
 
+### Query Parameters
+  + `currency`: Currency ID (optional, default to all currencies)
+    + string
+
+
+
+
+### Response
 
 > [Success] Response 200 (application/json)
 
@@ -1053,350 +1975,107 @@ https://api.cobinhood.com/v1/trading/trades?limit=30&page=7
 {
     "success": true,
     "result": {
-        "deposit_addresses": [
+        "limit": 50,
+        "page": 1,
+        "total_page": 1,
+        "ledger": [
             {
-                "currency": "BTC",
-                "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-                "created_at": 1504459805123,
-                "type": "exchange"
-            },
-            ...
-        ]
-    }
-}
-```
-
-`/v1/wallet/deposit_addresses [GET]`
-
-    Get Wallet Deposit Addresses
-
-+ **Query Parameters**
-    + `currency`: Currency ID
-        + enum[`BTC`, ...]
-        + optional
-
-+ **Response**
-    + `currency`: Currency ID
-        + enum[`BTC`, ...]
-    + `address`: Newly generated deposit address
-        + string
-    + `created_at`: Address creation time in milliseconds
-        + int
-    + `type`: Ledger type
-        +enum[`exchange`, `margin`, `funding`]
-
-## Get Withdrawal Addresses
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "withdrawal_addresses": [
-            {
-                "id": "09619448e48a3bd73d493a4194f9020b",
-                "currency": "BTC",
-                "name": "Kihon's Bitcoin Wallet Address",
+                "timestamp": "2018-04-26T03:43:43.051255Z",
+                "currency": "COB",
                 "type": "exchange",
-                "address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-                "created_at": 1504459805123
+                "action": "fixup",
+                "amount": "22000",
+                "balance": "22199.32393872",
+                "description": "",
+                "sequence": 0,
+                "trade_id": null,
+                "loan_id": null,
+                "deposit_id": null,
+                "withdrawal_id": null,
+                "fiat_deposit_id": null,
+                "fiat_withdrawal_id": null
             },
-            ...
-        ]
-    }
-}
-```
-
-`/v1/wallet/withdrawal_addresses [GET]`
-
-    Get Wallet Withdrawal Addresses
-
-+ **Query Parameters**
-    + `currency`: Currency ID
-        + enum[`BTC`, ...]
-        + optional
-
-+ **Response**
-    + `id`: Wallet ID
-        + string
-    + `currency`: Currency ID
-        + enum[`BTC`, ...]
-    + `name`: A name to describe this withdrawal wallet address
-        + string
-    + `type`: Ledger type
-        + enum[`exchange`, `funding`, `margin`]
-    + `address`: User withdrawal address
-        + string
-    + `created_at`: Address creation time in milliseconds
-        + int
-
-## Get Withdrawal
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "withdrawal": {
-            "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
-            "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
-            "status": "pending",
-            "confirmations": 25,
-            "required_confirmations": 25,
-            "created_at": 1504459805123,
-            "sent_at": 1504459805123,
-            "completed_at": 1504459914233,
-            "updated_at": 1504459914233,
-            "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-            "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
-            "currency": "BTC",
-            "amount": "0.021",
-            "fee": "0.0003"
-        }
-    }
-}
-```
-
-`/v1/wallet/withdrawals/<withdrawal_id> [GET]`
-
-    Get Withdrawal Information
-
-+ **Path Parameters**
-    + `withdrawal_id`: Withdrawal ID
-        + string
-        + required
-
-+ **Response**
-    + `withdrawal_id`: Withdrawal ID
-        + string
-    + `user_id`: Withdrawal user ID
-        + string
-    + `status`: Status of the withdrawal request
-        + enum[`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`]
-    + `confirmations`: Current confirmation count
-        + int
-    + `required_confirmations`: Required confirmation count
-        + int
-    + `created_at`: Timestamp of withdrawal creation in milliseconds
-        + int
-    + `sent_at`: Timestamp of issuing withdrawal in milliseconds
-        + int
-    + `completed_at`: Timestamp of withdrawal completion in milliseconds
-        + int
-    + `updated_at`: Timestamp of withdrawal update time in milliseconds
-        + int
-    + `to_address`: Target address of withdrawal
-        + string
-    + `txhash`: Transaction hash of withdrawal
-        + string
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-    + `amount`: Withdrawal amount
-        + string
-    + `fee`: Transfer fee of the withdrawal
-        + string
-
-## Get All Withdrawals
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "withdrawals": [
             {
-                "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
-                "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
-                "status": "pending",
-                "confirmations": 25,
-                "required_confirmations": 25,
-                "created_at": 1504459805123,
-                "sent_at": 1504459805123,
-                "completed_at": 1504459914233,
-                "updated_at": 1504459914233,
-                "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-                "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
-                "currency": "BTC",
-                "amount": "0.021",
-                "fee": "0.0003"
+                "timestamp": "2018-04-23T06:55:22.990024Z",
+                "currency": "COB",
+                "type": "exchange",
+                "action": "withdrawal_fee",
+                "amount": "-38.95",
+                "balance": "199.32393872",
+                "description": "",
+                "sequence": 0,
+                "trade_id": null,
+                "loan_id": null,
+                "deposit_id": null,
+                "withdrawal_id": null,
+                "fiat_deposit_id": null,
+                "fiat_withdrawal_id": null
             },
-            ...
-        ]
-    }
-}
-```
-
-`/v1/wallet/withdrawals [GET]`
-
-    Get All Withdrawals
-
-+ **Query Parameters**
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-        + optional
-        + Returns all currencies if not specified
-    + `status`: Status of withdrawal
-        + enum[`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`]
-        + optional
-        + Returns all status if not specified
-    + `limit`: Limits number of withdrawals per page
-        + int
-        + optional
-        + Defaults to 20 if not specified, Maximun 50.
-
-+ **Response**
-    + `withdrawal_id`: Withdrawal ID
-        + string
-    + `user_id`: Withdrawal user ID
-        + string
-    + `status`: Status of the withdrawal request
-        + enum[`tx_pending_two_factor_auth`, `tx_pending_email_auth`, `tx_pending_approval`, `tx_approved`, `tx_processing`, `tx_sent`, `tx_pending`, `tx_confirmed`, `tx_timeout`, `tx_invalid`, `tx_cancelled`, `tx_rejected`]
-    + `confirmations`: Current confirmation count
-        + int
-    + `required_confirmations`: Required confirmation count
-        + int
-    + `created_at`: Timestamp of withdrawal creation in milliseconds
-        + int
-    + `sent_at`: Timestamp of issuing withdrawal in milliseconds
-        + int
-    + `completed_at`: Timestamp of withdrawal completion in milliseconds
-        + int
-    + `updated_at`: Timestamp of withdrawal update time in milliseconds
-        + int
-    + `to_address`: Target address of withdrawal
-        + string
-    + `txhash`: Transaction hash of withdrawal
-        + string
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-    + `amount`: Withdrawal amount
-        + string
-    + `fee`: Transfer fee of the withdrawal
-        + string
-
-## Get Deposit
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "deposit": {
-            "deposit_id": "62056df2d4cf8fb9b15c7238b89a1438",
-            "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
-            "status": "pending",
-            "confirmations": 25,
-            "required_confirmations": 25,
-            "created_at": 1504459805123,
-            "completed_at": 1504459914233,
-            "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-            "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
-            "currency": "BTC",
-            "amount": "0.021",
-            "fee": "0.0003"
-        }
-    }
-}
-```
-
-`/v1/wallet/deposits/<deposit_id> [GET]`
-
-    Get Deposit Information
-
-+ **Path Parameters**
-    + `deposit_id`: Deposit ID
-        + string
-        + required
-
-+ **Response**
-    + `deposit_id`: Deposit ID
-        + string
-    + `user_id`: Deposit user ID
-        + string
-    + `status`: Transation status
-        + string
-    + `confirmations`: Current confirmation count
-        + int
-    + `required_confirmations`: Required confirmation count
-        + int
-    + `created_at`: Timestamp of deposit creation in milliseconds
-        + int
-    + `completed_at`: Timestamp of deposit  completion in milliseconds
-        + int
-    + `from_address`: Source address of deposit
-        + string
-    + `txhash`: Transaction hash of deposit
-        + string
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-    + `amount`: Deposit amount
-        + string
-    + `fee`: Transfer fee of the deposit
-        + string
-
-## Get All Deposits
-
-> [Success] Response 200 (application/json)
-
-```json
-{
-    "success": true,
-    "result": {
-        "deposits": [
             {
-                "deposit_id": "62056df2d4cf8fb9b15c7238b89a1438",
-                "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
-                "status": "pending",
-                "confirmations": 25,
-                "required_confirmations": 25,
-                "created_at": 1504459805123,
-                "completed_at": 1504459914233,
-                "from_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
-                "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
-                "currency": "BTC",
-                "amount": "0.021",
-                "fee": "0.0003"
-            },
-            ...
+                "timestamp": "2018-04-23T06:55:22.975023Z",
+                "currency": "COB",
+                "type": "exchange",
+                "action": "withdraw",
+                "amount": "-639.05",
+                "balance": "238.27393872",
+                "description": "",
+                "sequence": 0,
+                "trade_id": null,
+                "loan_id": null,
+                "deposit_id": null,
+                "withdrawal_id": null,
+                "fiat_deposit_id": null,
+                "fiat_withdrawal_id": null
+            }
         ]
     }
 }
+
 ```
 
-`/v1/wallet/deposits [GET]`
 
 
-+ **Response**
-    + `deposit_id`: Deposit ID
+  + `limit`: integer
+  + `page`: integer
+  + `total_page`: integer
+  + `ledger`: array
+      + `loan_id`: Load ID
+        + ['string', 'null']
+      + `fiat_deposit_id`: Fiat deposit ID. This field will be removed.
+        + ['string', 'null']
+      + `description`: Description of the change
         + string
-    + `user_id`: Deposit user ID
+      + `sequence`: Sequence number of trades processing
+        + integer
+      + `timestamp`: Timestamp
         + string
-    + `status`: Transation status
+      + `amount`: Amount of the balance change
         + string
-    + `confirmations`: Current confirmation count
-        + int
-    + `required_confirmations`: Required confirmation count
-        + int
-    + `created_at`: Timestamp of deposit creation in milliseconds
-        + int
-    + `completed_at`: Timestamp of deposit  completion in milliseconds
-        + int
-    + `from_address`: Source address of deposit
+      + `fiat_withdrawal_id`: Fiat withdrawal ID. This field will be removed.
+        + ['string', 'null']
+      + `currency`: Currency ID
         + string
-    + `txhash`: Transaction hash of deposit
+      + `trade_id`: Trade ID
+        + ['string', 'null']
+      + `deposit_id`: Deposit ID. This field will be removed.
+        + ['string', 'null']
+      + `withdrawal_id`: Withdrawal ID. This field will be removed.
+        + ['string', 'null']
+      + `balance`: Balance after the change
         + string
-    + `currency`: Currency ID
-        + enum[`BTC`, `ETH`, ...]
-    + `amount`: Deposit amount
-        + string
-    + `fee`: Transfer fee of the deposit
-        + string
+      + `type`: ledger type
+        + enum [`funding`, `margin`, `tradable`, `exchange`]
+      + `action`: Ledger action
+        + enum [`trade`, `deposit`, `deposit_fee`, `revoke_deposit`, `revoke_deposit_fee`, `withdraw`, `withdrawal_fee`, `cancel_withdrawal`, `cancel_withdrawal_fee`, `funding_tax`, `funding_tax_fee`, `fixup`]
 
-# WebSocket [Will deprecate in June, 2018]
+
+
+
+
+
+
+
+# WebSocket [Deprecated]
 
 ## Order *[Auth]*
 
@@ -2387,10 +3066,10 @@ timeframe interval are emitted.
 
 ```json
 {
-	"h": ["candle.ETH-BTC.1h", "2", "u"],
+    "h": ["candle.ETH-BTC.1h", "2", "u"],
     "d":
         [
-          [TIME_STAMP, VOL, HIGH, LOW,OPEN, CLOSE],
+          [TIME_STAMP, VOL, HIGH, LOW, OPEN, CLOSE],
           ...
         ]
 }

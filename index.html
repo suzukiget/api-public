@@ -334,6 +334,33 @@
             <a href="#funding-auth" class="toc-h1 toc-link" data-title="Funding [Auth]">Funding [Auth]</a>
               <ul class="toc-list-h2">
                   <li>
+                    <a href="#setup-auto-offering" class="toc-h2 toc-link" data-title="Setup Auto Offering">Setup Auto Offering</a>
+                  </li>
+                  <li>
+                    <a href="#get-all-active-auto-offerings" class="toc-h2 toc-link" data-title="Get All Active Auto Offerings">Get All Active Auto Offerings</a>
+                  </li>
+                  <li>
+                    <a href="#get-auto-offering" class="toc-h2 toc-link" data-title="Get Auto Offering">Get Auto Offering</a>
+                  </li>
+                  <li>
+                    <a href="#disable-auto-offering" class="toc-h2 toc-link" data-title="Disable Auto Offering">Disable Auto Offering</a>
+                  </li>
+                  <li>
+                    <a href="#get-funding-orders-history" class="toc-h2 toc-link" data-title="Get Funding Orders History">Get Funding Orders History</a>
+                  </li>
+                  <li>
+                    <a href="#place-funding-order" class="toc-h2 toc-link" data-title="Place Funding Order">Place Funding Order</a>
+                  </li>
+                  <li>
+                    <a href="#get-open-funding-orders" class="toc-h2 toc-link" data-title="Get Open Funding Orders">Get Open Funding Orders</a>
+                  </li>
+                  <li>
+                    <a href="#modify-funding-order" class="toc-h2 toc-link" data-title="Modify Funding Order">Modify Funding Order</a>
+                  </li>
+                  <li>
+                    <a href="#cancel-funding-order" class="toc-h2 toc-link" data-title="Cancel Funding Order">Cancel Funding Order</a>
+                  </li>
+                  <li>
                     <a href="#get-all-loans" class="toc-h2 toc-link" data-title="Get All Loans">Get All Loans</a>
                   </li>
                   <li>
@@ -2911,11 +2938,766 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 </ul></li>
 </ul></li>
 </ul>
-<h1 id='funding-auth'>Funding [Auth]</h1><h2 id='get-all-loans'>Get All Loans</h2>
+<h1 id='funding-auth'>Funding [Auth]</h1><h2 id='setup-auto-offering'>Setup Auto Offering</h2>
+<p><code>/v1/funding/auto_offerings [POST]</code></p>
+
+<p>Setup an auto offering.</p>
+<h3 id='request-6'>Request</h3>
+<blockquote>
+<p>Payload</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USDT"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.01"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>currency</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this auto offering will set
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this auto offering will set
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>size</code>: maximum offering size, 0 is unlimited
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul>
+<h3 id='response-25'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"auto_offering"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8850805e-d783-46ec-9af5-30712035e760"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USDT"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.01"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>auto_offering</code>: object
+
+<ul>
+<li><code>currency</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>active</code>: if this auto offering is active
+
+<ul>
+<li>boolean</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this auto offering will set
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: maximum offering size, 0 is unlimited
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this auto offering will set
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>id</code>: auto offering ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id='get-all-active-auto-offerings'>Get All Active Auto Offerings</h2>
+<p><code>/v1/funding/auto_offerings [GET]</code></p>
+
+<p>List all active auto offerings.</p>
+<h3 id='response-26'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"auto_offerings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8850805e-d783-46ec-9af5-30712035e760"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USDT"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.01"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>auto_offerings</code>: array
+
+<ul>
+<li><code>currency</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>active</code>: if this auto offering is active
+
+<ul>
+<li>boolean</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this auto offering will set
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: maximum offering size, 0 is unlimited
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this auto offering will set
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>id</code>: auto offering ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id='get-auto-offering'>Get Auto Offering</h2>
+<p><code>/v1/funding/auto_offerings/:currency_id [GET]</code></p>
+
+<p>Get information for an auto offering.</p>
+<h3 id='path-parameters-13'>Path Parameters</h3>
+<ul>
+<li><code>currency_id</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul>
+<h3 id='response-27'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"auto_offering"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8850805e-d783-46ec-9af5-30712035e760"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USDT"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.01"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>auto_offering</code>: object
+
+<ul>
+<li><code>currency</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>active</code>: if this auto offering is active
+
+<ul>
+<li>boolean</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this auto offering will set
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: maximum offering size, 0 is unlimited
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this auto offering will set
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>id</code>: auto offering ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id='disable-auto-offering'>Disable Auto Offering</h2>
+<p><code>/v1/funding/auto_offerings/:currency_id [DELETE]</code></p>
+
+<p>Disable an auto offering.</p>
+<h3 id='path-parameters-14'>Path Parameters</h3>
+<ul>
+<li><code>currency_id</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul>
+<h3 id='response-28'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li>null</li>
+</ul>
+<h2 id='get-funding-orders-history'>Get Funding Orders History</h2>
+<p><code>/v1/funding/funding_history [GET]</code></p>
+
+<p>List historical funding orders.</p>
+<h3 id='query-parameters-9'>Query Parameters</h3>
+<ul>
+<li><code>currency</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>limit</code>: pagingnation limit number
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>page</code>: pagingnation page number
+
+<ul>
+<li>integer</li>
+</ul></li>
+</ul>
+<h3 id='response-29'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"total_page"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total_count"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"page"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"limit"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"fundings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8850805e-d783-46ec-9af5-30712035e760"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.05"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.3002"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"filled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filled"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-07T01:10:02.999169Z"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"auto_refund"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"position_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1529401868804</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>total_count</code>: pagingnation total count of data
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>fundings</code>: array
+
+<ul>
+<li><code>auto_refund</code>: if this fund should be auto refund
+
+<ul>
+<li>boolean</li>
+</ul></li>
+<li><code>currency</code>: which currency of this fund
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>position_id</code>: this funding is requested by system for position_id
+
+<ul>
+<li>[&#39;string&#39;, &#39;null&#39;]</li>
+</ul></li>
+<li><code>timestamp</code>: order timestamp in milliseconds
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this fund per day
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this funding request/offer
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>id</code>: funding ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>completed_at</code>: funding filled time
+
+<ul>
+<li>[&#39;string&#39;, &#39;null&#39;]</li>
+</ul></li>
+<li><code>state</code>: order status
+
+<ul>
+<li>enum [<code>queued</code>, <code>open</code>, <code>partially_filled</code>, <code>filled</code>, <code>cancelled</code>, <code>rejected</code>, <code>pending_cancellation</code>, <code>pending_modifications</code>, <code>triggered</code>]</li>
+</ul></li>
+<li><code>type</code>: 
+
+<ul>
+<li>enum [<code>market</code>, <code>limit</code>]</li>
+</ul></li>
+<li><code>side</code>: order side
+
+<ul>
+<li>enum [<code>bid</code>, <code>ask</code>]</li>
+</ul></li>
+<li><code>filled</code>: how many money dealt
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: how many money provide/request
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul></li>
+<li><code>limit</code>: pagingnation limit number
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>page</code>: pagingnation page number
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>total_page</code>: pagingnation total page number
+
+<ul>
+<li>integer</li>
+</ul></li>
+</ul>
+<h2 id='place-funding-order'>Place Funding Order</h2>
+<p><code>/v1/funding/fundings [POST]</code></p>
+
+<p>Place a funding order.</p>
+<h3 id='request-7'>Request</h3>
+<blockquote>
+<p>Payload</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.05"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.3002"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>currency</code>: Currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>interest_rate</code>: Interest rate of this funding per day
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: How many money provide/request
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>type</code>: order type
+
+<ul>
+<li>enum [<code>market</code>, <code>limit</code>, <code>market_stop</code>, <code>limit_stop</code>]</li>
+</ul></li>
+<li><code>period</code>: How many days this funding request/offer
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>side</code>: order side
+
+<ul>
+<li>enum [<code>bid</code>, <code>ask</code>]</li>
+</ul></li>
+</ul>
+<h3 id='response-30'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"funding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8850805e-d783-46ec-9af5-30712035e760"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.05"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.3002"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"filled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filled"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-07T01:10:02.999169Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"auto_refund"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"position_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1529401868804</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>funding</code>: object
+
+<ul>
+<li><code>auto_refund</code>: if this fund should be auto refund
+
+<ul>
+<li>boolean</li>
+</ul></li>
+<li><code>currency</code>: which currency of this fund
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>position_id</code>: this funding is requested by system for position_id
+
+<ul>
+<li>[&#39;string&#39;, &#39;null&#39;]</li>
+</ul></li>
+<li><code>timestamp</code>: order timestamp in milliseconds
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this fund per day
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this funding request/offer
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>id</code>: funding ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>completed_at</code>: funding filled time
+
+<ul>
+<li>[&#39;string&#39;, &#39;null&#39;]</li>
+</ul></li>
+<li><code>state</code>: order status
+
+<ul>
+<li>enum [<code>queued</code>, <code>open</code>, <code>partially_filled</code>, <code>filled</code>, <code>cancelled</code>, <code>rejected</code>, <code>pending_cancellation</code>, <code>pending_modifications</code>, <code>triggered</code>]</li>
+</ul></li>
+<li><code>type</code>: 
+
+<ul>
+<li>enum [<code>market</code>, <code>limit</code>]</li>
+</ul></li>
+<li><code>side</code>: order side
+
+<ul>
+<li>enum [<code>bid</code>, <code>ask</code>]</li>
+</ul></li>
+<li><code>filled</code>: how many money dealt
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: how many money provide/request
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id='get-open-funding-orders'>Get Open Funding Orders</h2>
+<p><code>/v1/funding/fundings [GET]</code></p>
+
+<p>List all open funding orders for a user.</p>
+<h3 id='query-parameters-10'>Query Parameters</h3>
+<ul>
+<li><code>currency</code>: currency ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>limit</code>: pagingnation limit number
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>page</code>: pagingnation page number
+
+<ul>
+<li>integer</li>
+</ul></li>
+</ul>
+<h3 id='response-31'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"total_page"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total_count"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"page"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"limit"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"fundings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8850805e-d783-46ec-9af5-30712035e760"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"period"</span><span class="p">:</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.05"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000.3002"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"filled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COB"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bid"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filled"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-07T01:10:02.999169Z"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"auto_refund"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"position_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1529401868804</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>total_count</code>: pagingnation total count of data
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>fundings</code>: array
+
+<ul>
+<li><code>auto_refund</code>: if this fund should be auto refund
+
+<ul>
+<li>boolean</li>
+</ul></li>
+<li><code>currency</code>: which currency of this fund
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>position_id</code>: this funding is requested by system for position_id
+
+<ul>
+<li>[&#39;string&#39;, &#39;null&#39;]</li>
+</ul></li>
+<li><code>timestamp</code>: order timestamp in milliseconds
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>interest_rate</code>: interest rate of this fund per day
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>period</code>: how many days this funding request/offer
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>id</code>: funding ID
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>completed_at</code>: funding filled time
+
+<ul>
+<li>[&#39;string&#39;, &#39;null&#39;]</li>
+</ul></li>
+<li><code>state</code>: order status
+
+<ul>
+<li>enum [<code>queued</code>, <code>open</code>, <code>partially_filled</code>, <code>filled</code>, <code>cancelled</code>, <code>rejected</code>, <code>pending_cancellation</code>, <code>pending_modifications</code>, <code>triggered</code>]</li>
+</ul></li>
+<li><code>type</code>: 
+
+<ul>
+<li>enum [<code>market</code>, <code>limit</code>]</li>
+</ul></li>
+<li><code>side</code>: order side
+
+<ul>
+<li>enum [<code>bid</code>, <code>ask</code>]</li>
+</ul></li>
+<li><code>filled</code>: how many money dealt
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: how many money provide/request
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul></li>
+<li><code>limit</code>: pagingnation limit number
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>page</code>: pagingnation page number
+
+<ul>
+<li>integer</li>
+</ul></li>
+<li><code>total_page</code>: pagingnation total page number
+
+<ul>
+<li>integer</li>
+</ul></li>
+</ul>
+<h2 id='modify-funding-order'>Modify Funding Order</h2>
+<p><code>/v1/funding/fundings/:funding_id [PUT]</code></p>
+
+<p>Modify a funding order.</p>
+<h3 id='path-parameters-15'>Path Parameters</h3>
+<ul>
+<li><code>funding_id</code>: funding ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul>
+<h3 id='request-8'>Request</h3>
+<blockquote>
+<p>Payload</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"interest_rate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.08"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100000.300"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li><code>interest_rate</code>: interest rate per day
+
+<ul>
+<li>string</li>
+</ul></li>
+<li><code>size</code>: amount
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul>
+<h3 id='response-32'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li>null</li>
+</ul>
+<h2 id='cancel-funding-order'>Cancel Funding Order</h2>
+<p><code>/v1/funding/fundings/:funding_id [DELETE]</code></p>
+
+<p>Cancel an funding order.</p>
+<h3 id='path-parameters-16'>Path Parameters</h3>
+<ul>
+<li><code>funding_id</code>: funding ID
+
+<ul>
+<li>string</li>
+</ul></li>
+</ul>
+<h3 id='response-33'>Response</h3>
+<blockquote>
+<p>[Success] Response 200 (application/json)</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<ul>
+<li>null</li>
+</ul>
+<h2 id='get-all-loans'>Get All Loans</h2>
 <p><code>/v1/funding/loans [GET]</code></p>
 
 <p>List all loans for a user.</p>
-<h3 id='query-parameters-9'>Query Parameters</h3>
+<h3 id='query-parameters-11'>Query Parameters</h3>
 <ul>
 <li><code>currency_id</code>: currency ID
 
@@ -2938,7 +3720,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>integer</li>
 </ul></li>
 </ul>
-<h3 id='response-25'>Response</h3>
+<h3 id='response-34'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3041,7 +3823,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/funding/loans/:loan_id [GET]</code></p>
 
 <p>Get information for a single loan.</p>
-<h3 id='path-parameters-13'>Path Parameters</h3>
+<h3 id='path-parameters-17'>Path Parameters</h3>
 <ul>
 <li><code>loan_id</code>: loan ID
 
@@ -3049,7 +3831,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-26'>Response</h3>
+<h3 id='response-35'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3126,7 +3908,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/funding/loans/:loan_id [DELETE]</code></p>
 
 <p>Close a loan manually.</p>
-<h3 id='path-parameters-14'>Path Parameters</h3>
+<h3 id='path-parameters-18'>Path Parameters</h3>
 <ul>
 <li><code>loan_id</code>: loan ID
 
@@ -3134,7 +3916,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-27'>Response</h3>
+<h3 id='response-36'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3151,7 +3933,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/currencies [GET]</code></p>
 
 <p>This endpoint returns all supported currencies and related information.</p>
-<h3 id='response-28'>Response</h3>
+<h3 id='response-37'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3254,7 +4036,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/fundingbook/precisions/:currency_id [GET]</code></p>
 
 <p>Returns available precisions in scientific notation of funndingbook by given currency.</p>
-<h3 id='path-parameters-15'>Path Parameters</h3>
+<h3 id='path-parameters-19'>Path Parameters</h3>
 <ul>
 <li><code>trading_pair_id</code>: currency symbol/id
 
@@ -3262,7 +4044,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-29'>Response</h3>
+<h3 id='response-38'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3298,7 +4080,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/fundingbooks/:currency_id [GET]</code></p>
 
 <p>Return fundingbook of given currency.</p>
-<h3 id='path-parameters-16'>Path Parameters</h3>
+<h3 id='path-parameters-20'>Path Parameters</h3>
 <ul>
 <li><code>trading_pair_id</code>: currency symbol/id
 
@@ -3306,7 +4088,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='query-parameters-10'>Query Parameters</h3>
+<h3 id='query-parameters-12'>Query Parameters</h3>
 <ul>
 <li><code>limit</code>: limits number of price point. Optional. If limit is 0, the whole fundingbook is returned. Default and max as 50, min 1
 
@@ -3319,7 +4101,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-30'>Response</h3>
+<h3 id='response-39'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3378,7 +4160,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/orderbook/precisions/:trading_pair_id [GET]</code></p>
 
 <p>Returns available precisions in scientific notation of orderbook by given trading pair.</p>
-<h3 id='path-parameters-17'>Path Parameters</h3>
+<h3 id='path-parameters-21'>Path Parameters</h3>
 <ul>
 <li><code>trading_pair_id</code>: trading pair symbol/id
 
@@ -3386,7 +4168,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-31'>Response</h3>
+<h3 id='response-40'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3416,7 +4198,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/orderbooks/:trading_pair_id [GET]</code></p>
 
 <p>Return orderbook of given trading pair.</p>
-<h3 id='path-parameters-18'>Path Parameters</h3>
+<h3 id='path-parameters-22'>Path Parameters</h3>
 <ul>
 <li><code>trading_pair_id</code>: trading pair symbol/id
 
@@ -3424,7 +4206,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='query-parameters-11'>Query Parameters</h3>
+<h3 id='query-parameters-13'>Query Parameters</h3>
 <ul>
 <li><code>limit</code>: limits number of price point. Optional. If limit is 0, the whole orderbook is returned. Default and max as 50, min 1
 
@@ -3437,7 +4219,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-32'>Response</h3>
+<h3 id='response-41'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3492,7 +4274,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/quote_currencies [GET]</code></p>
 
 <p>This endpoint returns all supported quote currencies and related information.</p>
-<h3 id='response-33'>Response</h3>
+<h3 id='response-42'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3595,7 +4377,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/stats [GET]</code></p>
 
 <p>Returns exchange statistics in past 24 hours by trading pair.</p>
-<h3 id='response-34'>Response</h3>
+<h3 id='response-43'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3678,7 +4460,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/tickers [GET]</code></p>
 
 <p>Returns all trading pair tickers.</p>
-<h3 id='response-35'>Response</h3>
+<h3 id='response-44'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3757,7 +4539,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/tickers/:trading_pair_id [GET]</code></p>
 
 <p>Return trading pair of given trading pair.</p>
-<h3 id='path-parameters-19'>Path Parameters</h3>
+<h3 id='path-parameters-23'>Path Parameters</h3>
 <ul>
 <li><code>trading_pair_id</code>: trading pair symbol/id
 
@@ -3765,7 +4547,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='response-36'>Response</h3>
+<h3 id='response-45'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3842,7 +4624,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/trades/:trading_pair_id [GET]</code></p>
 
 <p>Returns recently trades of given trading pair.</p>
-<h3 id='path-parameters-20'>Path Parameters</h3>
+<h3 id='path-parameters-24'>Path Parameters</h3>
 <ul>
 <li><code>trading_pair_id</code>: trading pair symbol/id
 
@@ -3850,7 +4632,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>string</li>
 </ul></li>
 </ul>
-<h3 id='query-parameters-12'>Query Parameters</h3>
+<h3 id='query-parameters-14'>Query Parameters</h3>
 <ul>
 <li><code>limit</code>: pagingnation limit number
 
@@ -3868,7 +4650,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <li>integer</li>
 </ul></li>
 </ul>
-<h3 id='response-37'>Response</h3>
+<h3 id='response-46'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3929,7 +4711,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/market/trading_pairs [GET]</code></p>
 
 <p>Returns all supported trading pairs and related information.</p>
-<h3 id='response-38'>Response</h3>
+<h3 id='response-47'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>
@@ -3996,7 +4778,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
 <p><code>/v1/system/time [GET]</code></p>
 
 <p>Get the reference system time as Unix timestamp.</p>
-<h3 id='response-39'>Response</h3>
+<h3 id='response-48'>Response</h3>
 <blockquote>
 <p>[Success] Response 200 (application/json)</p>
 </blockquote>

@@ -2516,6 +2516,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
         "loans": [
             {
                 "id": "8850805e-d783-46ec-9af5-30712035e760",
+                "timestamp": 1529020800,
                 "currency": "USDT",
                 "size": "1",
                 "interest_rate": "0.01",
@@ -2523,7 +2524,8 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
                 "state": "active",
                 "will_close_at": "2018-05-23T04:20:50.304063Z",
                 "completed_at": null,
-                "auto_refund": false
+                "auto_refund": false,
+                "side": "ask"
             }
         ]
     }
@@ -2542,16 +2544,20 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
       + boolean
     + `currency`: currency ID
       + string
+    + `timestamp`: created timestamp in unix timestamp
+      + integer
     + `interest_rate`: interest rate of the loan
       + string
     + `period`: valid period of the loan
       + integer
+    + `id`: loan ID
+      + string
     + `completed_at`: the complete time of the loan
       + ['string', 'null']
     + `state`: 
       + enum [`in_use`, `active`, `closed`]
-    + `id`: loan ID
-      + string
+    + `side`: order side
+      + enum [`bid`, `ask`]
     + `size`: loan amount
       + string
   + `limit`: pagingnation limit number
@@ -2588,6 +2594,7 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
     "result": {
         "loan": {
             "id": "8850805e-d783-46ec-9af5-30712035e760",
+            "timestamp": 1529020800,
             "currency": "USDT",
             "size": "1",
             "interest_rate": "0.01",
@@ -2595,7 +2602,8 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
             "state": "active",
             "will_close_at": "2018-05-23T04:20:50.304063Z",
             "completed_at": null,
-            "auto_refund": false
+            "auto_refund": false,
+            "side": "ask"
         }
     }
 }
@@ -2611,16 +2619,20 @@ This endnpoint is equipped with <a href="#custom-query-amp-pagination">custom-qu
       + boolean
     + `currency`: currency ID
       + string
+    + `timestamp`: created timestamp in unix timestamp
+      + integer
     + `interest_rate`: interest rate of the loan
       + string
     + `period`: valid period of the loan
       + integer
+    + `id`: loan ID
+      + string
     + `completed_at`: the complete time of the loan
       + ['string', 'null']
     + `state`: 
       + enum [`in_use`, `active`, `closed`]
-    + `id`: loan ID
-      + string
+    + `side`: order side
+      + enum [`bid`, `ask`]
     + `size`: loan amount
       + string
 
@@ -4406,6 +4418,7 @@ After subscribing this topic, you will start receiving recent matched loans,
 followed by any loan that occurs at COBINHOOD.
 
 **State**
+
 + `loan_in_use`: loan is currently used
 + `loan_active`: loan created or available for funding
 + `loan_closed`: loan closed
@@ -4415,9 +4428,16 @@ followed by any loan that occurs at COBINHOOD.
 + `0`: created
 + `1`: updated
 
+**Side**
+
++ `ask`: mean ask loan
++ `bid`: mean bid loan
+
+
 **PARAMS**
 
 + `LOAN_ID`: loan id
++ `TIME_STAMP`: timestamp in milliseconds
 + `WILL_CLOSE_AT`: the closing time of this loan
 + `COMPLETED_AT`: the loan completed time
 + `CURRENCY_ID`: currency id of this loan
@@ -4427,6 +4447,7 @@ followed by any loan that occurs at COBINHOOD.
 + `SIZE`: loan size
 + `PERIOD`: the loan period
 + `AUTO_REFUND`: boolean to mark auto refund or not
++ `SIDE`: appears in authed loan for user to recognize created information.
 
 > **Request**
 
@@ -4447,6 +4468,7 @@ followed by any loan that occurs at COBINHOOD.
         [
             [
                 LOAN_ID,
+                TIME_STAMP,
                 WILL_CLOSE_AT,
                 COMPLETED_AT,
                 CURRENCY_ID,
@@ -4485,6 +4507,7 @@ Response format is same as matched loan.
         [
             [
                 LOAN_ID,
+                TIME_STAMP,
                 WILL_CLOSE_AT,
                 COMPLETED_AT,
                 CURRENCY_ID,
